@@ -1,0 +1,12 @@
+fig:index-2-4
+tab:gdsl
+fig:interactive
+fig:cranlogs
+tab:revdep
+intro
+what-is-geocomputation
+why-use-r-for-geocomputation
+software-for-geocomputation
+r-ecosystem
+the-history-of-r-spatial
+exercises

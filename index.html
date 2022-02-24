@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Welcome | Geocomputation with R</title>
+<meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
+<meta name="description" content="Welcome | Geocomputation with R is for people who want to analyze, visualize and model geographic data with open source software. It is based on R, a statistical programming language that has powerful data processing, visualization, and geospatial capabilities. The book equips you with the knowledge and skills to tackle a wide range of issues manifested in geographic data, including those with scientific, societal, and environmental implications. This book will interest people from many backgrounds, especially Geographic Information Systems (GIS) users interested in applying their domain-specific knowledge in a powerful open source language for data science, and R users interested in extending their skills to handle spatial data.">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Welcome | Geocomputation with R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://geocompr.github.io/fr/">
+<meta property="og:image" content="https://geocompr.github.io/es/images/cover.png">
+<meta property="og:description" content="Welcome | Geocomputation with R is for people who want to analyze, visualize and model geographic data with open source software. It is based on R, a statistical programming language that has powerful data processing, visualization, and geospatial capabilities. The book equips you with the knowledge and skills to tackle a wide range of issues manifested in geographic data, including those with scientific, societal, and environmental implications. This book will interest people from many backgrounds, especially Geographic Information Systems (GIS) users interested in applying their domain-specific knowledge in a powerful open source language for data science, and R users interested in extending their skills to handle spatial data.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Welcome | Geocomputation with R">
+<meta name="twitter:description" content="Welcome | Geocomputation with R is for people who want to analyze, visualize and model geographic data with open source software. It is based on R, a statistical programming language that has powerful data processing, visualization, and geospatial capabilities. The book equips you with the knowledge and skills to tackle a wide range of issues manifested in geographic data, including those with scientific, societal, and environmental implications. This book will interest people from many backgrounds, especially Geographic Information Systems (GIS) users interested in applying their domain-specific knowledge in a powerful open source language for data science, and R users interested in extending their skills to handle spatial data.">
+<meta name="twitter:image" content="https://geocompr.github.io/es/images/cover.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Lato-0.4.0/font.css" rel="stylesheet">
+<link href="libs/_Roboto%20Mono-0.4.0/font.css" rel="stylesheet">
+<link href="libs/_Montserrat-0.4.0/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-99618359-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="style/style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geocomputation with R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="active" href="index.html">Welcome</a></li>
+<li><a class="" href="foreword-1st-edition.html">Foreword (1st Edition)</a></li>
+<li><a class="" href="preface.html">Preface</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">1</span> Introduction</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/Robinlovelace/geocompr">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!--bookdown:title:end--><!--bookdown:title:start--><div id="welcome" class="section level1 unnumbered">
+<h1>Welcome<a class="anchor" aria-label="anchor" href="#welcome"><i class="fas fa-link"></i></a>
+</h1>
+<p>This is the online home of <em>Geocomputation with R</em>, a book on geographic data analysis, visualization and modeling.</p>
+<p><a href="https://www.routledge.com/9781138304512"><img src="images/cover.png" width="250" height="375" alt="The geocompr book cover" align="right" style="margin: 0 1em 0 1em"></a></p>
+<p><strong>Note</strong>: The first edition of the book has been published by CRC Press in the <a href="https://www.routledge.com/Chapman--HallCRC-The-R-Series/book-series/CRCTHERSER">R Series</a>.
+You can buy the book from <a href="https://www.routledge.com/9781138304512">CRC Press</a>, or <a href="https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577/">Amazon</a>, and see the archived <strong>First Edition</strong> hosted on <a href="https://bookdown.org/robinlovelace/geocompr/">bookdown.org</a>.</p>
+<p>Inspired by the Free and Open Source Software for Geospatial (<a href="https://foss4g.org/">FOSS4G</a>) movement, the code and prose underlying this book are open, ensuring that the content is reproducible, transparent, and accessible.
+Hosting the source code on <a href="https://github.com/Robinlovelace/geocompr/">GitHub</a> allows anyone to interact with the project by opening issues or contributing new content and typo fixes for the benefit of everyone.</p>
+<p><a href="https://github.com/robinlovelace/geocompr"><img src="https://img.shields.io/github/stars/robinlovelace/geocompr?style=for-the-badge"></a>
+<a href="https://github.com/Robinlovelace/geocompr/graphs/contributors"><img src="https://img.shields.io/github/contributors/robinlovelace/geocompr?style=for-the-badge"></a></p>
+<p>The online version of the book is hosted at <a href="https://geocompr.robinlovelace.net">geocompr.robinlovelace.net</a> and kept up-to-date by <a href="https://github.com/Robinlovelace/geocompr/actions">GitHub Actions</a>.
+Its current ‘build status’ as follows:</p>
+<p><a href="https://github.com/Robinlovelace/geocompr/actions"><img src="https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg" alt="Actions"></a></p>
+<p>This version of the book was built on GH Actions on 2022-02-24.</p>
+<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</p>
+<div id="how-to-contribute" class="section level2 unnumbered">
+<h2>How to contribute?<a class="anchor" aria-label="anchor" href="#how-to-contribute"><i class="fas fa-link"></i></a>
+</h2>
+<p><strong>bookdown</strong> makes editing a book as easy as editing a wiki, provided you have a GitHub account (<a href="https://github.com/join">sign-up at github.com</a>).
+Once logged-in to GitHub, click on the ‘Edit this page’ icon in the right panel of the book website.
+This will take you to an editable version of the the source <a href="http://rmarkdown.rstudio.com/">R Markdown</a> file that generated the page you’re on.</p>
+<!--[![](figures/editme.png)](https://github.com/Robinlovelace/geocompr/edit/main/index.Rmd)-->
+<p>To raise an issue about the book’s content (e.g. code not running) or make a feature request, check-out the <a href="https://github.com/Robinlovelace/geocompr/issues">issue tracker</a>.</p>
+<p>Maintainers and contributors must follow this repository’s <a href="https://github.com/Robinlovelace/geocompr/blob/main/CODE_OF_CONDUCT.md">CODE OF CONDUCT</a>.</p>
+</div>
+<div id="reproducibility" class="section level2 unnumbered">
+<h2>Reproducibility<a class="anchor" aria-label="anchor" href="#reproducibility"><i class="fas fa-link"></i></a>
+</h2>
+<p>The quickest way to reproduce the contents of the book if you’re new to geographic data in R may be in the web browser, thanks to <a href="https://mybinder.org/">Binder</a>.
+Clicking on the link below should open a new window containing RStudio Server in your web browser, enabling you to open chapter files and running code chunks to test that the code is reproducible.</p>
+<p><a href="https://mybinder.org/v2/gh/robinlovelace/geocompr/main?urlpath=rstudio"><img src="https://mybinder.org/badge_logo.svg" alt="Binder"></a></p>
+<p>If you see something like the image below, congratulations, it’s worked and you can start exploring Geocomputation with R in a cloud-based environment (while being aware of <a href="https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html">mybinder.org user guidelines</a>):</p>
+<!-- ![](https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png) -->
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:index-2-4"></span>
+<img src="https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png" alt="Screenshot of reproducible code contained in Geocomputation with R running in RStudio Server on a browser served by Binder" width="100%"><p class="caption">
+FIGURE 0.1: Screenshot of reproducible code contained in Geocomputation with R running in RStudio Server on a browser served by Binder
+</p>
+</div>
+<p>To reproduce the code in the book on your own computer, you need a recent version of <a href="https://cran.r-project.org/">R</a> and up-to-date packages.
+These can be installed using the <a href="https://github.com/r-lib/remotes"><strong>remotes</strong></a> package.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"geocompr/geocompkg"</span><span class="op">)</span></code></pre></div>
+<p>After installing the book’s dependencies, you can rebuild the book for testing and educational purposes.
+To do this <a href="https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip">download</a> and unzip or <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">clone</a> the book’s source code.
+After opening the <code>geocompr.Rproj</code> project in RStudio (or opening the folder in another IDE such as <a href="https://github.com/REditorSupport/vscode-R">VS Code</a>), you should be able to reproduce the contents with the following command:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">bookdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/bookdown/reference/serve_book.html">serve_book</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></code></pre></div>
+<p>See the project’s <a href="https://github.com/robinlovelace/geocompr#reproducing-the-book">GitHub repo</a> for full details on reproducing the book.</p>
+</div>
+<div id="supporting-the-project" class="section level2 unnumbered">
+<h2>Supporting the project<a class="anchor" aria-label="anchor" href="#supporting-the-project"><i class="fas fa-link"></i></a>
+</h2>
+<p>If you find the book useful, please support it by:</p>
+<ul>
+<li>Telling people about it in person</li>
+<li>Communicating about the book in digital media, e.g., via the <a href="https://twitter.com/hashtag/geocompr">#geocompr hashtag</a> on Twitter (see our <a href="https://geocompr.github.io/guestbook/">Guestbook at geocompr.github.io</a>) or by letting us know of <a href="https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md">courses</a> using the book</li>
+<li>
+<a href="https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib">Citing</a> or <a href="https://geocompr.robinlovelace.net/">linking-to</a> it</li>
+<li>‘<a href="https://help.github.com/articles/about-stars/">Starring</a>’ the <a href="https://github.com/robinlovelace/geocompr">geocompr GitHub repository</a>
+</li>
+<li>Reviewing it, e.g., on Amazon or <a href="https://www.goodreads.com/book/show/42780859-geocomputation-with-r">Goodreads</a>
+</li>
+<li>Asking questions about or making suggestion on the content via <a href="https://github.com/Robinlovelace/geocompr/issues/372">GitHub</a> or Twitter.</li>
+<li>
+<a href="https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577">Buying</a> a copy</li>
+</ul>
+<p>Further details can be found at <a href="https://github.com/Robinlovelace/geocompr#geocomputation-with-r">github.com/Robinlovelace/geocompr</a>.</p>
+<hr>
+<p>The globe icon used in this book was created by <a href="https://github.com/Viglino">Jean-Marc Viglino</a> and is licensed under <a href="https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md">CC-BY 4.0 International</a>.</p>
+<p><a href="https://www.netlify.com"><img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg"></a></p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="empty"></div>
+<div class="next"><a href="foreword-1st-edition.html">Foreword (1st Edition)</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <h2>Note: Second Edition is under construction 🏗</h2>
+    <p>Now is a great time to test in-development packages and provide feedback</p>
+        <ul class="list-unstyled">
+<li><a href="https://forms.gle/nq9RmbxJyZXQgc948">Provide feedback (5 min)</a></li>
+          <li><a href="https://geocompr.robinlovelace.net/#reproducibility">Install updated packages</a></li>
+          <li><a href="https://github.com/Robinlovelace/geocompr/issues">Open an issue <i class="fas fa-question"></i></a></li>
+          <li><a href="https://discord.gg/Te3gWeDwmf">Chat on Discord <i class="fab fa-discord"></i></a></li>
+        </ul>
+<hr>
+<nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#welcome">Welcome</a></li>
+<li><a class="nav-link" href="#how-to-contribute">How to contribute?</a></li>
+<li><a class="nav-link" href="#reproducibility">Reproducibility</a></li>
+<li><a class="nav-link" href="#supporting-the-project">Supporting the project</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/Robinlovelace/geocompr/blob/main/index.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/Robinlovelace/geocompr/edit/main/index.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geocomputation with R</strong>" was written by Robin Lovelace, Jakub Nowosad, Jannes Muenchow. It was last built on 2022-02-24.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
