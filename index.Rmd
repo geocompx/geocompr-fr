@@ -1,5 +1,5 @@
 --- 
-title: 'Geocomputation with R'
+title: 'Geocomputation avec R'
 author: 'Robin Lovelace, Jakub Nowosad, Jannes Muenchow'
 date: '`r Sys.Date()`'
 site: bookdown::bookdown_site
@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 colorlinks: yes
 graphics: yes
-description: "Geocomputation with R is for people who want to analyze, visualize and model geographic data with open source software. It is based on R, a statistical programming language that has powerful data processing, visualization, and geospatial capabilities. The book equips you with the knowledge and skills to tackle a wide range of issues manifested in geographic data, including those with scientific, societal, and environmental implications. This book will interest people from many backgrounds, especially Geographic Information Systems (GIS) users interested in applying their domain-specific knowledge in a powerful open source language for data science, and R users interested in extending their skills to handle spatial data."
+description: "Geocomputation avec R s´adresse aux personnes qui souhaitent analyser, visualiser et modéliser des données géographiques à l´aide de logiciels open source. Il est basé sur R, un langage de programmation statistique qui possède de puissantes capacités de traitement de données, de visualisation et de traitement géospatial. Ce livre vous donne les connaissances et les compétences nécessaires pour aborder un large éventail de questions qui se manifestent dans les données géographiques, notamment celles qui ont des implications scientifiques, sociales et environnementales. Ce livre intéressera des personnes de tous horizons, en particulier les utilisateurs de systèmes d´information géographique (SIG) désireux d´appliquer leurs connaissances spécifiques à un domaine dans un puissant langage open source pour la science des données, et les utilisateurs de R désireux d'étendre leurs compétences au traitement des données spatiales."
 github-repo: "geocompr/fr"
 cover-image: "https://geocompr.github.io/es/images/cover.png"
 url: https://geocompr.github.io/fr/
@@ -27,25 +27,25 @@ is_html = knitr::is_html_output()
 ```
 
 ```{asis index-2, echo=is_html}
-# Welcome {-}
+# Bienvenue! {-}
 
-This is the online home of *Geocomputation with R*, a book on geographic data analysis, visualization and modeling.
+Il s'agit du site en français de *Geocomputation with R*, un livre sur l'analyse, la visualisation et la modélisation des données géographiques. Le site en anglais est [ici](https://geocompr.robinlovelace.net/).
 
 <a href="https://www.routledge.com/9781138304512"><img src="images/cover.png" width="250" height="375" alt="The geocompr book cover" align="right" style="margin: 0 1em 0 1em" /></a>
   
-**Note**: The first edition of the book has been published by CRC Press in the [R Series](https://www.routledge.com/Chapman--HallCRC-The-R-Series/book-series/CRCTHERSER).
-You can buy the book from [CRC Press](https://www.routledge.com/9781138304512), or [Amazon](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577/), and see the archived **First Edition** hosted on [bookdown.org](https://bookdown.org/robinlovelace/geocompr/). 
+**Note**: La première édition a été imprimée par CRC Press dans la collection [R Series](https://www.routledge.com/Chapman--HallCRC-The-R-Series/book-series/CRCTHERSER).
+Il est possible de l'acheter chez [CRC Press](https://www.routledge.com/9781138304512), ou sur [Amazon](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577/), la première version est aussi archivée **First Edition** et hebergée sur [bookdown.org](https://bookdown.org/robinlovelace/geocompr/). 
 
-Inspired by the Free and Open Source Software for Geospatial ([FOSS4G](https://foss4g.org/)) movement, the code and prose underlying this book are open, ensuring that the content is reproducible, transparent, and accessible.
-Hosting the source code on [GitHub](https://github.com/Robinlovelace/geocompr/) allows anyone to interact with the project by opening issues or contributing new content and typo fixes for the benefit of everyone.
+Inspiré par le mouvement libriste et l'Open Source Software for Geospatial ([FOSS4G](https://foss4g.org/)), le code et le texte qui sous-tendent ce livre sont ouverts, ce qui garantit que le contenu est reproductible, transparent et accessible.
+L'hébergement du code source sur [GitHub](https://github.com/Robinlovelace/geocompr/) permet à quiconque d'interagir avec le projet en ouvrant des questions ou en contribuant au nouveau contenu et à la correction des fautes de frappe pour le bénéfice de tous.
 
 [![](https://img.shields.io/github/stars/robinlovelace/geocompr?style=for-the-badge)](https://github.com/robinlovelace/geocompr)
 [![](https://img.shields.io/github/contributors/robinlovelace/geocompr?style=for-the-badge)](https://github.com/Robinlovelace/geocompr/graphs/contributors)
 
-The online version of the book is hosted at [geocompr.robinlovelace.net](https://geocompr.robinlovelace.net) and kept up-to-date by [GitHub Actions](https://github.com/Robinlovelace/geocompr/actions).
-Its current 'build status' as follows:
+La version en ligne du livre est hébergée sur [geocompr.github.io/fr/] (https://geocompr.github.io/fr/) et mise à jour par [GitHub Actions] (https://github.com/geocompr/fr/actions).
+L'état actuel de sa construction est le suivant : 
 
-[![Actions](https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg)](https://github.com/Robinlovelace/geocompr/actions)
+[![Actions](https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg)](https://github.com/geocompr/fr/actions)
 ```
 
 ```{r index-2-2, echo=FALSE, eval=is_html, results="asis"}
@@ -59,26 +59,26 @@ if (is_on_ghactions){
 ```{asis index-2-3, echo=is_html}
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 
-## How to contribute? {-}
+## Comment contribuer ? {-}
 
-**bookdown** makes editing a book as easy as editing a wiki, provided you have a GitHub account ([sign-up at github.com](https://github.com/join)).
-Once logged-in to GitHub, click on the 'Edit this page' icon in the right panel of the book website.
-This will take you to an editable version of the the source [R Markdown](http://rmarkdown.rstudio.com/) file that generated the page you're on.
+**bookdown** rend l'édition d'un livre aussi facile que l'édition d'un wiki, à condition d'avoir un compte GitHub ([inscription sur github.com](https://github.com/join)).
+Une fois connecté à GitHub, cliquez sur l'icône "Edit this page" dans le panneau de droite du site Web du livre.
+Vous accéderez ainsi à une version modifiable du fichier source [R Markdown](http://rmarkdown.rstudio.com/) qui a généré la page sur laquelle vous vous trouvez.
 
 <!--[![](figures/editme.png)](https://github.com/Robinlovelace/geocompr/edit/main/index.Rmd)-->
 
-To raise an issue about the book's content (e.g. code not running) or make a feature request, check-out the [issue tracker](https://github.com/Robinlovelace/geocompr/issues).
+Pour signaler un problème concernant le contenu du livre (par exemple, un code qui ne fonctionne pas) ou pour demander une fonctionnalité, consultez la [liste des issues] (https://github.com/Robinlovelace/geocompr/issues).
 
-Maintainers and contributors must follow this repository’s [CODE OF CONDUCT](https://github.com/Robinlovelace/geocompr/blob/main/CODE_OF_CONDUCT.md).
+Les mainteneurs et les contributeurs doivent suivre les règles de conduite de ce dépôt : [CODE OF CONDUCT](https://github.com/Robinlovelace/geocompr/blob/main/CODE_OF_CONDUCT.md).
 
-## Reproducibility {-}
+## Reproducibilité {-}
 
 The quickest way to reproduce the contents of the book if you're new to geographic data in R may be in the web browser, thanks to [Binder](https://mybinder.org/).
 Clicking on the link below should open a new window containing RStudio Server in your web browser, enabling you to open chapter files and running code chunks to test that the code is reproducible.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/robinlovelace/geocompr/main?urlpath=rstudio)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/geocompr/fr/main?urlpath=rstudio)
 
-If you see something like the image below, congratulations, it's worked and you can start exploring Geocomputation with R in a cloud-based environment (while being aware of [mybinder.org user guidelines](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html)):
+Si vous voyez quelque chose comme l'image ci-dessous, félicitations, cela a fonctionné et vous pouvez commencer à explorer la géocomputation avec R dans un environnement cloud.(tout en étant conscient des consignes d'utilisation de [mybinder.org](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html)):
 
 <!-- ![](https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png) -->
 ```
