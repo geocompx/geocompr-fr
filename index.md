@@ -29,7 +29,7 @@ Il s'agit du site en français de *Geocomputation with R*, un livre sur l'analys
 <a href="https://www.routledge.com/9781138304512"><img src="images/cover.png" width="250" height="375" alt="The geocompr book cover" align="right" style="margin: 0 1em 0 1em" /></a>
   
 **Note**: La première édition a été imprimée par CRC Press dans la collection [R Series](https://www.routledge.com/Chapman--HallCRC-The-R-Series/book-series/CRCTHERSER).
-Il est possible de l'acheter chez [CRC Press](https://www.routledge.com/9781138304512), ou sur [Amazon](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577/), la première version est aussi archivée **First Edition** et hebergée sur [bookdown.org](https://bookdown.org/robinlovelace/geocompr/). 
+Il est possible de l'acheter chez [CRC Press](https://www.routledge.com/9781138304512), ou sur [Amazon](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577/), la **première version** est aussi hebergée sur [bookdown.org](https://bookdown.org/robinlovelace/geocompr/). 
 
 Inspiré par le mouvement libriste et l'Open Source Software for Geospatial ([FOSS4G](https://foss4g.org/)), le code et le texte qui sous-tendent ce livre sont ouverts, ce qui garantit que le contenu est reproductible, transparent et accessible.
 L'hébergement du code source sur [GitHub](https://github.com/Robinlovelace/geocompr/) permet à quiconque d'interagir avec le projet en ouvrant des questions ou en contribuant au nouveau contenu et à la correction des fautes de frappe pour le bénéfice de tous.
@@ -37,7 +37,7 @@ L'hébergement du code source sur [GitHub](https://github.com/Robinlovelace/geoc
 [![](https://img.shields.io/github/stars/robinlovelace/geocompr?style=for-the-badge)](https://github.com/robinlovelace/geocompr)
 [![](https://img.shields.io/github/contributors/robinlovelace/geocompr?style=for-the-badge)](https://github.com/Robinlovelace/geocompr/graphs/contributors)
 
-La version en ligne du livre est hébergée sur [geocompr.github.io/fr/] (https://geocompr.github.io/fr/) et mise à jour par [GitHub Actions] (https://github.com/geocompr/fr/actions).
+La version en ligne du livre est hébergée sur [geocompr.github.io](https://geocompr.github.io/fr/) et mise à jour par [GitHub Actions] (https://github.com/geocompr/fr/actions).
 L'état actuel de sa construction est le suivant : 
 
 [![Actions](https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg)](https://github.com/geocompr/fr/actions)
