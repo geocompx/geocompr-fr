@@ -22,7 +22,8 @@ Il est possible de:
 
 - traduire des parties du texte   
 - corriger des fautes d'orthographes  
-- participer aux choix de traduction de certains termes techniques  
+- participer aux choix de traduction de certains termes techniques ([ici](https://github.com/geocompr/fr/issues?q=is%3Aissue+is%3Aopen+label%3Atranslation))  
 - améliorer la reproductibilité de ce dépôt en fournissant des services identiques à celui en anglais
+- reproduire certaines figures avec des termes anglais en français 
 
 Pour échanger il est possible de passer par Github mais aussi par le [discord](https://discord.gg/Zt8sphjkKT). 
