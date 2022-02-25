@@ -104,7 +104,7 @@ Les SCR sont plus complexes, et seront abordées plus en détail dans les sectio
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/02-vectorplots.R") # produit la figure suivante
 ```
 
-```{r vectorplots, fig.cap="Représentation de données vectorielles (ponctuelles) dans laquelle l'emplacement de Londres (X rouge) est représenté par rapport à une origine (le cercle bleu). La carte de gauche représente un SCR géographique dont l'origine se situe à 0° de longitude et de latitude. Le graphique de droite représente un SCR projeté dont l'origine est située dans la mer à l'ouest de la péninsule du sud-ouest anglaise."", out.width="49%", fig.show='hold', echo=FALSE, fig.scap="Représentation de données vectorielles (ponctuelles)."}
+```{r vectorplots, fig.cap="Représentation de données vectorielles (ponctuelles) dans laquelle l'emplacement de Londres (X rouge) est représenté par rapport à une origine (le cercle bleu). La carte de gauche représente un SCR géographique dont l'origine se situe à 0° de longitude et de latitude. Le graphique de droite représente un SCR projeté dont l'origine est située dans la mer à l'ouest de la péninsule du sud-ouest anglaise.", out.width="49%", fig.show='hold', echo=FALSE, fig.scap="Représentation de données vectorielles (ponctuelles)."}
 knitr::include_graphics(c("figures/vector_lonlat.png", "figures/vector_projected.png"))
 ```
 
