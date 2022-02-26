@@ -80,10 +80,10 @@ Il est possible de l’acheter chez <a href="https://www.routledge.com/978113830
 L’hébergement du code source sur <a href="https://github.com/Robinlovelace/geocompr/">GitHub</a> permet à quiconque d’interagir avec le projet en ouvrant des questions ou en contribuant au nouveau contenu et à la correction des fautes de frappe pour le bénéfice de tous.</p>
 <p><a href="https://github.com/robinlovelace/geocompr"><img src="https://img.shields.io/github/stars/robinlovelace/geocompr?style=for-the-badge"></a>
 <a href="https://github.com/Robinlovelace/geocompr/graphs/contributors"><img src="https://img.shields.io/github/contributors/robinlovelace/geocompr?style=for-the-badge"></a></p>
-<p>La version en ligne du livre est hébergée sur <a href="https://geocompr.github.io/fr/">geocompr.github.io</a> et mise à jour par [GitHub Actions] (<a href="https://github.com/geocompr/fr/actions" class="uri">https://github.com/geocompr/fr/actions</a>).
+<p>La version en ligne du livre est hébergée sur <a href="https://geocompr.github.io/fr/">geocompr.github.io</a> et mise à jour par <a href="https://github.com/geocompr/fr/actions">GitHub Actions</a>.
 L’état actuel de sa construction est le suivant :</p>
 <p><a href="https://github.com/geocompr/fr/actions"><img src="https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg" alt="Actions"></a></p>
-<p>This version of the book was built on GH Actions on 2022-02-25.</p>
+<p>This version of the book was built on GH Actions on 2022-02-26.</p>
 <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</p>
 <div id="comment-contribuer" class="section level2 unnumbered">
 <h2>Comment contribuer ?<a class="anchor" aria-label="anchor" href="#comment-contribuer"><i class="fas fa-link"></i></a>
@@ -98,49 +98,50 @@ Vous accéderez ainsi à une version modifiable du fichier source <a href="http:
 <div id="reproducibilité" class="section level2 unnumbered">
 <h2>Reproducibilité<a class="anchor" aria-label="anchor" href="#reproducibilit%C3%A9"><i class="fas fa-link"></i></a>
 </h2>
-<p>The quickest way to reproduce the contents of the book if you’re new to geographic data in R may be in the web browser, thanks to <a href="https://mybinder.org/">Binder</a>.
-Clicking on the link below should open a new window containing RStudio Server in your web browser, enabling you to open chapter files and running code chunks to test that the code is reproducible.</p>
+<p>Le moyen le plus rapide de reproduire le contenu du livre si vous êtes novice en matière de données géographiques avec R peut être via le navigateur web, grâce à <a href="https://mybinder.org/">Binder</a>.
+En cliquant sur le lien ci-dessous, vous ouvrirez une nouvelle fenêtre contenant RStudio Server dans votre navigateur Web, ce qui vous permettra d’ouvrir les fichiers du chapitre et d’exécuter des morceaux de code pour vérifier que le code est reproductible.</p>
 <p><a href="https://mybinder.org/v2/gh/geocompr/fr/main?urlpath=rstudio"><img src="https://mybinder.org/badge_logo.svg" alt="Binder"></a></p>
 <p>Si vous voyez quelque chose comme l’image ci-dessous, félicitations, cela a fonctionné et vous pouvez commencer à explorer la géocomputation avec R dans un environnement cloud.(tout en étant conscient des consignes d’utilisation de <a href="https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html">mybinder.org</a>):</p>
 <!-- ![](https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png) -->
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:index-2-4"></span>
-<img src="https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png" alt="Screenshot of reproducible code contained in Geocomputation with R running in RStudio Server on a browser served by Binder" width="100%"><p class="caption">
-FIGURE 0.1: Screenshot of reproducible code contained in Geocomputation with R running in RStudio Server on a browser served by Binder
+<img src="https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png" alt="Capture d'écran du code reproductible contenu dans Geocomputation avec R s'exécutant dans RStudio Server sur un navigateur servi par Binder." width="100%"><p class="caption">
+FIGURE 0.1: Capture d’écran du code reproductible contenu dans Geocomputation avec R s’exécutant dans RStudio Server sur un navigateur servi par Binder.
 </p>
 </div>
-<p>To reproduce the code in the book on your own computer, you need a recent version of <a href="https://cran.r-project.org/">R</a> and up-to-date packages.
-These can be installed using the <a href="https://github.com/r-lib/remotes"><strong>remotes</strong></a> package.</p>
+<p>Pour reproduire le code du livre sur votre propre ordinateur, vous avez besoin d’une version récente de <a href="https://cran.r-project.org/">R</a> et des paquets à jour.
+Ils peuvent être installés en utilisant le paquet <a href="https://github.com/r-lib/remotes"><strong>remotes</strong></a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"geocompr/geocompkg"</span><span class="op">)</span></code></pre></div>
-<p>After installing the book’s dependencies, you can rebuild the book for testing and educational purposes.
-To do this <a href="https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip">download</a> and unzip or <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">clone</a> the book’s source code.
-After opening the <code>geocompr.Rproj</code> project in RStudio (or opening the folder in another IDE such as <a href="https://github.com/REditorSupport/vscode-R">VS Code</a>), you should be able to reproduce the contents with the following command:</p>
+<p>Après avoir installé les dépendances du livre, vous pouvez reconstruire le livre à des fins de test et d’enseignement.
+Pour ce faire, vous devez <a href="https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip">télécharger</a> et déziper ou <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">cloner</a> le code source du libre.
+Après avoir ouvert le projet <code>geocompr.Rproj</code> dans RStudio (ou ouvert le dossier dans un autre IDE tel que <a href="https://github.com/REditorSupport/vscode-R">VS Code</a>), vous devriez être en mesure de reproduire le contenu avec la commande suivante :</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">bookdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/bookdown/reference/serve_book.html">serve_book</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></code></pre></div>
-<p>See the project’s <a href="https://github.com/robinlovelace/geocompr#reproducing-the-book">GitHub repo</a> for full details on reproducing the book.</p>
+<p>La page <a href="https://github.com/robinlovelace/geocompr#reproducing-the-book">GitHub repo</a> contient plus de détail pour reproduire ce livre.</p>
 </div>
-<div id="supporting-the-project" class="section level2 unnumbered">
-<h2>Supporting the project<a class="anchor" aria-label="anchor" href="#supporting-the-project"><i class="fas fa-link"></i></a>
+<div id="soutenir-le-projet" class="section level2 unnumbered">
+<h2>Soutenir le projet<a class="anchor" aria-label="anchor" href="#soutenir-le-projet"><i class="fas fa-link"></i></a>
 </h2>
-<p>If you find the book useful, please support it by:</p>
+<p>Si vous trouvez ce livre utile (sa traduction ou sa version originale), vous pouvez le soutenir :</p>
 <ul>
-<li>Telling people about it in person</li>
-<li>Communicating about the book in digital media, e.g., via the <a href="https://twitter.com/hashtag/geocompr">#geocompr hashtag</a> on Twitter (see our <a href="https://geocompr.github.io/guestbook/">Guestbook at geocompr.github.io</a>) or by letting us know of <a href="https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md">courses</a> using the book</li>
+<li>En en parlant à d’autres personnes</li>
+<li>En communiquant sur le livre dans les réseaux sociaux, par exemple, via <a href="https://twitter.com/hashtag/geocompr">#geocompr hashtag</a> sur Twitter (cf. notre <a href="https://geocompr.github.io/guestbook/"><strong>Guestbook</strong> sur geocompr.github.io</a>) ou en référençant les cours <a href="https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md">courses</a> mobilisant le livre</li>
 <li>
-<a href="https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib">Citing</a> or <a href="https://geocompr.robinlovelace.net/">linking-to</a> it</li>
-<li>‘<a href="https://help.github.com/articles/about-stars/">Starring</a>’ the <a href="https://github.com/robinlovelace/geocompr">geocompr GitHub repository</a>
+<a href="https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib">Le citant</a> ou <a href="https://geocompr.robinlovelace.net/">le metre en lien</a>
 </li>
-<li>Reviewing it, e.g., on Amazon or <a href="https://www.goodreads.com/book/show/42780859-geocomputation-with-r">Goodreads</a>
+<li>‘<a href="https://help.github.com/articles/about-stars/">Starring</a>’ le <a href="https://github.com/robinlovelace/geocompr">dépôt GitHub geocompr</a>
 </li>
-<li>Asking questions about or making suggestion on the content via <a href="https://github.com/Robinlovelace/geocompr/issues/372">GitHub</a> or Twitter.</li>
+<li>Ecrivant un recension, sur Amazon ou <a href="https://www.goodreads.com/book/show/42780859-geocomputation-with-r">Goodreads</a>
+</li>
+<li>Posant des questions ou faire des suggestions de contenus sur <a href="https://github.com/Robinlovelace/geocompr/issues/372">GitHub</a> ou Twitter.</li>
 <li>
-<a href="https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577">Buying</a> a copy</li>
+<a href="https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577">Achetant</a> une copie</li>
 </ul>
-<p>Further details can be found at <a href="https://github.com/Robinlovelace/geocompr#geocomputation-with-r">github.com/Robinlovelace/geocompr</a>.</p>
+<p>Plus de détails sur le <a href="https://github.com/Robinlovelace/geocompr#geocomputation-with-r">github.com/Robinlovelace/geocompr</a>.</p>
 <hr>
-<p>The globe icon used in this book was created by <a href="https://github.com/Viglino">Jean-Marc Viglino</a> and is licensed under <a href="https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md">CC-BY 4.0 International</a>.</p>
+<p>L’icône du globe utilisé en couverture de ce livre a été créé par <a href="https://github.com/Viglino">Jean-Marc Viglino</a> et est sous licence <a href="https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md">CC-BY 4.0 International</a>.</p>
 <p><a href="https://www.netlify.com"><img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg"></a></p>
 </div>
 </div>
@@ -162,7 +163,7 @@ After opening the <code>geocompr.Rproj</code> project in RStudio (or opening the
 <li><a class="nav-link" href="#bienvenue">Bienvenue!</a></li>
 <li><a class="nav-link" href="#comment-contribuer">Comment contribuer ?</a></li>
 <li><a class="nav-link" href="#reproducibilit%C3%A9">Reproducibilité</a></li>
-<li><a class="nav-link" href="#supporting-the-project">Supporting the project</a></li>
+<li><a class="nav-link" href="#soutenir-le-projet">Soutenir le projet</a></li>
 </ul>
 
       <div class="book-extra">
@@ -180,7 +181,7 @@ After opening the <code>geocompr.Rproj</code> project in RStudio (or opening the
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" was written by Robin Lovelace, Jakub Nowosad, Jannes Muenchow. It was last built on 2022-02-25.</p>
+    <p>"<strong>Geocomputation avec R</strong>" was written by Robin Lovelace, Jakub Nowosad, Jannes Muenchow. It was last built on 2022-02-26.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

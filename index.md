@@ -1,7 +1,7 @@
 --- 
 title: 'Geocomputation avec R'
 author: 'Robin Lovelace, Jakub Nowosad, Jannes Muenchow'
-date: '2022-02-25'
+date: '2022-02-26'
 site: bookdown::bookdown_site
 output: bookdown::bs4_book
 documentclass: krantz
@@ -37,12 +37,12 @@ L'hébergement du code source sur [GitHub](https://github.com/Robinlovelace/geoc
 [![](https://img.shields.io/github/stars/robinlovelace/geocompr?style=for-the-badge)](https://github.com/robinlovelace/geocompr)
 [![](https://img.shields.io/github/contributors/robinlovelace/geocompr?style=for-the-badge)](https://github.com/Robinlovelace/geocompr/graphs/contributors)
 
-La version en ligne du livre est hébergée sur [geocompr.github.io](https://geocompr.github.io/fr/) et mise à jour par [GitHub Actions] (https://github.com/geocompr/fr/actions).
+La version en ligne du livre est hébergée sur [geocompr.github.io](https://geocompr.github.io/fr/) et mise à jour par [GitHub Actions](https://github.com/geocompr/fr/actions).
 L'état actuel de sa construction est le suivant : 
 
 [![Actions](https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg)](https://github.com/geocompr/fr/actions)
 
-This version of the book was built on GH Actions on 2022-02-25.
+This version of the book was built on GH Actions on 2022-02-26.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 
@@ -60,8 +60,8 @@ Les mainteneurs et les contributeurs doivent suivre les règles de conduite de c
 
 ## Reproducibilité {-}
 
-The quickest way to reproduce the contents of the book if you're new to geographic data in R may be in the web browser, thanks to [Binder](https://mybinder.org/).
-Clicking on the link below should open a new window containing RStudio Server in your web browser, enabling you to open chapter files and running code chunks to test that the code is reproducible.
+Le moyen le plus rapide de reproduire le contenu du livre si vous êtes novice en matière de données géographiques avec R peut être via le navigateur web, grâce à [Binder](https://mybinder.org/).
+En cliquant sur le lien ci-dessous, vous ouvrirez une nouvelle fenêtre contenant RStudio Server dans votre navigateur Web, ce qui vous permettra d'ouvrir les fichiers du chapitre et d'exécuter des morceaux de code pour vérifier que le code est reproductible.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/geocompr/fr/main?urlpath=rstudio)
 
@@ -71,13 +71,13 @@ Si vous voyez quelque chose comme l'image ci-dessous, félicitations, cela a fon
 
 
 <div class="figure" style="text-align: center">
-<img src="https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png" alt="Screenshot of reproducible code contained in Geocomputation with R running in RStudio Server on a browser served by Binder" width="100%" />
-<p class="caption">(\#fig:index-2-4)Screenshot of reproducible code contained in Geocomputation with R running in RStudio Server on a browser served by Binder</p>
+<img src="https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png" alt="Capture d'écran du code reproductible contenu dans Geocomputation avec R s'exécutant dans RStudio Server sur un navigateur servi par Binder." width="100%" />
+<p class="caption">(\#fig:index-2-4)Capture d'écran du code reproductible contenu dans Geocomputation avec R s'exécutant dans RStudio Server sur un navigateur servi par Binder.</p>
 </div>
 
 
-To reproduce the code in the book on your own computer, you need a recent version of [R](https://cran.r-project.org/) and up-to-date packages.
-These can be installed using the [**remotes**](https://github.com/r-lib/remotes) package.
+Pour reproduire le code du livre sur votre propre ordinateur, vous avez besoin d'une version récente de [R](https://cran.r-project.org/) et des paquets à jour.
+Ils peuvent être installés en utilisant le paquet [**remotes**](https://github.com/r-lib/remotes).
 
 
 ```r
@@ -88,9 +88,9 @@ remotes::install_github("geocompr/geocompkg")
 
 
 
-After installing the book's dependencies, you can rebuild the book for testing and educational purposes.
-To do this [download](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) and unzip or [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the book's source code.
-After opening the `geocompr.Rproj` project in RStudio (or opening the folder in another IDE such as [VS Code](https://github.com/REditorSupport/vscode-R)), you should be able to reproduce the contents with the following command:
+Après avoir installé les dépendances du livre, vous pouvez reconstruire le livre à des fins de test et d'enseignement.
+Pour ce faire, vous devez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) et déziper ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) le code source du libre.
+Après avoir ouvert le projet `geocompr.Rproj` dans RStudio (ou ouvert le dossier dans un autre IDE tel que [VS Code](https://github.com/REditorSupport/vscode-R)), vous devriez être en mesure de reproduire le contenu avec la commande suivante :
 
 
 ```r
@@ -99,25 +99,25 @@ bookdown::serve_book(".")
 
 
 
-See the project's [GitHub repo](https://github.com/robinlovelace/geocompr#reproducing-the-book) for full details on reproducing the book.
+La page [GitHub repo](https://github.com/robinlovelace/geocompr#reproducing-the-book) contient plus de détail pour reproduire ce livre.
 
-## Supporting the project {-}
+##  Soutenir le projet {-}
 
-If you find the book useful, please support it by:
+Si vous trouvez ce livre utile (sa traduction ou sa version originale), vous pouvez le soutenir :
 
-- Telling people about it in person
-- Communicating about the book in digital media, e.g., via the [#geocompr hashtag](https://twitter.com/hashtag/geocompr) on Twitter (see our [Guestbook at geocompr.github.io](https://geocompr.github.io/guestbook/)) or by letting us know of [courses](https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md) using the book
-- [Citing](https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib) or [linking-to](https://geocompr.robinlovelace.net/) it
-- '[Starring](https://help.github.com/articles/about-stars/)' the [geocompr GitHub repository](https://github.com/robinlovelace/geocompr)
-- Reviewing it, e.g., on Amazon or [Goodreads](https://www.goodreads.com/book/show/42780859-geocomputation-with-r)
-- Asking questions about or making suggestion on the content via [GitHub](https://github.com/Robinlovelace/geocompr/issues/372) or Twitter.
-- [Buying](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577) a copy
+- En en parlant à d'autres personnes
+- En communiquant sur le livre dans les réseaux sociaux, par exemple, via [#geocompr hashtag](https://twitter.com/hashtag/geocompr) sur Twitter (cf. notre [**Guestbook** sur geocompr.github.io](https://geocompr.github.io/guestbook/)) ou en référençant les cours  [courses](https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md) mobilisant le livre
+- [Le citant](https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib) ou  [le metre en lien](https://geocompr.robinlovelace.net/)
+- '[Starring](https://help.github.com/articles/about-stars/)' le [dépôt GitHub geocompr](https://github.com/robinlovelace/geocompr)
+- Ecrivant un recension, sur Amazon ou [Goodreads](https://www.goodreads.com/book/show/42780859-geocomputation-with-r)
+- Posant des questions ou faire des suggestions de contenus sur [GitHub](https://github.com/Robinlovelace/geocompr/issues/372) ou Twitter.
+- [Achetant](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577) une copie
 
-Further details can be found at [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr#geocomputation-with-r).
+Plus de détails sur le [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr#geocomputation-with-r).
 
 <hr>
 
-The globe icon used in this book was created by [Jean-Marc Viglino](https://github.com/Viglino) and is licensed under [CC-BY 4.0 International](https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md).
+L'icône du globe utilisé en couverture de ce livre a été créé par [Jean-Marc Viglino](https://github.com/Viglino) et est sous licence [CC-BY 4.0 International](https://github.com/Viglino/font-gis/blob/main/LICENSE-CC-BY.md).
 
 <a href="https://www.netlify.com"><img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg"/></a>
 
