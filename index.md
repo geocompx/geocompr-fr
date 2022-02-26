@@ -42,9 +42,9 @@ L'état actuel de sa construction est le suivant :
 
 [![Actions](https://github.com/Robinlovelace/geocompr/workflows/Render/badge.svg)](https://github.com/geocompr/fr/actions)
 
-This version of the book was built on GH Actions on 2022-02-26.
+Cette version du livre en français a été produite via l'action GitHub du 2022-02-26.
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br /> Ce travail est sous licence : <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 
 ## Comment contribuer ? {-}
 
@@ -106,7 +106,7 @@ La page [GitHub repo](https://github.com/robinlovelace/geocompr#reproducing-the-
 Si vous trouvez ce livre utile (sa traduction ou sa version originale), vous pouvez le soutenir :
 
 - En en parlant à d'autres personnes
-- En communiquant sur le livre dans les réseaux sociaux, par exemple, via [#geocompr hashtag](https://twitter.com/hashtag/geocompr) sur Twitter (cf. notre [**Guestbook** sur geocompr.github.io](https://geocompr.github.io/guestbook/)) ou en référençant les cours  [courses](https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md) mobilisant le livre
+- En communiquant sur le livre dans les réseaux sociaux, par exemple, via [#geocompr hashtag](https://twitter.com/hashtag/geocompr) sur Twitter (cf. notre [**Guestbook** sur geocompr.github.io](https://geocompr.github.io/guestbook/)) ou en référençant les [cours](https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md) mobilisant le livre
 - [Le citant](https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib) ou  [le metre en lien](https://geocompr.robinlovelace.net/)
 - '[Starring](https://help.github.com/articles/about-stars/)' le [dépôt GitHub geocompr](https://github.com/robinlovelace/geocompr)
 - Ecrivant un recension, sur Amazon ou [Goodreads](https://www.goodreads.com/book/show/42780859-geocomputation-with-r)
