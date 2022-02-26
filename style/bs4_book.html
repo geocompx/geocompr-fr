@@ -65,11 +65,11 @@
       </form>
 
       <nav aria-label="Table of contents">
-        <h2>Table of contents</h2>
+        <h2>Table des matières</h2>
         <div id="book-toc"></div>
 
         <div class="book-extra">
-          <p><a id="book-repo" href="#">View book source <i class="fab fa-github"></i></a></li></p>
+          <p><a id="book-repo" href="#">Code source du livre<i class="fab fa-github"></i></a></li></p>
         </div>
       </nav>
     </div>
@@ -89,23 +89,23 @@ $endfor$
   </main>
 
   <div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
-    <h2>Note: Second Edition is under construction 🏗</h2>
-    <p>Now is a great time to test in-development packages and provide feedback</p>
+    <h2>Note: La Seconde Edition est en construction 🏗</h2>
+    <p>C'est le moment idéal pour tester les paquets en cours de développement et fournir vos commentaires</p>
         <ul class="list-unstyled">
-          <li><a href="https://forms.gle/nq9RmbxJyZXQgc948">Provide feedback (5 min)</a></li>
-          <li><a href="https://geocompr.robinlovelace.net/#reproducibility">Install updated packages</a></li>
-          <li><a href="https://github.com/Robinlovelace/geocompr/issues">Open an issue <i class="fas fa-question"></i></a></li>
-          <li><a href="https://discord.gg/Te3gWeDwmf">Chat on Discord <i class="fab fa-discord"></i></a></li>
+          <li><a href="https://forms.gle/nq9RmbxJyZXQgc948">Fournir un commentaire (5 min)</a></li>
+          <li><a href="https://geocompr.robinlovelace.net/#reproducibility">Installer la dernière version</a></li>
+          <li><a href="https://github.com/Robinlovelace/geocompr/issues">Signaler un problème<i class="fas fa-question"></i></a></li>
+          <li><a href="https://discord.gg/Te3gWeDwmf">Discuter sur Discord <i class="fab fa-discord"></i></a></li>
         </ul>
         <hr>
     <nav id="toc" data-toggle="toc" aria-label="On this page">
-      <h2>On this page</h2>
+      <h2>Sur cette page</h2>
       <div id="book-on-this-page"></div>
 
       <div class="book-extra">
         <ul class="list-unstyled">
-          <li><a id="book-source" href="#">View source <i class="fab fa-github"></i></a></li>
-          <li><a id="book-edit" href="#">Edit this page <i class="fab fa-github"></i></a></li>
+          <li><a id="book-source" href="#">Code source<i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="#">Editer cette page <i class="fab fa-github"></i></a></li>
         </ul>
       </div>
     </nav>
@@ -118,11 +118,11 @@ $endfor$
   <div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>$title$</strong>$if(subtitle)$: $subtitle$$endif$" was written by $for(author)$$author$$sep$, $endfor$. $if(date)$It was last built on $date$.$endif$</p>
+    <p>"<strong>$title$</strong>$if(subtitle)$: $subtitle$$endif$" a été ecris par $for(author)$$author$$sep$, $endfor$. $if(date)$ et sa dernière mise en ligne date de  $date$.$endif$</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
-    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+    <p>Ce livre a été ecris grâce à <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
   </div>
 
 </div></div>
