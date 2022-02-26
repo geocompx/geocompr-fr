@@ -392,15 +392,15 @@ FIGURE 2.5: Pays coloriés par continents et leurs populations en 2015 populatio
 <p>
 La méthode plot de <strong>sf</strong> possède également des arguments spécifiques aux données géographiques. <code>expandBB</code>, par exemple, peut être utilisé pour dessiner un objet <code>sf</code> dans son contexte :
 elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en lsuivant l’ordre : bas, gauche, haut, droite.
-C’est ce que nous avons utilisé dans le morceau de code suivant pour représenter l’Inde dans le contexte de ses gigantesques voisins asiatiques, en mettant l’accent sur la Chine à l’est <a href="spatial-class.html#fig:china">2.6</a> (voir les ci-dessous sur l’ajout de texte aux graphiques) :</p>
+C’est ce que nous avons utilisé dans le morceau de code suivant pour représenter l’Inde et les pays avoisinants de ses gigantesques voisins asiatiques, en mettant l’accent sur la Chine à l’est <a href="spatial-class.html#fig:china">2.6</a> (voir les ci-dessous sur l’ajout de texte aux graphiques) :</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">india</span> <span class="op">=</span> <span class="va">world</span><span class="op">[</span><span class="va">world</span><span class="op">$</span><span class="va">name_long</span> <span class="op">==</span> <span class="st">"India"</span>, <span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">india</span><span class="op">)</span>, expandBB <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"gray"</span>, lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">world_asia</span><span class="op">[</span><span class="fl">0</span><span class="op">]</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:china"></span>
-<img src="02-spatial-data_files/figure-html/china-1.png" alt="L'Inde en contexte, demonstration de l'argument the expandBB." width="50%"><p class="caption">
-FIGURE 2.6: L’Inde en contexte, demonstration de l’argument the expandBB.
+<img src="02-spatial-data_files/figure-html/china-1.png" alt="L'Inde et les pays avoisinants, demonstration de l'argument the expandBB." width="50%"><p class="caption">
+FIGURE 2.6: L’Inde et les pays avoisinants, demonstration de l’argument the expandBB.
 </p>
 </div>
 <p>Notez l’utilisation de <code>[0]</code> pour ne garder que la colonne de géométrie et de <code>lwd</code> pour mettre l’accent sur l’Inde.
@@ -1102,30 +1102,30 @@ Par conséquent, sa résolution est également donnée en degrés décimaux, mai
 <h2>
 <span class="header-section-number">2.6</span> Exercises<a class="anchor" aria-label="anchor" href="#ex2"><i class="fas fa-link"></i></a>
 </h2>
-<p>E1. Use <code><a href="https://rdrr.io/pkg/terra/man/summary.html">summary()</a></code> on the geometry column of the <code>world</code> data object that is included in the <strong>spData</strong> package. What does the output tell us about:</p>
+<p>E1. Utilisez <code><a href="https://rdrr.io/pkg/terra/man/summary.html">summary()</a></code> sur la colonne géométrie de l’objet de données <code>world</code> qui est inclus dans le paquet <strong>spData</strong>. Qu’en déduisez vous sur :</p>
 <ul>
-<li>Its geometry type?</li>
-<li>The number of countries?</li>
-<li>Its coordinate reference system (CRS)?</li>
+<li>Son type de géométrie ?</li>
+<li>Le nombre de pays ?</li>
+<li>Son système de coordonnées et de référence (SCR) ?</li>
 </ul>
-<p>E2. Run the code that ‘generated’ the map of the world in Section 2.2.3 (Basic map making).
-Find two similarities and two differences between the image on your computer and that in the book.</p>
+<p>E2. Exécutez le code qui a “généré” la carte du monde dans la section 2.2.3 (Création de cartes de base).
+Trouvez deux similitudes et deux différences entre l’image sur votre ordinateur et celle du livre.</p>
 <ul>
-<li>What does the <code>cex</code> argument do (see <code><a href="https://rdrr.io/pkg/terra/man/plot.html">?plot</a></code>)?</li>
-<li>Why was <code>cex</code> set to the <code>sqrt(world$pop) / 10000</code>?</li>
-<li>Bonus: experiment with different ways to visualize the global population.</li>
+<li>Que fait l’argument <code>cex</code> (voir <code><a href="https://rdrr.io/pkg/terra/man/plot.html">?plot</a></code>) ?</li>
+<li>Pourquoi le paramètre <code>cex</code> a-t-il été fixé à <code>sqrt(world$pop) / 10000</code> ?</li>
+<li>Bonus : expérimentez différentes façons de visualiser la population mondiale.</li>
 </ul>
-<p>E3. Use <code><a href="https://rdrr.io/pkg/terra/man/plot.html">plot()</a></code> to create maps of Nigeria in context (see Section 2.2.3).</p>
+<p>E3. Utilisez <code><a href="https://rdrr.io/pkg/terra/man/plot.html">plot()</a></code> pour créer des cartes du Nigeria et les pays avoisinants (voir section 2.2.3).</p>
 <ul>
-<li>Adjust the <code>lwd</code>, <code>col</code> and <code>expandBB</code> arguments of <code><a href="https://rdrr.io/pkg/terra/man/plot.html">plot()</a></code>.</li>
-<li>Challenge: read the documentation of <code><a href="https://rdrr.io/pkg/sp/man/gridlines.html">text()</a></code> and annotate the map.</li>
+<li>Ajustez les arguments <code>lwd</code>, <code>col</code> et <code>expandBB</code> de <code><a href="https://rdrr.io/pkg/terra/man/plot.html">plot()</a></code>.</li>
+<li>Défi! : lisez la documentation de <code><a href="https://rdrr.io/pkg/sp/man/gridlines.html">text()</a></code> et annotez la carte.</li>
 </ul>
-<p>E4. Create an empty <code>SpatRaster</code> object called <code>my_raster</code> with 10 columns and 10 rows.
-Assign random values between 0 and 10 to the new raster and plot it.</p>
-<p>E5. Read-in the <code>raster/nlcd.tif</code> file from the <strong>spDataLarge</strong> package.
-What kind of information can you get about the properties of this file?</p>
-<p>E6. Check the CRS of the <code>raster/nlcd.tif</code> file from the <strong>spDataLarge</strong> package.
-What kind of information you can learn from it?</p>
+<p>E4. Créez un objet <code>SpatRaster</code> vide appelé <code>mon_raster</code> avec 10 colonnes et 10 lignes.
+Attribuez des valeurs aléatoires entre 0 et 10 au nouveau raster et représentez-le.</p>
+<p>E5. Lisez le fichier <code>raster/nlcd.tif</code> du paquet <strong>spDataLarge</strong>.
+Quel type d’information pouvez-vous obtenir sur les propriétés de ce fichier ?</p>
+<p>E6. Regardez le SCR du fichier <code>raster/nlcd.tif</code> du paquet <strong>spDataLarge</strong>.
+Quel type d’information pouvez-vous en tirer ?</p>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-akima_akima_2016" class="csl-entry">

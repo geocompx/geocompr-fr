@@ -394,7 +394,7 @@ Le code ci-dessus utilise la fonction `st_centroid()` pour convertir un type de 
 \index{bounding box}
 La méthode plot de **sf** possède également des arguments spécifiques aux données géographiques. `expandBB`, par exemple, peut être utilisé pour dessiner un objet `sf` dans son contexte :
 elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en  lsuivant l'ordre : bas, gauche, haut, droite.
-C'est ce que nous avons utilisé dans le morceau de code suivant pour représenter l'Inde dans le contexte de ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
+C'est ce que nous avons utilisé dans le morceau de code suivant pour représenter l'Inde et les pays avoisinants de ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
 
 
 ```r
@@ -404,8 +404,8 @@ plot(world_asia[0], add = TRUE)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="02-spatial-data_files/figure-html/china-1.png" alt="L'Inde en contexte, demonstration de l'argument the expandBB." width="50%" />
-<p class="caption">(\#fig:china)L'Inde en contexte, demonstration de l'argument the expandBB.</p>
+<img src="02-spatial-data_files/figure-html/china-1.png" alt="L'Inde et les pays avoisinants, demonstration de l'argument the expandBB." width="50%" />
+<p class="caption">(\#fig:china)L'Inde et les pays avoisinants, demonstration de l'argument the expandBB.</p>
 </div>
 
 Notez l'utilisation de `[0]` pour ne garder que la colonne de géométrie et de `lwd` pour mettre l'accent sur l'Inde.
@@ -1245,42 +1245,42 @@ Encore une fois, la commande `res()` renvoie un tableau numérique sans unité, 
 ## Exercises {#ex2}
 
 
-E1. Use `summary()` on the geometry column of the `world` data object that is included in the **spData** package. What does the output tell us about:
+E1. Utilisez `summary()` sur la colonne géométrie de l'objet de données `world` qui est inclus dans le paquet **spData**. Qu'en déduisez vous sur :
 
-- Its geometry type?
-- The number of countries?
-- Its coordinate reference system (CRS)?
+- Son type de géométrie ?
+- Le nombre de pays ?
+- Son système de coordonnées et de référence (SCR) ?
     
 
 
-E2. Run the code that 'generated' the map of the world in Section 2.2.3 (Basic map making).
-Find two similarities and two differences between the image on your computer and that in the book.
+E2. Exécutez le code qui a "généré" la carte du monde dans la section 2.2.3 (Création de cartes de base).
+Trouvez deux similitudes et deux différences entre l'image sur votre ordinateur et celle du livre.
 
-- What does the `cex` argument do (see `?plot`)?
-- Why was `cex` set to the `sqrt(world$pop) / 10000`?
-- Bonus: experiment with different ways to visualize the global population.
-
-
-
-E3. Use `plot()` to create maps of Nigeria in context (see Section 2.2.3).
-
-- Adjust the `lwd`, `col` and `expandBB` arguments of `plot()`. 
-- Challenge: read the documentation of `text()` and annotate the map.
+- Que fait l'argument `cex` (voir `?plot`) ?
+- Pourquoi le paramètre `cex` a-t-il été fixé à `sqrt(world$pop) / 10000` ?
+- Bonus : expérimentez différentes façons de visualiser la population mondiale.
 
 
 
-E4. Create an empty `SpatRaster` object called `my_raster` with 10 columns and 10 rows.
-Assign random values between 0 and 10 to the new raster and plot it.
+E3. Utilisez `plot()` pour créer des cartes du Nigeria et les pays avoisinants (voir section 2.2.3).
+
+- Ajustez les arguments `lwd`, `col` et `expandBB` de `plot()`. 
+- Défi! : lisez la documentation de `text()` et annotez la carte.
 
 
 
-E5. Read-in the `raster/nlcd.tif` file from the **spDataLarge** package. 
-What kind of information can you get about the properties of this file?
+E4. Créez un objet `SpatRaster` vide appelé `mon_raster` avec 10 colonnes et 10 lignes.
+Attribuez des valeurs aléatoires entre 0 et 10 au nouveau raster et représentez-le.
 
 
 
-E6. Check the CRS of the `raster/nlcd.tif` file from the **spDataLarge** package. 
-What kind of information you can learn from it?
+E5. Lisez le fichier `raster/nlcd.tif` du paquet **spDataLarge**. 
+Quel type d'information pouvez-vous obtenir sur les propriétés de ce fichier ?
+
+
+
+E6. Regardez le SCR du fichier `raster/nlcd.tif` du paquet **spDataLarge**. 
+Quel type d'information pouvez-vous en tirer ?
 
 
 

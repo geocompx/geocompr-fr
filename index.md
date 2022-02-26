@@ -99,7 +99,7 @@ bookdown::serve_book(".")
 
 
 
-La page [GitHub repo](https://github.com/robinlovelace/geocompr#reproducing-the-book) contient plus de détail pour reproduire ce livre.
+La page [GitHub](https://github.com/robinlovelace/geocompr#reproducing-the-book) contient plus de détail pour reproduire ce livre.
 
 ##  Soutenir le projet {-}
 
