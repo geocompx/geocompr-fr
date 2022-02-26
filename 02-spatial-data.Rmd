@@ -350,7 +350,7 @@ Le code ci-dessus utilise la fonction `st_centroid()` pour convertir un type de 
 \index{bounding box}
 La méthode plot de **sf** possède également des arguments spécifiques aux données géographiques. `expandBB`, par exemple, peut être utilisé pour dessiner un objet `sf` dans son contexte :
 elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en  lsuivant l'ordre : bas, gauche, haut, droite.
-C'est ce que nous avons utilisé dans le morceau de code suivant pour représenter l'Inde dans le contexte de ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
+C'est ce que nous avons utilisé dans le morceau de code suivant pour représenter l'Inde et les pays avoisinants de ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
 
 ```{r 02-spatial-data-17, eval=FALSE}
 india = world[world$name_long == "India", ]
@@ -358,7 +358,7 @@ plot(st_geometry(india), expandBB = c(0, 0.2, 0.1, 1), col = "gray", lwd = 3)
 plot(world_asia[0], add = TRUE)
 ```
 
-```{r china, fig.cap="L'Inde en contexte, demonstration de l'argument the expandBB.", warning=FALSE, echo=FALSE, out.width="50%"}
+```{r china, fig.cap="L'Inde et les pays avoisinants, demonstration de l'argument the expandBB.", warning=FALSE, echo=FALSE, out.width="50%"}
 old_par = par(mar = rep(0, 4))
 india = world[world$name_long == "India", ]
 indchi = world_asia[grepl("Indi|Chi", world_asia$name_long), ]

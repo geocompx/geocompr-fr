@@ -131,7 +131,7 @@ if(!geocompkg_is_installed){
 ```
 
 ```{asis index-23, echo=is_html}
-La page [GitHub repo](https://github.com/robinlovelace/geocompr#reproducing-the-book) contient plus de détail pour reproduire ce livre.
+La page [GitHub](https://github.com/robinlovelace/geocompr#reproducing-the-book) contient plus de détail pour reproduire ce livre.
 ```
 
 ```{asis index-22, echo=is_html}

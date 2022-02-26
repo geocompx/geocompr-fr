@@ -5,58 +5,58 @@ library(spData)
 library(terra)
 ```
 
-E1. Use `summary()` on the geometry column of the `world` data object that is included in the **spData** package. What does the output tell us about:
+E1. Utilisez `summary()` sur la colonne géométrie de l'objet de données `world` qui est inclus dans le paquet **spData**. Qu'en déduisez vous sur :
 
-- Its geometry type?
-- The number of countries?
-- Its coordinate reference system (CRS)?
+- Son type de géométrie ?
+- Le nombre de pays ?
+- Son système de coordonnées et de référence (SCR) ?
     
 ```{r 02-ex-e1}
 summary(world)
-# - Its geometry type?
+# - Son type de géométrie ?
 #   multipolygon
-# - The number of countries?
+# - Le nombre de pays ?
 #   177
-# - Its coordinate reference system (CRS)?
+# - Son système de coordonnées et de référence (SCR) ?
 #   epsg:4326
 ```
 
-E2. Run the code that 'generated' the map of the world in Section 2.2.3 (Basic map making).
-Find two similarities and two differences between the image on your computer and that in the book.
+E2. Exécutez le code qui a "généré" la carte du monde dans la section 2.2.3 (Création de cartes de base).
+Trouvez deux similitudes et deux différences entre l'image sur votre ordinateur et celle du livre.
 
-- What does the `cex` argument do (see `?plot`)?
-- Why was `cex` set to the `sqrt(world$pop) / 10000`?
-- Bonus: experiment with different ways to visualize the global population.
+- Que fait l'argument `cex` (voir `?plot`) ?
+- Pourquoi le paramètre `cex` a-t-il été fixé à `sqrt(world$pop) / 10000` ?
+- Bonus : expérimentez différentes façons de visualiser la population mondiale.
 
 ```{r 02-ex-e2}
 plot(world["continent"], reset = FALSE)
 cex = sqrt(world$pop) / 10000
 world_cents = st_centroid(world, of_largest = TRUE)
 plot(st_geometry(world_cents), add = TRUE, cex = cex)
-# - What does the `cex` argument do (see `?plot`)?
-#   It specifies the size of the circles
-# - Why was `cex` set to the `sqrt(world$pop) / 10000`?
-#   So the circles would be visible for small countries but not too large for large countries, also because area increases as a linear function of the square route of the diameter defined by `cex`
-# - Bonus: experiment with different ways to visualize the global population.
+# -  Que fait l'argument `cex` (voir `?plot`) ?
+#   Il spécifie la taille des cercles
+# - Pourquoi le paramètre `cex` a-t-il été fixé à `sqrt(world$pop) / 10000` ?
+#   Ainsi les cercles seront visibles pour les petits pays mais pas trop grands pour les grands pays, aussi parce que la surface augmente comme une fonction linéaire de la racine carrée du diamètre défini par `cex`.
+# - Bonus : expérimentez différentes manières de visualiser la population mondiale.
 plot(st_geometry(world_cents), cex = world$pop / 1e9)
 plot(st_geometry(world_cents), cex = world$pop / 1e8)
 plot(world["pop"])
 plot(world["pop"], logz = TRUE)
 
-# Similarities: global extent, colorscheme, relative size of circles
+# Similitudes : étendue globale, schéma de couleurs, taille relative des cercles.
 # 
-# Differences: projection (Antarctica is much smaller for example), graticules, location of points in the countries.
+# Différences : projection (l'Antarctique est beaucoup plus petit par exemple), graticules, localisation des points dans les pays.
 # 
-# To understand these differences read-over, run, and experiment with different argument values in this script: https://github.com/Robinlovelace/geocompr/raw/main/code/02-contpop.R
+# Pour comprendre ces différences, relisez, exécutez et expérimentez avec différentes valeurs d'arguments dans ce script : https://github.com/Robinlovelace/geocompr/raw/main/code/02-contpop.R
 # 
-# `cex` refers to the diameter of symbols plotted, as explained by the help page `?graphics::points`. It is an acronym for 'Chacter symbol EXpansion'.
-# It was set to the square route of the population divided by 10,000 because a) otherwise the symbols would not fit on the map and b) to make circle area proportional to population.
+# `cex` fait référence au diamètre des symboles représentés, comme expliqué par la page d'aide `?graphics::points`. C'est l'acronyme de "Chacter symbol EXpansion"
+# Elle a été fixée au carré de la population divisé par 10 000 parce que a) sinon les symboles ne tiendraient pas sur la carte et b) pour que la surface du cercle soit proportionnelle à la population.
 ```
 
-E3. Use `plot()` to create maps of Nigeria in context (see Section 2.2.3).
+E3. Utilisez `plot()` pour créer des cartes du Nigeria et les pays avoisinants (voir section 2.2.3).
 
-- Adjust the `lwd`, `col` and `expandBB` arguments of `plot()`. 
-- Challenge: read the documentation of `text()` and annotate the map.
+- Ajustez les arguments `lwd`, `col` et `expandBB` de `plot()`. 
+- Défi! : lisez la documentation de `text()` et annotez la carte.
 
 ```{r 02-ex-e3}
 nigeria = world[world$name_long == "Nigeria", ]
@@ -65,7 +65,7 @@ plot(world[0], add = TRUE)
 world_coords = st_coordinates(world_cents)
 text(world_coords, world$iso_a2)
 
-# Alternative answer:
+# réponse alternative:
 nigeria = world[world$name_long == "Nigeria", ]
 africa = world[world$continent == "Africa", ]
 plot(st_geometry(nigeria), col = "white", lwd = 3, main = "Nigeria in context", border = "lightgrey", expandBB = c(0.5, 0.2, 0.5, 0.2))
@@ -77,39 +77,39 @@ ncentre_num = st_coordinates(ncentre)
 text(x = ncentre_num[, 1], y = ncentre_num[, 2], labels = a$name_long)
 ```
 
-E4. Create an empty `SpatRaster` object called `my_raster` with 10 columns and 10 rows.
-Assign random values between 0 and 10 to the new raster and plot it.
+E4. Créez un objet `SpatRaster` vide appelé `mon_raster` avec 10 colonnes et 10 lignes.
+Attribuez des valeurs aléatoires entre 0 et 10 au nouveau raster et représentez-le.
 
 ```{r 02-ex-e4, message = FALSE}
-my_raster = rast(ncol = 10, nrow = 10,
+mon_raster = rast(ncol = 10, nrow = 10,
                  vals = sample(0:10, size = 10 * 10, replace = TRUE))
-plot(my_raster)
+plot(mon_raster)
 ```
 
-E5. Read-in the `raster/nlcd.tif` file from the **spDataLarge** package. 
-What kind of information can you get about the properties of this file?
+E5. Lisez le fichier `raster/nlcd.tif` du paquet **spDataLarge**. 
+Quel type d'information pouvez-vous obtenir sur les propriétés de ce fichier ?
 
 ```{r 02-ex-e5, message = FALSE}
 nlcd = rast(system.file("raster/nlcd.tif", package = "spDataLarge"))
 dim(nlcd) # dimensions
-res(nlcd) # resolution
-ext(nlcd) # extent
-nlyr(nlcd) # number of layers
-cat(crs(nlcd)) # CRS
+res(nlcd) # résolution
+ext(nlcd) # étendue
+nlyr(nlcd) # nombre de couches
+cat(crs(nlcd)) # SCR
 ```
 
-E6. Check the CRS of the `raster/nlcd.tif` file from the **spDataLarge** package. 
-What kind of information you can learn from it?
+E6. Regardez le SCR du fichier `raster/nlcd.tif` du paquet **spDataLarge**. 
+Quel type d'information pouvez-vous en tirer ?
 
 ```{r 02-ex-e6, message = FALSE}
 cat(crs(nlcd))
 ```
 
 ```{asis, message = FALSE}
-The WKT above describes a two-dimensional projected coordinate reference system.
-It is based on the GRS 1980 ellipsoid with  North American Datum 1983  and the Greenwich prime meridian.
-It used the Transverse Mercator projection to transform from geographic to projected CRS (UTM zone 12N).
-Its first axis is related to eastness, while the second one is related to northness, and both axes have units in meters.
-The SRID of the above CRS is "EPSG:26912".
+Le WKT ci-dessus décrit un système de coordonnées et de référence   projetées à deux dimensions.
+Il est basé sur l'ellipsoïde GRS 1980 avec le North American Datum 1983 et le méridien d'origine de Greenwich.
+Il utilise la projection de Mercator transverse pour passer du système géographique au système de référence projeté (zone UTM 12N).
+Son premier axe est lié à l'est, tandis que le second est lié au nord, et les deux axes ont des unités en mètres.
+Le SRID du CRS ci-dessus est "EPSG:26912".
 ```
 
