@@ -57,16 +57,16 @@ Le chapitre \@ref(spatial-operations) étend les méthodes présentées ici au m
 Après une exploration en profondeur dans les différents types d'opérations sur les attributs *vectoriels*, les opérations sur les données attributaires *raster* sont abordées dans la section \@ref(manipulating-raster-objects). Elle montrera comment créer des couches raster contenant des attributs continus et catégoriels et comment extraire les valeurs des cellules d'une ou de plusieurs couches (sous-ensemble raster). 
 La section \@ref(summarizing-raster-objects) fournit une vue d'ensemble des calculs matricielles "globaux" qui peuvent être utilisées pour résumer des jeux de données raster entiers.
 
-## Vector attribute manipulation
+## Manipulations des attributs de données vectorielles. 
 
-Geographic vector datasets are well supported in R thanks to the `sf` class, which extends base R's `data.frame`.
-Like data frames, `sf` objects have one column per attribute variable (such as 'name') and one row per observation or *feature* (e.g., per bus station).
-`sf` objects differ from basic data frames because they have a `geometry` column of class `sfc` which can contain a range of geographic entities (single and 'multi' point, line, and polygon features) per row.
-This was described in Chapter \@ref(spatial-class), which demonstrated how *generic methods* such as `plot()` and `summary()` work with `sf` objects.
-**sf** also provides generics that allow `sf` objects to behave like regular data frames, as shown by printing the class's methods:
+Les jeux de données géographiques vectorielles sont bien supportés dans R grâce à la classe `sf`, qui étend la classe `data.frame` de R.
+Comme les tableaux de données, les objets `sf` ont une colonne par variable attributaire (comme le 'nom') et une ligne par observation ou *élément* (par exemple, par station de bus).
+Les objets `sf` diffèrent des cadres de données de base parce qu'ils ont une colonne `geometry` de la classe `sfc` qui peut contenir une gamme d'entités géographiques (points simples et 'multi', lignes et polygones) par ligne.
+Ceci a été décrit dans le chapitre \@ref(spatial-class), qui a démontré comment les *méthodes génériques* telles que `plot()` et `summary()` fonctionnent avec les objets `sf`.
+**sf** fournit également des méthodes génériques permettant aux objets `sf` de se comporter comme des tableaux de données ordinaires, comme le montre l'impression des méthodes de la classe :
 
 ```{r 03-attribute-operations-3, eval=FALSE}
-methods(class = "sf") # methods for sf objects, first 12 shown
+methods(class = "sf") # liste des 12 premières méthodes possibles avec la class sf 
 ```
 
 ```{r 03-attribute-operations-4}
@@ -77,40 +77,40 @@ methods(class = "sf") # methods for sf objects, first 12 shown
 ```
 
 ```{r 03-attribute-operations-5, eval=FALSE, echo=FALSE}
-# Another way to show sf methods:
+# Une autre manière de lister les méthodes associées à la classe sf:
 attributes(methods(class = "sf"))$info %>% 
   dplyr::filter(!visible)
 ```
 
-Many of these (`aggregate()`, `cbind()`, `merge()`, `rbind()` and `[`) are for manipulating data frames.
-`rbind()`, for example, is binds rows two data frames together, one 'on top' of the other.
-`$<-` creates new columns. 
-A key feature of `sf` objects is that they store spatial and non-spatial data in the same way, as columns in a `data.frame`.
+Beaucoup d'entre elles (`aggregate()`, `cbind()`, `merge()`, `rbind()` et `[`) servent à manipuler des tableaux de données.
+`rbind()`, par exemple, lie deux tableaux de données, l'un "au-dessus" de l'autre.
+`$<-` crée de nouvelles colonnes. 
+Une caractéristique essentielle des objets `sf` est qu'ils stockent des données spatiales et non spatiales de la même manière, comme des colonnes dans un `data.frame`.
 
 ```{block2 03-attribute-operations-6, type = 'rmdnote'}
-The geometry column of `sf` objects is typically called `geometry` or `geom` but any name can be used.
-The following command, for example, creates a geometry column named g:
+La colonne géométrique des objets `sf` est typiquement appelée `geometry` ou `geom` mais n´importe quel nom peut être utilisé.
+La commande suivante, par exemple, crée une colonne géométrique nommée g :
   
 `st_sf(data.frame(n = world$name_long), g = world$geom)`
 
-This enables geometries imported from spatial databases to have a variety of names such as `wkb_geometry` and `the_geom`.
+Cela permet aux géométries importées des bases de données spatiales d´avoir une variété de noms tels que `wkb_geometry` et `the_geom`.
 ```
 
-`sf` objects can also extend the `tidyverse` classes for data frames, `tibble` and `tbl`.
+Les objets `sf` peuvent également étendre les classes `tidyverse` pour les tableaux de données, `tibble` et `tbl`.
 \index{tidyverse (package)}.
-Thus **sf** enables the full power of R's data analysis capabilities to be unleashed on geographic data, whether you use base R or tidyverse functions for data analysis.
+Ainsi, **sf** permet d'utiliser toute la puissance des capacités d'analyse de données de R sur les données géographiques, que vous utilisiez les fonctions de base de R ou du tidyverse pour l'analyse des données.
 \index{tibble}
-(See [`Rdatatable/data.table#2273`](https://github.com/Rdatatable/data.table/issues/2273) for discussion of compatibility between `sf` objects and the fast `data.table` package.)
-Before using these capabilities it is worth re-capping how to discover the basic properties of vector data objects.
-Let's start by using base R functions to learn about the `world` dataset from the **spData** package:
+(Voir [`Rdatatable/data.table#2273`](https://github.com/Rdatatable/data.table/issues/2273) pour une discussion sur la compatibilité entre les objets `sf` et le paquet `data.table` très rapide).
+Avant d'utiliser ces capacités, il est utile de rappeler comment découvrir les propriétés de base des objets de données vectorielles.
+Commençons par utiliser les fonctions de base de R pour découvrir l'ensemble de données `world` du paquet **spData**.
 
 ```{r 03-attribute-operations-7}
-class(world) # it's an sf object and a (tidy) data frame
-dim(world)   # it is a 2 dimensional object, with 177 rows and 11 columns
+class(world) # c'est un objet sf et un (tidy) data.frame
+dim(world)   # c'est un objet de deux dimensions avec 177 lignes et 11 colonnes
 ```
 
-`world` contains ten non-geographic columns (and one geometry list column) with almost 200 rows representing the world's countries.
-The function `st_drop_geometry()` keeps only the attributes data of an `sf` object, in other words removing its geometry:
+`world` contient dix colonnes non-géographiques (et une colonne de liste de géométrie) avec presque 200 lignes représentant les pays du monde.
+La fonction `st_drop_geometry()` ne conserve que les données des attributs d'un objet `sf`, c'est-à-dire qu'elle supprime sa géométrie.
 
 ```{r 03-attribute-operations-8}
 world_df = st_drop_geometry(world)

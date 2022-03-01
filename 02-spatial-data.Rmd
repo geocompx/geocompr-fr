@@ -999,7 +999,7 @@ Elle accepte un numéro de couche ou son nom comme second argument :
 
 ```{r}
 multi_rast3 = subset(multi_rast, 3)
-multi_rast4 = subset(multi_rast, 4)
+multi_rast4 = subset(multi_rast, "landsat_4")
 ```
 
 L'opération inverse, qui consiste à combiner plusieurs objets `SpatRaster` en un seul, peut être réalisée à l'aide de la fonction `c` :
