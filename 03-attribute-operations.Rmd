@@ -310,11 +310,11 @@ knitr::kable(tibble(Symbole = operators, Nom = operators_exp),
              booktabs = TRUE)
 ```
 
-### Chaining commands with pipes
+### Enchainement de commandes avec des *pipes*
 
-Key to workflows using **dplyr** functions is the ['pipe'](http://r4ds.had.co.nz/pipes.html) operator `%>%` (or since R `4.1.0` the native pipe `|>`), which takes its name from the Unix pipe `|` [@grolemund_r_2016].
-Pipes enable expressive code: the output of a previous function becomes the first argument of the next function, enabling *chaining*.
-This is illustrated below, in which only countries from Asia are filtered from the `world` dataset, next the object is subset by columns (`name_long` and `continent`) and the first five rows (result not shown).
+La clé des flux de travail utilisant les fonctions **dplyr** est l'opérateur ['pipe'](http://r4ds.had.co.nz/pipes.html) `%>%` (ou depuis R `4.1.0` le *pipe* natif `|>`), qui tire son nom du *pipe* Unix `|` [@grolemund_r_2016].
+Les *pipes* permettent un code expressif : la sortie d'une fonction précédente devient le premier argument de la fonction suivante, permettant l'*enchaînement*.
+Ceci est illustré ci-dessous, dans lequel seuls les pays d'Asie sont filtrés de l'ensemble de données `world`, l'objet est ensuite sélectionné par les colonnes (`name_long` et `continent`) et les cinq premières lignes (résultat non montré).
 
 ```{r 03-attribute-operations-24}
 world7 = world %>%
@@ -323,9 +323,9 @@ world7 = world %>%
   slice(1:5)
 ```
 
-The above chunk shows how the pipe operator allows commands to be written in a clear order:
-the above run from top to bottom (line-by-line) and left to right.
-The alternative to `%>%` is nested function calls, which is harder to read:
+Les lignes de code ci-dessus montre comment l'opérateur *pipe* permet d'écrire des commandes dans un ordre précis :
+les commandes ci-dessus sont écrites de haut en bas (ligne par ligne) et de gauche à droite.
+L'alternative à `%>%` est un appel de fonction imbriqué, ce qui est plus difficile à lire :
 
 ```{r 03-attribute-operations-25}
 world8 = slice(
@@ -335,15 +335,15 @@ world8 = slice(
   1:5)
 ```
 
-### Vector attribute aggregation
+### Agrégation sur la base des attributs de données vectorielles
 
 \index{attribute!aggregation}
 \index{aggregation}
-Aggregation involves summarizing data with one or more 'grouping variables', typically from columns in the data frame to be aggregated (geographic aggregation is covered in the next chapter).
-An example of attribute aggregation is calculating the number of people per continent based on country-level data (one row per country).
-The `world` dataset contains the necessary ingredients: the columns `pop` and `continent`, the population and the grouping variable, respectively.
-The aim is to find the `sum()` of country populations for each continent, resulting in a smaller data frame (aggregation is a form of data reduction and can be a useful early step when working with large datasets).
-This can be done with the base R function `aggregate()` as follows:
+L'agrégation consiste à résumer les données à l'aide d'une ou plusieurs "variables de regroupement", généralement issues des colonnes du tableau de données à agréger (l'agrégation géographique est traitée au chapitre suivant).
+Un exemple d'agrégation d'attributs est le calcul du nombre d'habitants par continent à partir des données par pays (une ligne par pays).
+Le jeu de données `world` contient les ingrédients nécessaires : les colonnes `pop` et `continent`, respectivement la population et la variable de regroupement.
+Le but est de trouver la `somme()` des populations des pays pour chaque continent, ce qui permet d'obtenir un tableau de données plus petit (l'agrégation est une forme de réduction des données et peut être une première étape utile lorsqu'on travaille avec de grands jeux de données).
+Ceci peut être fait avec la fonction de base de R `aggregate()` comme suit :
 
 ```{r 03-attribute-operations-26}
 world_agg1 = aggregate(pop ~ continent, FUN = sum, data = world,
@@ -351,10 +351,10 @@ world_agg1 = aggregate(pop ~ continent, FUN = sum, data = world,
 class(world_agg1)
 ```
 
-The result is a non-spatial data frame with six rows, one per continent, and two columns reporting the name and population of each continent (see Table \@ref(tab:continents) with results for the top 3 most populous continents).
+Le résultat est un tableau de données non spatialisées comportant six lignes, une par continent, et deux colonnes indiquant le nom et la population de chaque continent (voir le tableau \@ref(tab:continents) avec les résultats pour les 3 continents les plus peuplés).
 
-`aggregate()` is a [generic function](https://adv-r.hadley.nz/s3.html#s3-methods) which means that it behaves differently depending on its inputs. 
-**sf** provides the method `aggregate.sf()` which is activated automatically when `x` is an `sf` object and a `by` argument is provided:
+`aggregate()` est une [fonction générique] (https://adv-r.hadley.nz/s3.html#s3-methods) ce qui signifie qu'elle se comporte différemment en fonction de ses entrées. 
+**sf** fournit la méthode `aggregate.sf()` qui est activée automatiquement lorsque `x` est un objet `sf` et qu'un argument `by` est fourni :
 
 ```{r 03-attribute-operations-27}
 world_agg2 = aggregate(world["pop"], list(world$continent), FUN = sum, 
@@ -363,8 +363,8 @@ class(world_agg2)
 nrow(world_agg2)
 ```
 
-The resulting `world_agg2` object is a spatial object containing 8 features representing the continents of the world (and the open ocean).
-`group_by() %>% summarize()` is the **dplyr** equivalent of `aggregate()`, with the variable name provided in the `group_by()` function specifying the grouping variable and information on what is to be summarized passed to the `summarize()` function, as shown below:
+L'objet `world_agg2` résultant est un objet spatial contenant 8 entités représentant les continents du monde (et les océans).
+`group_by() %>% summarize()` est l'équivalent **dplyr** de `aggregate()`, avec le nom de variable fourni dans la fonction `group_by()` spécifiant la variable de regroupement et les informations sur ce qui doit être résumé passées à la fonction `summarize()`, comme indiqué ci-dessous :
 
 ```{r 03-attribute-operations-28}
 world_agg3 = world %>%
@@ -372,8 +372,8 @@ world_agg3 = world %>%
   summarize(pop = sum(pop, na.rm = TRUE))
 ```
 
-The approach may seem more complex but it has benefits: flexibility, readability, and control over the new column names.
-This flexibility is illustrated in the command below, which calculates not only the population but also the area and number of countries in each continent:
+Cette approche peut sembler plus complexe mais elle présente des avantages : flexibilité, lisibilité et contrôle sur les nouveaux noms de colonnes.
+Cette flexibilité est illustrée dans la commande ci-dessous, qui calcule non seulement la population mais aussi la superficie et le nombre de pays de chaque continent :
 
 ```{r 03-attribute-operations-29}
 world_agg4  = world %>% 
@@ -381,78 +381,78 @@ world_agg4  = world %>%
   summarize(pop = sum(pop, na.rm = TRUE), `area (sqkm)` = sum(area_km2), n = n())
 ```
 
-In the previous code chunk `pop`, `area (sqkm)` and `n` are column names in the result, and `sum()` and `n()` were the aggregating functions.
-These aggregating functions return `sf` objects with rows representing continents and geometries containing the multiple polygons representing each land mass and associated islands (this works thanks to the geometric operation 'union', as explained in Section \@ref(geometry-unions)).
+Dans le morceau de code précédent, `pop`, `area (sqkm)` et `n` sont des noms de colonnes dans le résultat, et `sum()` et `n()` sont les fonctions d'agrégation.
+Ces fonctions d'agrégation renvoient des objets `sf` avec des lignes représentant les continents et des géométries contenant les multiples polygones représentant chaque masse terrestre et les îles associées (cela fonctionne grâce à l'opération géométrique 'union', comme expliqué dans la section \@ref(geometry-unions)).
 
-Let's combine what we have learned so far about **dplyr** functions, by chaining multiple commands to summarize attribute data about countries worldwide by continent.
-The following command calculates population density (with `mutate()`), arranges continents by the number countries they contain (with `dplyr::arrange()`), and keeps only the 3 most populous continents (with `top_n()`), the result of which is presented in Table \@ref(tab:continents)):
+Combinons ce que nous avons appris jusqu'à présent sur les fonctions **dplyr**, en enchaînant plusieurs commandes pour résumer les données attributaires des pays du monde entier par continent.
+La commande suivante calcule la densité de population (avec `mutate()`), classe les continents selon le nombre de pays qu'ils contiennent (avec `dplyr::arrange()`), et ne conserve que les 3 continents les plus peuplés (avec `top_n()`), dont le résultat est présenté dans le Tableau \@ref(tab:continents)) :
 
 ```{r 03-attribute-operations-30}
 world_agg5 = world %>% 
-  st_drop_geometry() %>%                      # drop the geometry for speed
-  dplyr::select(pop, continent, area_km2) %>% # subset the columns of interest  
-  group_by(continent) %>%                     # group by continent and summarize:
-  summarize(Pop = sum(pop, na.rm = TRUE), Area = sum(area_km2), N = n()) %>%
-  mutate(Density = round(Pop / Area)) %>%     # calculate population density
-  top_n(n = 3, wt = Pop) %>%                  # keep only the top 3
-  arrange(desc(N))                            # arrange in order of n. countries
+  st_drop_geometry() %>%                      # enlève la colonne géométrie pour un gain de temps
+  dplyr::select(pop, continent, area_km2) %>% # sélectionne les colonnes d’intérêt  
+  group_by(continent) %>%                     # regroupe par continents et synthétise:
+  summarize(Pop = sum(pop, na.rm = TRUE), Superficie = sum(area_km2), N = n()) %>%
+  mutate(Densité = round(Pop / Area)) %>%     # calcule la densité de population
+  top_n(n = 3, wt = Pop) %>%                  # ne garde que les 3 plus importants
+  arrange(desc(N))                            # trie par ordre du nombre de pays
 ```
 
 ```{r continents, echo=FALSE}
 options(scipen = 999)
 knitr::kable(
   world_agg5,
-  caption = "The top 3 most populous continents ordered by population density (people per square km).",
-  caption.short = "Top 3 most populous continents.",
+  caption = "Les 3 continents les plus peuplés classés par densité de population (personnes par km carré).",
+  caption.short = "Les 3 continents les plus peuplés.",
   booktabs = TRUE
 )
 ```
 
 ```{block2 03-attribute-operations-31, type='rmdnote'}
-More details are provided in the help pages (which can be accessed via `?summarize` and `vignette(package = "dplyr")` and Chapter 5 of [R for Data Science](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarize). 
+Plus de détails sont fournis dans les pages d´aide (qui sont accessibles via `?summarize` et `vignette(package = "dplyr")` et le chapitre 5 de 5 of [R for Data Science](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarize). 
 ```
 
-###  Vector attribute joining
+###  Jointures attributaires de données vectorielles
 
-Combining data from different sources is a common task in data preparation. 
-Joins do this by combining tables based on a shared 'key' variable.
-**dplyr** has multiple join functions including `left_join()` and `inner_join()` --- see `vignette("two-table")` for a full list.
-These function names follow conventions used in the database language [SQL](http://r4ds.had.co.nz/relational-data.html) [@grolemund_r_2016, Chapter 13]; using them to join non-spatial datasets to `sf` objects is the focus of this section.
-**dplyr** join functions work the same on data frames and `sf` objects, the only important difference being the `geometry` list column.
-The result of data joins can be either an `sf` or `data.frame` object.
-The most common type of attribute join on spatial data takes an `sf` object as the first argument and adds columns to it from a `data.frame` specified as the second argument.
+La combinaison de données provenant de différentes sources est une tâche courante dans la préparation des données. 
+Les jointures le font en combinant des tables basées sur une variable "clé" partagée.
+**dplyr** possède plusieurs fonctions de jointure, dont `left_join()` et `inner_join()` --- voir `vignette("two-table")` pour une liste complète.
+Ces noms de fonctions suivent les conventions utilisées dans le langage des base de données [SQL](http://r4ds.had.co.nz/relational-data.html) [@grolemund_r_2016, Chapitre 13] ; leur utilisation pour joindre des ensembles de données non spatiales à des objets `sf` est l'objet de cette section.
+Les fonctions de jointure **dplyr** fonctionnent de la même manière sur les tableau de données et les objets `sf`, la seule différence importante étant la colonne de liste `geometry`.
+Le résultat des jointures de données peut être un objet `sf` ou `data.frame`.
+Le type le plus courant de jointure attributaures sur des données spatiales prend un objet `sf` comme premier argument et lui ajoute des colonnes à partir d'un `data.frame` spécifié comme second argument.
 \index{join}
 \index{attribute!join}
 
-To demonstrate joins, we will combine data on coffee production with the `world` dataset.
-The coffee data is in a data frame called `coffee_data` from the **spData** package (see `?coffee_data` for details).
-It has 3 columns:
-`name_long` names major coffee-producing nations and `coffee_production_2016` and `coffee_production_2017` contain estimated values for coffee production in units of 60-kg bags in each year.
-A 'left join', which preserves the first dataset, merges `world` with `coffee_data`:
+Pour démontrer les jointures, nous allons combiner les données sur la production de café avec l'ensemble de données `world`.
+Les données sur le café sont dans un tableau de données appelé `coffee_data` du paquet **spData** (voir `?coffee_data` pour plus de détails).
+Il comporte 3 colonnes :
+`name_long` nomme les principales nations productrices de café et `coffee_production_2016` et `coffee_production_2017` contiennent les valeurs estimées de la production de café en unités de sacs de 60 kg pour chaque année.
+Une "jointure gauche" (*left join*), qui préserve le premier ensemble de données, fusionne `world` avec `coffee_data` :
 
 ```{r 03-attribute-operations-32, warning=FALSE}
 world_coffee = left_join(world, coffee_data)
 class(world_coffee)
 ```
 
-Because the input datasets share a 'key variable' (`name_long`) the join worked without using the `by` argument (see `?left_join` for details).
-The result is an `sf` object identical to the original `world` object but with two new variables (with column indices 11 and 12) on coffee production.
-This can be plotted as a map, as illustrated in Figure \@ref(fig:coffeemap), generated with the `plot()` function below:
+Comme les données d'entrée partagent une "variable clé" (`name_long`), la jointure fonctionne sans utiliser l'argument `by` (voir `?left_join` pour plus de détails).
+Le résultat est un objet `sf` identique à l'objet original `world` mais avec deux nouvelles variables (indexées comme les colonne 11 et 12) sur la production de café.
+Cet objet peut être représenté sous forme de carte, comme l'illustre la figure \@ref(fig:coffeemap), générée avec la fonction `plot()` ci-dessous :
 
-```{r coffeemap, fig.cap="World coffee production (thousand 60-kg bags) by country, 2017. Source: International Coffee Organization.", fig.scap="World coffee production by country."}
+```{r coffeemap, fig.cap="Production mondiale de café (milliers de sacs de 60 kg) par pays, 2017. Source : Organisation internationale du café.", fig.scap="Production mondiale de café par pays."}
 names(world_coffee)
 plot(world_coffee["coffee_production_2017"])
 ```
 
-For joining to work, a 'key variable' must be supplied in both datasets.
-By default **dplyr** uses all variables with matching names.
-In this case, both `world_coffee` and `world` objects contained a variable called `name_long`, explaining the message `Joining, by = "name_long"`.
-In the majority of cases where variable names are not the same, you have two options:
+Pour que la jointure fonctionne, une "variable clé" doit être fournie dans les deux ensembles de données.
+Par défaut, **dplyr** utilise toutes les variables dont le nom correspond.
+Dans ce cas, les deux objets `world_coffee` et `world` contenaient une variable appelée `name_long`, expliquant le message `Joining, by = "name_long"`.
+Dans la majorité des cas où les noms des variables ne sont pas les mêmes, vous avez deux options :
 
-1. Rename the key variable in one of the objects so they match.
-2. Use the `by` argument to specify the joining variables.
+1. Renommez la variable clé dans l'un des objets pour qu'ils correspondent.
+2. Utiliser l'argument `by` pour spécifier les variables de jonction.
 
-The latter approach is demonstrated below on a renamed version of `coffee_data`:
+Cette dernière approche est démontrée ci-dessous sur une version renommée de `coffee_data` :
 
 ```{r 03-attribute-operations-33, warning=FALSE}
 coffee_renamed = rename(coffee_data, nm = name_long)
@@ -477,17 +477,17 @@ world_coffee_inner = inner_join(world, coffee_data)
 nrow(world_coffee_inner)
 ```
 
-Note that the result of `inner_join()` has only 45 rows compared with 47 in `coffee_data`.
-What happened to the remaining rows?
-We can identify the rows that did not match using the `setdiff()` function as follows:
+Notez que le résultat de `inner_join()` ne comporte que 45 lignes contre 47 dans `coffee_data`.
+Qu'est-il arrivé aux lignes restantes ?
+Nous pouvons identifier les lignes qui ne correspondent pas en utilisant la fonction `setdiff()` comme suit :
 
 ```{r 03-attribute-operations-36}
 setdiff(coffee_data$name_long, world$name_long)
 ```
 
-The result shows that `Others` accounts for one row not present in the `world` dataset and that the name of the `Democratic Republic of the Congo` accounts for the other:
-it has been abbreviated, causing the join to miss it.
-The following command uses a string matching (regex) function from the **stringr** package to confirm what `Congo, Dem. Rep. of` should be:
+Le résultat montre que "Others" représente une ligne non présente dans la base de données "monde" et que le nom de la "Democratic Republic of the Congo" représente l'autre ligne :
+il a été abrégé, ce qui a fait que la jointure l'a manqué.
+La commande suivante utilise une fonction de correspondance de chaîne (regex) du paquet **stringr** pour confirmer ce que devrait être `Congo, Dem. Rep. of` :
 
 ```{r 03-attribute-operations-37}
 (drc = stringr::str_subset(world$name_long, "Dem*.+Congo"))
@@ -503,8 +503,8 @@ str_subset(coffee_data$name_long, "Ivo|Congo,")
 .Last.value %in% str_subset(world$name_long, "Ivo|Dem*.+Congo")
 ```
 
-To fix this issue, we will create a new version of `coffee_data` and update the name.
-`inner_join()`ing the updated data frame returns a result with all 46 coffee-producing nations:
+Pour résoudre ce problème, nous allons créer une nouvelle version de `coffee_data` et mettre à jour le nom.
+En utilisant le tableau de données mis à jour, `inner_join()` renvoie un résultat avec les 46 pays producteurs de café :
 
 ```{r 03-attribute-operations-39, warning=FALSE}
 coffee_data$name_long[grepl("Congo,", coffee_data$name_long)] = drc
@@ -512,10 +512,10 @@ world_coffee_match = inner_join(world, coffee_data)
 nrow(world_coffee_match)
 ```
 
-It is also possible to join in the other direction: starting with a non-spatial dataset and adding variables from a simple features object.
-This is demonstrated below, which starts with the `coffee_data` object and adds variables from the original `world` dataset.
-In contrast with the previous joins, the result is *not* another simple feature object, but a data frame in the form of a **tidyverse** tibble:
-the output of a join tends to match its first argument:
+Il est également possible d'effectuer une jointure dans l'autre sens : en partant d'un ensemble de données non spatiales et en ajoutant des variables provenant d'un objet *simple features*.
+Ci-dessous, on commence avec l'objet `coffee_data` et on ajoute les variables du jeux de données  `world`.
+Contrairement aux jointures précédentes, le résultat n'est *pas* un autre objet *simple features* , mais un tableau de données sous la forme d'un tibble **tidyverse** :
+Le résultat d'une jointure tend à correspondre à son premier argument :
 
 ```{r 03-attribute-operations-40, warning=FALSE}
 coffee_world = left_join(coffee_data, world)
@@ -523,56 +523,56 @@ class(coffee_world)
 ```
 
 ```{block2 03-attribute-operations-41, type='rmdnote'}
-In most cases, the geometry column is only useful in an `sf` object.
-The geometry column can only be used for creating maps and spatial operations if R 'knows' it is a spatial object, defined by a spatial package such as **sf**.
-Fortunately, non-spatial data frames with a geometry list column (like `coffee_world`) can be coerced into an `sf` object as follows: `st_as_sf(coffee_world)`. 
+Dans la plupart des cas, la colonne géométrique n´est utile que dans un objet `sf`.
+Elle ne peut être utilisée pour créer des cartes et des opérations spatiales que si R "sait" qu´il s´agit d´un objet spatial, défini par un package spatial tel que **sf**.
+Heureusement, les tableau de données non spatiaux avec une colonne de liste de géométrie (comme `coffee_world`) peuvent être converties en un objet `sf` comme suit : `st_as_sf(coffee_world)`. 
 ```
 
-This section covers the majority of joining use cases.
-For more information, we recommend @grolemund_r_2016, the [join vignette](https://geocompr.github.io/geocompkg/articles/join.html) in the **geocompkg** package that accompanies this book, and documentation of the **data.table** package.^[
-**data.table** is a high-performance data processing package.
-Its application to geographic data is covered in a blog post hosted at r-spatial.org/r/2017/11/13/perp-performance.html.
+Cette section couvre la majorité des cas d'utilisation de la jointure.
+Pour plus d'informations, nous recommandons @grolemund_r_2016, la [vignette join](https://geocompr.github.io/geocompkg/articles/join.html) dans le paquet **geocompkg** qui accompagne ce livre, et la documentation du paquet **data.table** .^[
+**data.table** est un paquet de traitement de données très  performant.
+Son application aux données géographiques est couverte dans un billet de blog hébergé à r-spatial.org/r/2017/11/13/perp-performance.html.
 ]
-Another type of join is a spatial join, covered in the next chapter (Section \@ref(spatial-joining)).
+Un autre type de jointure est la jointure spatiale, traitée dans le chapitre suivant (section \@ref(spatial-joining)).
 
-### Creating attributes and removing spatial information {#vec-attr-creation}
+### Création d'attributs et suppression d'informations spatiales {#vec-attr-creation}
 
-Often, we would like to create a new column based on already existing columns.
-For example, we want to calculate population density for each country.
-For this we need to divide a population column, here `pop`, by an area column, here `area_km2` with unit area in square kilometers.
-Using base R, we can type:
+Souvent, nous souhaitons créer une nouvelle colonne à partir de colonnes déjà existantes.
+Par exemple, nous voulons calculer la densité de population pour chaque pays.
+Pour cela, nous devons diviser une colonne de population, ici `pop`, par une colonne de surface, ici `area_km2` avec une unité de surface en kilomètres carrés.
+En utilisant les fonctions de base de R, nous pouvons taper :
 
 ```{r 03-attribute-operations-42}
-world_new = world # do not overwrite our original data
+world_new = world # afin de ne pas écraser nos données
 world_new$pop_dens = world_new$pop / world_new$area_km2
 ```
 
-Alternatively, we can use one of **dplyr** functions - `mutate()` or `transmute()`.
-`mutate()` adds new columns at the penultimate position in the `sf` object (the last one is reserved for the geometry):
+Alternativement, nous pouvons utiliser l'une des fonctions **dplyr** - `mutate()` ou `transmute()`.
+`mutate()` ajoute de nouvelles colonnes à l'avant-dernière position dans l'objet `sf` (la dernière est réservée à la géométrie) :
 
 ```{r 03-attribute-operations-43, eval=FALSE}
 world %>% 
   mutate(pop_dens = pop / area_km2)
 ```
 
-The difference between `mutate()` and `transmute()` is that the latter drops all other existing columns (except for the sticky geometry column):
+La différence entre `mutate()` et `transmute()` est que ce dernier supprime toutes les autres colonnes existantes (à l'exception de la colonne de géométrie collante) :
 
 ```{r 03-attribute-operations-44, eval=FALSE}
 world %>% 
   transmute(pop_dens = pop / area_km2)
 ```
 
-`unite()` from the **tidyr** package (which provides many useful functions for reshaping datasets, including `pivot_longer()`) pastes together existing columns.
-For example, we want to combine the `continent` and `region_un` columns into a new column named `con_reg`.
-Additionally, we can define a separator (here: a colon `:`) which defines how the values of the input columns should be joined, and if the original columns should be removed (here: `TRUE`):
+`unite()` du paquet **tidyr** (qui fournit de nombreuses fonctions utiles pour remodeler les ensembles de données, notamment `pivot_longer()`) colle ensemble des colonnes existantes.
+Par exemple, ici nous voulons combiner les colonnes `continent` et `region_un` dans une nouvelle colonne nommée `con_reg`.
+De plus, nous pouvons définir un séparateur (ici : deux points `:`) qui définit comment les valeurs des colonnes d'entrée doivent être jointes, et si les colonnes originales doivent être supprimées (ici : `TRUE`) :
 
 ```{r 03-attribute-operations-45, eval=FALSE}
 world_unite = world %>%
   unite("con_reg", continent:region_un, sep = ":", remove = TRUE)
 ```
 
-The `separate()` function does the opposite of `unite()`: it splits one column into multiple columns using either a regular expression or character positions.
-This function also comes from the **tidyr** package.
+La fonction `separate()` fait l'inverse de `unite()` : elle divise une colonne en plusieurs colonnes en utilisant soit une expression régulière, soit les positions des caractères.
+Cette fonction provient également du paquetage **tidyr**.
 
 ```{r 03-attribute-operations-46, eval=FALSE}
 world_separate = world_unite %>% 
@@ -583,17 +583,17 @@ world_separate = world_unite %>%
 identical(world, world_separate)
 ```
 
-The **dplyr** function `rename()` and the base R function `setNames()` are useful for renaming columns.
-The first replaces an old name with a new one.
-The following command, for example, renames the lengthy `name_long` column to simply `name`:
+La fonction **dplyr** `rename()` et la fonction de base de R  `setNames()` sont utiles pour renommer des colonnes.
+La première remplace un ancien nom par un nouveau.
+Ici, par exemple, elle renomme la longue colonne `name_long` en un simple `name` :
 
 ```{r 03-attribute-operations-48, eval=FALSE}
 world %>% 
   rename(name = name_long)
 ```
 
-`setNames()` changes all column names at once, and requires a character vector with a name matching each column.
-This is illustrated below, which outputs the same `world` object, but with very short names: 
+`setNames()` change tous les noms de colonnes en une fois, et nécessite un vecteur de caractères avec un nom correspondant pour chaque colonne.
+Ceci est illustré ci-dessous, qui produit le même objet `world`, mais avec des noms très courts : 
 
 ```{r 03-attribute-operations-49, eval=FALSE, echo=FALSE}
 abbreviate(names(world), minlength = 1) %>% dput()
@@ -605,11 +605,11 @@ world %>%
   setNames(new_names)
 ```
 
-It is important to note that attribute data operations preserve the geometry of the simple features.
-As mentioned at the outset of the chapter, it can be useful to remove the geometry.
-To do this, you have to explicitly remove it.
-Hence, an approach such as `select(world, -geom)` will be unsuccessful and you should instead use `st_drop_geometry()`.^[
-`st_geometry(world_st) = NULL` also works to remove the geometry from `world`, but overwrites the original object.
+Il est important de noter que les opérations sur les données attributaires préservent la géométrie des *simple features*.
+Comme mentionné au début du chapitre, il peut être utile de supprimer la géométrie.
+Pour ce faire, vous devez la supprimer explicitement.
+Par conséquent, une approche telle que `select(world, -geom)` sera infructueuse et vous devriez plutôt utiliser `st_drop_geometry()`.^[
+`st_geometry(world_st) = NULL` fonctionne également pour supprimer la géométrie de `world`, mais écrase l'objet original.
 ]
 
 ```{r 03-attribute-operations-51}
@@ -617,16 +617,16 @@ world_data = world %>% st_drop_geometry()
 class(world_data)
 ```
 
-## Manipulating raster objects
+## Manipuler des objets raster
 <!--jn-->
 
-In contrast to the vector data model underlying simple features (which represents points, lines and polygons as discrete entities in space), raster data represent continuous surfaces.
-This section shows how raster objects work by creating them *from scratch*, building on Section \@ref(an-introduction-to-terra).
-Because of their unique structure, subsetting and other operations on raster datasets work in a different way, as demonstrated in Section \@ref(raster-subsetting).
-\index{raster!manipulation}
+Contrairement au modèle de données vectorielles qui sous-tend les *simple features* (qui représente les points, les lignes et les polygones comme des entités discrètes dans l'espace), les données matricielles représentent des surfaces continues.
+Cette section présente le fonctionnement des objets raster en les créant *de bout en bout*, en s'appuyant sur la section \@ref(an-introduction-to-terra).
+En raison de leur structure unique, les sélections et les autres opérations sur les jeux de données raster fonctionnent d'une manière différente, comme le montre la section \@ref(raster-subsetting).
+\index{manipulation!raster}
 
-The following code recreates the raster dataset used in Section \@ref(raster-classes), the result of which is illustrated in Figure \@ref(fig:cont-raster).
-This demonstrates how the `rast()` function works to create an example raster named `elev` (representing elevations).
+Le code suivant recrée le jeu de données matricielles utilisé dans la section \@ref(raster-classes), dont le résultat est illustré dans la figure \@ref(fig:cont-raster).
+Cela montre comment la fonction `rast()` fonctionne pour créer un exemple de données matricielles nommé `elev` (représentant les élévations).
 
 ```{r 03-attribute-operations-52, message=FALSE, eval = FALSE}
 elev = rast(nrows = 6, ncols = 6, resolution = 0.5, 
@@ -634,10 +634,10 @@ elev = rast(nrows = 6, ncols = 6, resolution = 0.5,
             vals = 1:36)
 ```
 
-The result is a raster object with 6 rows and 6 columns (specified by the `nrow` and `ncol` arguments), and a minimum and maximum spatial extent in x and y direction (`xmin`, `xmax`, `ymin`, `ymax`).
-The `vals` argument sets the values that each cell contains: numeric data ranging from 1 to 36 in this case.
-Raster objects can also contain categorical values of class `logical` or `factor` variables in R.
-The following code creates the raster datasets shown in Figure \@ref(fig:cont-raster):
+Le résultat est un objet raster avec 6 lignes et 6 colonnes (spécifiées par les arguments `nrow` et `ncol`), et une étendue spatiale comprise dans les directions x et y (`xmin`, `xmax`, `ymin`, `ymax`).
+L'argument `vals` définit les valeurs que chaque cellule contient : des données numériques allant de 1 à 36 dans ce cas.
+Les objets raster peuvent également contenir des valeurs catégorielles de la classe des variables `logiques` ou `factor` de R.
+Le code suivant crée les ensembles de données matricielles illustrés dans la figure \@ref(fig:cont-raster) :
 
 ```{r 03-attribute-operations-53, eval = FALSE}
 grain_order = c("clay", "silt", "sand")
@@ -653,71 +653,71 @@ elev = rast(system.file("raster/elev.tif", package = "spData"))
 grain = rast(system.file("raster/grain.tif", package = "spData"))
 ```
 
-The raster object stores the corresponding look-up table or "Raster Attribute Table" (RAT) as a list of data frames, which can be viewed with `cats(grain)` (see `?cats()` for more information).
-Each element of this list is a layer of the raster.
-It is also possible to use the function `levels()` for retrieving and adding new or replacing existing factor levels:
+L'objet raster stocke la table de correspondance ou "Raster Attribute Table" (RAT) correspondante sous la forme d'une liste de tableau de données, qui peuvent être visualisés avec `cats(grain)` (cf. `?cats()` pour plus d'informations).
+Chaque élément de cette liste est une couche du raster.
+Il est également possible d'utiliser la fonction `levels()` pour récupérer et ajouter de nouveaux niveaux de facteurs ou remplacer des niveaux existants 
 
 ```{r 03-attribute-operations-56}
 levels(grain)[[1]] = c(levels(grain)[[1]], wetness = c("wet", "moist", "dry"))
 levels(grain)
 ```
 
-```{r cont-raster, echo = FALSE, message = FALSE, fig.asp=0.5, fig.cap = "Raster datasets with numeric (left) and categorical values (right).", fig.scap="Raster datasets with numeric and categorical values.", warning=FALSE}
+```{r cont-raster, echo = FALSE, message = FALSE, fig.asp=0.5, fig.cap = "Jeux de données raster avec des valeurs numériques (à gauche) et catégorielles (à droite).", fig.scap="Données raster avec des valeurs numériques et catégorielles.", warning=FALSE}
 # knitr::include_graphics("https://user-images.githubusercontent.com/1825120/146617366-7308535b-30f6-4c87-83f7-21702c7d993b.png")
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/03-cont-raster-plot.R", print.eval = TRUE)
 ```
 
 ```{block2 coltab, type='rmdnote'}
-Categorical raster objects can also store information about the colors associated with each value using a color table.
-The color table is a data frame with three (red, green, blue) or four (alpha) columns, where each row relates to one value.
-Color tables in **terra** can be viewed or set with the `coltab()` function (see `?coltab`).
-Importantly, saving a raster object with a color table to a file (e.g., GeoTIFF) will also save the color information.
+Les objets raster catégoriels peuvent également stocker des informations sur les couleurs associées à chaque valeur à l´aide d´une table de couleurs.
+La table de couleur est un tableau de données avec trois (rouge, vert, bleu) ou quatre (alpha) colonnes, où chaque ligne se rapporte à une valeur.
+Les tables de couleurs dans **terra** peuvent être visualisées ou définies avec la fonction `coltab()` (voir `?coltab`).
+Il est important de noter que la sauvegarde d´un objet raster avec une table de couleurs dans un fichier (par exemple, GeoTIFF) sauvegardera également les informations de couleurs
 ```
 
-### Raster subsetting
+### Sélection sur des raster
 
-Raster subsetting is done with the base R operator `[`, which accepts a variety of inputs:
+La sélection de données raster est réalisé à l'aide de l'opérateur de base de R `[`, qui accepte une large gamme d'entrées :
 \index{raster!subsetting}
 
-- Row-column indexing
-- Cell IDs
-- Coordinates (see Section \@ref(spatial-raster-subsetting))
-- Another spatial object (see Section \@ref(spatial-raster-subsetting))
+- Indexation ligne-colonne
+- ID des cellules
+- Coordonnées (voir la section \@ref(spatial-raster-subsetting))
+- Autre objet spatial (voir la section \@ref(spatial-raster-subsetting))
 
-Here, we only show the first two options since these can be considered non-spatial operations.
-If we need a spatial object to subset another or the output is a spatial object, we refer to this as spatial subsetting.
-Therefore, the latter two options will be shown in the next chapter (see Section \@ref(spatial-raster-subsetting)).
+Nous ne présentons ici que les deux premières options, car elles peuvent être considérées comme des opérations non spatiales.
+Si nous avons besoin d'un objet spatial pour en sélectionner un autre ou si le résultat est un objet spatial, nous en parlerons comme une sélection spatiale.
+Par conséquent, les deux dernières options seront présentées dans le chapitre suivant (voir la section \@ref(spatial-raster-subsetting)).
 
-The first two subsetting options are demonstrated in the commands below ---
-both return the value of the top left pixel in the raster object `elev` (results not shown):
+Les deux premières options de sous-ensembles sont présentées dans les commandes ci-dessous ---
+toutes deux renvoient la valeur du pixel supérieur gauche dans l'objet raster `elev` (résultats non montrés) :
 
 ```{r 03-attribute-operations-58, eval = FALSE}
-# row 1, column 1
+# ligne 1, colonne 1
 elev[1, 1]
-# cell ID 1
+# pixel ID 1
 elev[1]
 ```
 
-Subsetting of multi-layered raster objects will return the cell value(s) for each layer.
-For example, `c(elev, grain)[1]` returns a data frame with one row and two columns --- one for each layer.
-To extract all values or complete rows, you can also use `values()`.
+Les sélections d'objets raster à couches multiples renverront la ou les valeurs des cellules pour chaque couche.
+Par exemple, `c(elev, grain)[1]` renvoie un cadre de données avec une ligne et deux colonnes --- une pour chaque couche.
+Pour extraire toutes les valeurs ou des lignes complètes, vous pouvez également utiliser `values()`.
 
-Cell values can be modified by overwriting existing values in conjunction with a subsetting operation.
-The following code chunk, for example, sets the upper left cell of `elev` to 0 (results not shown):
+Les valeurs des cellules peuvent être modifiées en écrasant les valeurs existantes en conjonction avec une opération de sélection.
+L'exemple de code suivant, par exemple, définit la cellule supérieure gauche de `elev` à 0 (résultats non montrés) :
 
 ```{r 03-attribute-operations-60, results='hide'}
 elev[1, 1] = 0
 elev[]
 ```
 
-Leaving the square brackets empty is a shortcut version of `values()` for retrieving all values of a raster.
-Multiple cells can also be modified in this way:
+Laisser les crochets vides est une version raccourcie de `values()` pour récupérer toutes les valeurs d'un raster.
+Plusieurs cellules peuvent également être modifiées de cette manière :
 
 ```{r 03-attribute-operations-61}
 elev[1, c(1, 2)] = 0
 ```
 
-Replacing values of multilayered rasters can be done with a matrix with as many columns as layers and rows as replaceable cells (results not shown):
+Le remplacement des valeurs des rasters multicouches peut se faire avec une matrice comportant autant de colonnes que de couches et de lignes que de cellules remplaçables (résultats non montrés) :
 
 ```{r 03-attribute-operations-61b, eval=FALSE}
 two_layers = c(grain, elev) 
@@ -725,12 +725,12 @@ two_layers[1] = cbind(c(0), c(4))
 two_layers[]
 ```
 
-### Summarizing raster objects
+### Résumer les objets raster
 
-**terra** contains functions for extracting descriptive statistics\index{statistics} for entire rasters.
-Printing a raster object to the console by typing its name returns minimum and maximum values of a raster.
-`summary()` provides common descriptive statistics\index{statistics} -- minimum, maximum, quartiles and number of `NA`s for continuous rasters and a number of cells of each class for categorical rasters.
-Further summary operations such as the standard deviation (see below) or custom summary statistics can be calculated with `global()`. 
+**terra** contient des fonctions permettant d'extraire des statistiques descriptives\index{statistics} pour des rasters entiers.
+L'impression d'un objet raster sur la console en tapant son nom renvoie les valeurs minimales et maximales d'un objet raster.
+`summary()` fournit des statistiques descriptives courantes\index{statistiques} -- minimum, maximum, quartiles et nombre de `NA`s pour les matrices continues et un nombre de cellules de chaque classe pour les matrices catégorielles.
+D'autres opérations de synthèse telles que l'écart-type (voir ci-dessous) ou des statistiques de synthèse personnalisées peuvent être calculées avec `global()`. 
 \index{raster!summarizing}
 
 ```{r 03-attribute-operations-62, eval = FALSE}
@@ -738,30 +738,30 @@ global(elev, sd)
 ```
 
 ```{block2 03-attribute-operations-63, type='rmdnote'}
-If you provide the `summary()` and `global()` functions with a multi-layered raster object, they will summarize each layer separately, as can be illustrated by running: `summary(c(elev, grain))`.
+Si vous fournissez aux fonctions `summary()` et `global()` un objet raster multi-couches, elles résumeront chaque couche séparément, comme on peut l´illustrer en exécutant : `summary(c(elev, grain))`.
 ```
 
-Additionally, the `freq()` function allows to get the frequency table of categorical values.
+De plus, la fonction `freq()` permet d'obtenir le tableau de fréquence des valeurs catégorielles.
 
-Raster value statistics can be visualized in a variety of ways.
-Specific functions such as `boxplot()`, `density()`, `hist()` and `pairs()` work also with raster objects, as demonstrated in the histogram created with the command below (not shown):
+Les statistiques des données raster peuvent être visualisées de différentes manières.
+Des fonctions spécifiques telles que `boxplot()`, `density()`, `hist()` et `pairs()` fonctionnent également avec les objets raster, comme le montre l'histogramme créé avec la commande ci-dessous (non montré) :
 
 ```{r 03-attribute-operations-64, eval=FALSE}
 hist(elev)
 ```
 
-In case the desired visualization function does not work with raster objects, one can extract the raster data to be plotted with the help of `values()` (Section \@ref(raster-subsetting)).
-\index{raster!values}
+Si la fonction de visualisation souhaitée ne fonctionne pas avec les objets raster, on peut extraire les données  à représenter à l'aide de `values()` (section \@ref(raster-subsetting)).
+\index{valeurs!raster}
 
-Descriptive raster statistics belong to the so-called global raster operations.
-These and other typical raster processing operations are part of the map algebra scheme, which are covered in the next chapter (Section \@ref(map-algebra)).
+Les statistiques descriptives sur des raster font partie des opérations raster dites globales.
+Ces opérations, ainsi que d'autres opérations de traitement raster typiques, font partie du traitement algébrique sur raster, qui est abordé dans le chapitre suivant (section \@ref(map-algebra)).
 
 ```{block 03-attribute-operations-65, type='rmdnote'}
-Some function names clash between packages (e.g., a function with the name `extract()` exist in both **terra** and **tidyr** packages).
-In addition to not loading packages by referring to functions verbosely (e.g., `tidyr::extract()`), another way to prevent function names clashes is by unloading the offending package with `detach()`.
-The following command, for example, unloads the **terra** package (this can also be done in the *package* tab which resides by default in the right-bottom pane in RStudio): `detach("package:terra", unload = TRUE, force = TRUE)`.
-The `force` argument makes sure that the package will be detached even if other packages depend on it.
-This, however, may lead to a restricted usability of packages depending on the detached package, and is therefore not recommended.
+Certains noms de fonctions sont réutilisés entre les paquets et rentrent en conflit(par exemple, une fonction avec le nom `extract()` existe à la fois dans les paquets **terra** et **tidyr**).
+En plus de ne pas charger les paquets en se référant verbalement aux fonctions (par exemple, `tidyr::extract()`), une autre façon d'éviter les conflits de noms de fonctions est de décharger le paquet en question avec `detach()`.
+La commande suivante, par exemple, décharge le paquet **terra** (ceci peut également être fait dans l'onglet *package* qui se trouve par défaut dans le panneau inférieur droit de RStudio) : `detach("package:terra", unload = TRUE, force = TRUE)`.
+L'argument `force` permet de s'assurer que le paquet sera détaché même si d'autres paquets en dépendent.
+Cependant, cela peut conduire à une utilisation restreinte des paquets dépendant du paquet détaché, et n'est donc pas recommandé.
 ```
 
 ## Exercises
