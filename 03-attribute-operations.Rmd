@@ -1,4 +1,4 @@
-# Opérations sur les attributs des élements {#attr}
+# Opérations sur les tables attributaires {#attr}
 
 ## Prérequis {-}
 
@@ -353,7 +353,7 @@ class(world_agg1)
 
 Le résultat est un tableau de données non spatialisées comportant six lignes, une par continent, et deux colonnes indiquant le nom et la population de chaque continent (voir le tableau \@ref(tab:continents) avec les résultats pour les 3 continents les plus peuplés).
 
-`aggregate()` est une [fonction générique] (https://adv-r.hadley.nz/s3.html#s3-methods) ce qui signifie qu'elle se comporte différemment en fonction de ses entrées. 
+`aggregate()` est une [fonction générique](https://adv-r.hadley.nz/s3.html#s3-methods) ce qui signifie qu'elle se comporte différemment en fonction de ses entrées. 
 **sf** fournit la méthode `aggregate.sf()` qui est activée automatiquement lorsque `x` est un objet `sf` et qu'un argument `by` est fourni :
 
 ```{r 03-attribute-operations-27}
