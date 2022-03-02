@@ -19,6 +19,10 @@ fig:raster-intro-plot2
 fig:basic-new-raster-plot
 fig:datum-fig
 fig:vector-crs
+tab:operators
+tab:continents
+fig:coffeemap
+fig:cont-raster
 intro
 what-is-geocomputation
 why-use-r-for-geocomputation
@@ -48,3 +52,15 @@ système-de-référence-des-coordonnées
 système-de-réference-projetées
 unités
 ex2
+attr
+introduction
+manipulations-des-attributs-de-données-vectorielles.
+sélection-de-sous-ensemble-dans-des-attributs-de-données-vectorielles
+enchainement-de-commandes-avec-des-pipes
+agrégation-sur-la-base-des-attributs-de-données-vectorielles
+jointures-attributaires-de-données-vectorielles
+vec-attr-creation
+manipuler-des-objets-raster
+sélection-sur-des-raster
+résumer-les-objets-raster
+exercises-1
