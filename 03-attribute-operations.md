@@ -777,8 +777,8 @@ détaché, et n’est donc pas recommandé.</p>
 ## Exercises
 
 
-For these exercises we will use the `us_states` and `us_states_df` datasets from the **spData** package.
-You must have attached the package, and other packages used in the attribute operations chapter (**sf**, **dplyr**, **terra**) with commands such as `library(spData)` before attempting these exercises:
+Pour ces exercices, nous allons utiliser les jeux de données `us_states` et `us_states_df` du paquetage **spData**.
+Vous devez avoir chargé ce paquet, ainsi que les autres paquets utilisés dans le chapitre sur les opérations d'attributs (**sf**, **dplyr**, **terra**) avec des commandes telles que `library(spData)` avant de tenter ces exercices :
 
 ```r
 library(sf)
@@ -789,95 +789,95 @@ data(us_states)
 data(us_states_df)
 ```
 
-`us_states` is a spatial object (of class `sf`), containing geometry and a few attributes (including name, region, area, and population) of states within the contiguous United States.
-`us_states_df` is a data frame (of class `data.frame`) containing the name and additional variables (including median income and poverty level, for the years 2010 and 2015) of US states, including Alaska, Hawaii and Puerto Rico.
-The data comes from the United States Census Bureau, and is documented in `?us_states` and `?us_states_df`.
+`us_states` est un objet spatial (de classe `sf`), contenant la géométrie et quelques attributs (dont le nom, la région, la superficie et la population) des états des États-Unis contigus.
+`us_states_df` est un tableau de données (de classe `data.frame`) contenant le nom et des variables supplémentaires (dont le revenu médian et le niveau de pauvreté, pour les années 2010 et 2015) des états américains, y compris l'Alaska, Hawaii et Porto Rico.
+Les données proviennent du *United States Census Bureau*, et sont documentées dans `?us_states` et `?us_states_df`.
 
-E1. Create a new object called `us_states_name` that contains only the `NAME` column from the `us_states` object using either base R (`[`) or tidyverse (`select()`) syntax.
-What is the class of the new object and what makes it geographic?
-
-
+E1. Créez un nouvel objet appelé `us_states_name` qui ne contient que la colonne `NAME` de l'objet `us_states` en utilisant la syntaxe de base de R (`[`) ou du tidyverse (`select()`).
+Quelle est la classe du nouvel objet et qu'est-ce qui le rend géographique ?
 
 
 
-E2. Select columns from the `us_states` object which contain population data.
-Obtain the same result using a different command (bonus: try to find three ways of obtaining the same result).
-Hint: try to use helper functions, such as `contains` or `matches` from **dplyr** (see `?contains`).
+
+
+E2. Sélectionnez les colonnes de l'objet `us_states` qui contiennent des données sur la population.
+Obtenez le même résultat en utilisant une commande différente (bonus : essayez de trouver trois façons d'obtenir le même résultat).
+Indice : essayez d'utiliser les fonctions d'aide, telles que `contains` ou `matches` du paquet  **dplyr** (voir `?contains`).
 
 
 
-E3. Find all states with the following characteristics (bonus find *and* plot them):
+E3. Trouvez tous les États ayant les caractéristiques suivantes (bonus : trouvez *et* représentez-les) :
 
-- Belong to the Midwest region.
-- Belong to the West region, have an area below 250,000 km^2^ *and* in 2015 a population greater than 5,000,000 residents (hint: you may need to use the function `units::set_units()` or `as.numeric()`).
-- Belong to the South region, had an area larger than 150,000 km^2^ or a total population in 2015 larger than 7,000,000 residents.
-
-
-
-E4. What was the total population in 2015 in the `us_states` dataset?
-What was the minimum and maximum total population in 2015?
+- Appartenir à la région du Midwest.
+- Appartenir à la région Ouest, avoir une superficie inférieure à 250 000 km^2^ *et* en 2015 une population supérieure à 5 000 000 de résidents (indice : vous devrez peut-être utiliser la fonction `units::set_units()` ou `as.numeric()`).
+- Appartenant à la région Sud, avoir une superficie supérieure à 150 000 km^2^ *et* une population totale en 2015 supérieure à 7 000 000 de résidents.
 
 
 
-E5. How many states are there in each region?
+E4. Quelle était la population totale en 2015 dans l'ensemble de données `us_states` ?
+Quel était le minimum et le maximum de la population totale en 2015 ?
 
 
 
-E6. What was the minimum and maximum total population in 2015 in each region?
-What was the total population in 2015 in each region?
+E5. Combien d'États y a-t-il dans chaque région ?
 
 
 
-E7. Add variables from `us_states_df` to `us_states`, and create a new object called `us_states_stats`.
-What function did you use and why?
-Which variable is the key in both datasets?
-What is the class of the new object?
+E6. Quelle était la population totale minimale et maximale en 2015 dans chaque région ?
+Quelle était la population totale en 2015 dans chaque région ?
 
 
 
-E8. `us_states_df` has two more rows than `us_states`.
-How can you find them? (hint: try to use the `dplyr::anti_join()` function)
+E7. Effectuez une jointure entre les variables de `us_states_df` à `us_states`, et créez un nouvel objet appelé `us_states_stats`.
+Quelle fonction avez-vous utilisée et pourquoi ?
+Quelle variable est la clé dans les deux ensembles de données ?
+Quelle est la classe du nouvel objet ?
 
 
 
-E9. What was the population density in 2015 in each state?
-What was the population density in 2010 in each state?
+E8. `us_states_df` a deux lignes de plus que `us_states`.
+Comment pouvez-vous les trouver ? (indice : essayez d'utiliser la fonction `dplyr::anti_join()`)
 
 
 
-E10. How much has population density changed between 2010 and 2015 in each state?
-Calculate the change in percentages and map them.
+E9. Quelle était la densité de la population en 2015 dans chaque État ?
+Quelle était la densité de la population en 2010 dans chaque État ?
 
 
 
-E11. Change the columns' names in `us_states` to lowercase. (Hint: helper functions - `tolower()` and `colnames()` may help.)
+E10. Estimez le changement de la densité de la population entre 2010 et 2015 dans chaque État.
+Calculez ce changement en pourcentages et cartographiez-les.
 
 
 
-E12. Using `us_states` and `us_states_df` create a new object called `us_states_sel`.
-The new object should have only two variables - `median_income_15` and `geometry`.
-Change the name of the `median_income_15` column to `Income`.
+E11. Changez les noms des colonnes dans `us_states` en minuscules. (Indice : les fonctions d'aide - `tolower()` et `colnames()` peuvent vous aider).
 
 
 
-E13. Calculate the change in the number of residents living below the poverty level between 2010 and 2015 for each state. (Hint: See ?us_states_df for documentation on the poverty level columns.)
-Bonus: Calculate the change in the *percentage* of residents living below the poverty level in each state.
+E12. En utilisant `us_states` et `us_states_df`, créez un nouvel objet appelé `us_states_sel`.
+Ce nouvel objet ne doit avoir que deux variables - `median_income_15` et `geometry`.
+Changez le nom de la colonne `median_income_15` en `Income`.
 
 
 
-E14. What was the minimum, average and maximum state's number of people living below the poverty line in 2015 for each region?
-Bonus: What is the region with the largest increase in people living below the poverty line?
+E13. Calculez l'évolution du nombre de résidents vivant sous le seuil de pauvreté entre 2010 et 2015 pour chaque État. (Conseil : voir ?us_states_df pour la documentation sur les colonnes traitant du niveau de pauvreté).
+Bonus : Calculez l'évolution du *pourcentage* de résidents vivant sous le seuil de pauvreté dans chaque État.
 
 
 
-E15. Create a raster from scratch with nine rows and columns and a resolution of 0.5 decimal degrees (WGS84).
-Fill it with random numbers.
-Extract the values of the four corner cells. 
+E13. Calculez l'évolution du nombre de résidents vivant sous le seuil de pauvreté entre 2010 et 2015 pour chaque État. (Conseil : voir ?us_states_df pour la documentation sur les colonnes traitant du niveau de pauvreté).
+Bonus : Calculez l'évolution du *pourcentage* de résidents vivant sous le seuil de pauvreté dans chaque État.
 
 
 
-E16. What is the most common class of our example raster `grain` (hint: `modal`)?
+E15. Créez un raster à partir de zéro avec neuf lignes et colonnes et une résolution de 0,5 degré décimal (WGS84).
+Remplissez-le de nombres aléatoires.
+Sélectionnez les valeurs des cellules de chaque coin. 
 
 
 
-E17. Plot the histogram and the boxplot of the `dem.tif` file from the **spDataLarge** package (`system.file("raster/dem.tif", package = "spDataLarge")`). 
+E16. Quelle est la classe la plus commune de notre exemple de raster `grain` (indice : `modal`) ?
+
+
+
+E17. Utilisez un histogramme et un boxplot sur le fichier `dem.tif` du paquet **spDataLarge** (`system.file("raster/dem.tif", package = "spDataLarge")`). 

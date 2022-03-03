@@ -696,8 +696,8 @@ détaché, et n’est donc pas recommandé.
 <h2>
 <span class="header-section-number">3.4</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-1"><i class="fas fa-link"></i></a>
 </h2>
-<p>For these exercises we will use the <code>us_states</code> and <code>us_states_df</code> datasets from the <strong>spData</strong> package.
-You must have attached the package, and other packages used in the attribute operations chapter (<strong>sf</strong>, <strong>dplyr</strong>, <strong>terra</strong>) with commands such as <code><a href="https://nowosad.github.io/spData/">library(spData)</a></code> before attempting these exercises:</p>
+<p>Pour ces exercices, nous allons utiliser les jeux de données <code>us_states</code> et <code>us_states_df</code> du paquetage <strong>spData</strong>.
+Vous devez avoir chargé ce paquet, ainsi que les autres paquets utilisés dans le chapitre sur les opérations d’attributs (<strong>sf</strong>, <strong>dplyr</strong>, <strong>terra</strong>) avec des commandes telles que <code><a href="https://nowosad.github.io/spData/">library(spData)</a></code> avant de tenter ces exercices :</p>
 <div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
@@ -705,48 +705,48 @@ You must have attached the package, and other packages used in the attribute ope
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">us_states</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">us_states_df</span><span class="op">)</span></code></pre></div>
-<p><code>us_states</code> is a spatial object (of class <code>sf</code>), containing geometry and a few attributes (including name, region, area, and population) of states within the contiguous United States.
-<code>us_states_df</code> is a data frame (of class <code>data.frame</code>) containing the name and additional variables (including median income and poverty level, for the years 2010 and 2015) of US states, including Alaska, Hawaii and Puerto Rico.
-The data comes from the United States Census Bureau, and is documented in <code><a href="https://nowosad.github.io/spData/reference/us_states.html">?us_states</a></code> and <code><a href="https://nowosad.github.io/spData/reference/us_states_df.html">?us_states_df</a></code>.</p>
-<p>E1. Create a new object called <code>us_states_name</code> that contains only the <code>NAME</code> column from the <code>us_states</code> object using either base R (<code>[</code>) or tidyverse (<code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>) syntax.
-What is the class of the new object and what makes it geographic?</p>
-<p>E2. Select columns from the <code>us_states</code> object which contain population data.
-Obtain the same result using a different command (bonus: try to find three ways of obtaining the same result).
-Hint: try to use helper functions, such as <code>contains</code> or <code>matches</code> from <strong>dplyr</strong> (see <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html">?contains</a></code>).</p>
-<p>E3. Find all states with the following characteristics (bonus find <em>and</em> plot them):</p>
+<p><code>us_states</code> est un objet spatial (de classe <code>sf</code>), contenant la géométrie et quelques attributs (dont le nom, la région, la superficie et la population) des états des États-Unis contigus.
+<code>us_states_df</code> est un tableau de données (de classe <code>data.frame</code>) contenant le nom et des variables supplémentaires (dont le revenu médian et le niveau de pauvreté, pour les années 2010 et 2015) des états américains, y compris l’Alaska, Hawaii et Porto Rico.
+Les données proviennent du <em>United States Census Bureau</em>, et sont documentées dans <code><a href="https://nowosad.github.io/spData/reference/us_states.html">?us_states</a></code> et <code><a href="https://nowosad.github.io/spData/reference/us_states_df.html">?us_states_df</a></code>.</p>
+<p>E1. Créez un nouvel objet appelé <code>us_states_name</code> qui ne contient que la colonne <code>NAME</code> de l’objet <code>us_states</code> en utilisant la syntaxe de base de R (<code>[</code>) ou du tidyverse (<code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>).
+Quelle est la classe du nouvel objet et qu’est-ce qui le rend géographique ?</p>
+<p>E2. Sélectionnez les colonnes de l’objet <code>us_states</code> qui contiennent des données sur la population.
+Obtenez le même résultat en utilisant une commande différente (bonus : essayez de trouver trois façons d’obtenir le même résultat).
+Indice : essayez d’utiliser les fonctions d’aide, telles que <code>contains</code> ou <code>matches</code> du paquet <strong>dplyr</strong> (voir <code><a href="https://tidyselect.r-lib.org/reference/starts_with.html">?contains</a></code>).</p>
+<p>E3. Trouvez tous les États ayant les caractéristiques suivantes (bonus : trouvez <em>et</em> représentez-les) :</p>
 <ul>
-<li>Belong to the Midwest region.</li>
-<li>Belong to the West region, have an area below 250,000 km<sup>2</sup><em>and</em> in 2015 a population greater than 5,000,000 residents (hint: you may need to use the function <code><a href="https://rdrr.io/pkg/units/man/units.html">units::set_units()</a></code> or <code><a href="https://rdrr.io/pkg/terra/man/catalyze.html">as.numeric()</a></code>).</li>
-<li>Belong to the South region, had an area larger than 150,000 km<sup>2</sup> or a total population in 2015 larger than 7,000,000 residents.</li>
+<li>Appartenir à la région du Midwest.</li>
+<li>Appartenir à la région Ouest, avoir une superficie inférieure à 250 000 km<sup>2</sup><em>et</em> en 2015 une population supérieure à 5 000 000 de résidents (indice : vous devrez peut-être utiliser la fonction <code><a href="https://rdrr.io/pkg/units/man/units.html">units::set_units()</a></code> ou <code><a href="https://rdrr.io/pkg/terra/man/catalyze.html">as.numeric()</a></code>).</li>
+<li>Appartenant à la région Sud, avoir une superficie supérieure à 150 000 km<sup>2</sup><em>et</em> une population totale en 2015 supérieure à 7 000 000 de résidents.</li>
 </ul>
-<p>E4. What was the total population in 2015 in the <code>us_states</code> dataset?
-What was the minimum and maximum total population in 2015?</p>
-<p>E5. How many states are there in each region?</p>
-<p>E6. What was the minimum and maximum total population in 2015 in each region?
-What was the total population in 2015 in each region?</p>
-<p>E7. Add variables from <code>us_states_df</code> to <code>us_states</code>, and create a new object called <code>us_states_stats</code>.
-What function did you use and why?
-Which variable is the key in both datasets?
-What is the class of the new object?</p>
-<p>E8. <code>us_states_df</code> has two more rows than <code>us_states</code>.
-How can you find them? (hint: try to use the <code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">dplyr::anti_join()</a></code> function)</p>
-<p>E9. What was the population density in 2015 in each state?
-What was the population density in 2010 in each state?</p>
-<p>E10. How much has population density changed between 2010 and 2015 in each state?
-Calculate the change in percentages and map them.</p>
-<p>E11. Change the columns’ names in <code>us_states</code> to lowercase. (Hint: helper functions - <code><a href="https://rdrr.io/r/base/chartr.html">tolower()</a></code> and <code><a href="https://rdrr.io/r/base/colnames.html">colnames()</a></code> may help.)</p>
-<p>E12. Using <code>us_states</code> and <code>us_states_df</code> create a new object called <code>us_states_sel</code>.
-The new object should have only two variables - <code>median_income_15</code> and <code>geometry</code>.
-Change the name of the <code>median_income_15</code> column to <code>Income</code>.</p>
-<p>E13. Calculate the change in the number of residents living below the poverty level between 2010 and 2015 for each state. (Hint: See ?us_states_df for documentation on the poverty level columns.)
-Bonus: Calculate the change in the <em>percentage</em> of residents living below the poverty level in each state.</p>
-<p>E14. What was the minimum, average and maximum state’s number of people living below the poverty line in 2015 for each region?
-Bonus: What is the region with the largest increase in people living below the poverty line?</p>
-<p>E15. Create a raster from scratch with nine rows and columns and a resolution of 0.5 decimal degrees (WGS84).
-Fill it with random numbers.
-Extract the values of the four corner cells.</p>
-<p>E16. What is the most common class of our example raster <code>grain</code> (hint: <code>modal</code>)?</p>
-<p>E17. Plot the histogram and the boxplot of the <code>dem.tif</code> file from the <strong>spDataLarge</strong> package (<code>system.file("raster/dem.tif", package = "spDataLarge")</code>).</p>
+<p>E4. Quelle était la population totale en 2015 dans l’ensemble de données <code>us_states</code> ?
+Quel était le minimum et le maximum de la population totale en 2015 ?</p>
+<p>E5. Combien d’États y a-t-il dans chaque région ?</p>
+<p>E6. Quelle était la population totale minimale et maximale en 2015 dans chaque région ?
+Quelle était la population totale en 2015 dans chaque région ?</p>
+<p>E7. Effectuez une jointure entre les variables de <code>us_states_df</code> à <code>us_states</code>, et créez un nouvel objet appelé <code>us_states_stats</code>.
+Quelle fonction avez-vous utilisée et pourquoi ?
+Quelle variable est la clé dans les deux ensembles de données ?
+Quelle est la classe du nouvel objet ?</p>
+<p>E8. <code>us_states_df</code> a deux lignes de plus que <code>us_states</code>.
+Comment pouvez-vous les trouver ? (indice : essayez d’utiliser la fonction <code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">dplyr::anti_join()</a></code>)</p>
+<p>E9. Quelle était la densité de la population en 2015 dans chaque État ?
+Quelle était la densité de la population en 2010 dans chaque État ?</p>
+<p>E10. Estimez le changement de la densité de la population entre 2010 et 2015 dans chaque État.
+Calculez ce changement en pourcentages et cartographiez-les.</p>
+<p>E11. Changez les noms des colonnes dans <code>us_states</code> en minuscules. (Indice : les fonctions d’aide - <code><a href="https://rdrr.io/r/base/chartr.html">tolower()</a></code> et <code><a href="https://rdrr.io/r/base/colnames.html">colnames()</a></code> peuvent vous aider).</p>
+<p>E12. En utilisant <code>us_states</code> et <code>us_states_df</code>, créez un nouvel objet appelé <code>us_states_sel</code>.
+Ce nouvel objet ne doit avoir que deux variables - <code>median_income_15</code> et <code>geometry</code>.
+Changez le nom de la colonne <code>median_income_15</code> en <code>Income</code>.</p>
+<p>E13. Calculez l’évolution du nombre de résidents vivant sous le seuil de pauvreté entre 2010 et 2015 pour chaque État. (Conseil : voir ?us_states_df pour la documentation sur les colonnes traitant du niveau de pauvreté).
+Bonus : Calculez l’évolution du <em>pourcentage</em> de résidents vivant sous le seuil de pauvreté dans chaque État.</p>
+<p>E13. Calculez l’évolution du nombre de résidents vivant sous le seuil de pauvreté entre 2010 et 2015 pour chaque État. (Conseil : voir ?us_states_df pour la documentation sur les colonnes traitant du niveau de pauvreté).
+Bonus : Calculez l’évolution du <em>pourcentage</em> de résidents vivant sous le seuil de pauvreté dans chaque État.</p>
+<p>E15. Créez un raster à partir de zéro avec neuf lignes et colonnes et une résolution de 0,5 degré décimal (WGS84).
+Remplissez-le de nombres aléatoires.
+Sélectionnez les valeurs des cellules de chaque coin.</p>
+<p>E16. Quelle est la classe la plus commune de notre exemple de raster <code>grain</code> (indice : <code>modal</code>) ?</p>
+<p>E17. Utilisez un histogramme et un boxplot sur le fichier <code>dem.tif</code> du paquet <strong>spDataLarge</strong> (<code>system.file("raster/dem.tif", package = "spDataLarge")</code>).</p>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-akima_akima_2016" class="csl-entry">
@@ -1065,7 +1065,7 @@ Son application aux données géographiques est couverte dans un billet de blog 
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Liroy.  et sa dernière mise en ligne date de  2022-03-03.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-03-03.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
