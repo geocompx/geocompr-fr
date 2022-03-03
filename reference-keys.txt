@@ -40,7 +40,7 @@ geometry
 sf
 sfg
 sfc
-le-pacquet-sfheaders
+le-paquet-sfheaders
 s2
 données-raster
 les-paquets-de-r-pour-travailler-avec-des-rasters
