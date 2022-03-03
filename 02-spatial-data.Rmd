@@ -60,17 +60,17 @@ Le *modèle de données vectoriel* représente le monde à l'aide de points, de 
 Ceux-ci ont des frontières discrètes et bien définies, ce qui signifie que les ensembles de données vectorielles ont généralement un haut niveau de précision (mais pas nécessairement d'exactitude, comme nous le verrons dans la section \@ref(unités)).
 Le *modèle de données raster* divise la surface en pixel de taille constante.
 Les données rasters sont la base des images d'arrière-plan utilisées dans les cartes Web et constituent une source essentielle de données géographiques depuis les débuts de la photographie aérienne et des dispositifs de télédétection par satellite.
-Les rasters agrègent spatialement des informations à une résolution donnée. Ils maintiennent aisni une consistance temporelle sur de grandes superficies (de nombreux jeux de données rasters sont disponibles à l'echelle planetaire).
+Les rasters agrègent spatialement des informations à une résolution donnée. Ils maintiennent ainsi une consistance temporelle sur de grandes superficies (de nombreux jeux de données rasters sont disponibles à l'échelle planétaire).
 
 Que faut-il utiliser ?
 La réponse dépend probablement de votre domaine d'application :
 
-- Les données vectorielles ont tendance à dominer les sciences sociales parce que les constructions humains ont tendance à avoir des frontières discrètes.
+- Les données vectorielles ont tendance à dominer les sciences sociales parce que les constructions humaines ont tendance à avoir des frontières discrètes.
 - Les données rasters dominent de nombreuses sciences de l'environnement en raison de la dépendance aux données de télédétection.
 
-Il y a beaucoup de chevauchement dans certains domaines et les ensembles de données rasters et vectorielles peuvent être utilisés conjointement :
+Il y a beaucoup de chevauchements dans certains domaines et les ensembles de données rasters et vectorielles peuvent être utilisés conjointement :
 les écologistes et les démographes, par exemple, utilisent couramment les deux.
-En outre, il est possible de le convertir (voir la section \@ref(raster-vector)).
+En outre, il est possible de les convertir (voir la section \@ref(raster-vector)).
 Que votre travail mobilise plus un type de jeux de données, vectorielles ou rasters, il reste utile de comprendre leurs modèles de données sous-jacents pour bien les utiliser, comme nous le verrons dans les chapitres suivants.
 Ce livre utilise les paquets **sf** et **terra** pour travailler, respectivement, avec des données vectorielles et des jeux de données raster.
 
@@ -83,17 +83,17 @@ Le premier est un modèle de données, le second est une classe informatique de 
 Il existe néanmoins un lien entre les deux : les coordonnées spatiales qui sont au cœur du modèle de données vectorielles géographiques peuvent être représentées en R à l´aide d´objets `vector`.
 ```
 
-Le modèle de données géographiques vectorielles est basé sur des points situés dans un système de coordonnées  et de référence (SCR).
+Le modèle de données géographiques vectorielles est basé sur des points situés dans un système de coordonnées et de référence (SCR).
 Les points peuvent représenter des caractéristiques propres (par exemple, l'emplacement d'un arrêt de bus) ou être reliés entre eux pour former des géométries plus complexes telles que des lignes et des polygones.
 La plupart des géométries construites avec des points ne sont qu'en deux dimensions (les CRS tridimensionnels contiennent une valeur supplémentaire $z$, représentant généralement la hauteur au-dessus du niveau de la mer).
 
 Dans ce système, Londres, par exemple, peut être représentée par les coordonnées `c(-0,1, 51,5)`.
 Cela signifie que sa position est  -0,1 degré est et 51,5 degrés nord par rapport au point d'origine.
 Ce dernier se situe à 0 degré de longitude (le méridien d'origine) et à 0 degré de latitude (l'équateur) dans un SCR géographique ('long/lat') (Figure \@ref(fig:vectorplots), panneau de gauche).
-Cette même localisation pourrait également être approximé dans un SCR projeté avec des valeurs "Est/Nord" de `c(530000, 180000)` dans le [*British National Grid*] (https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid), ce qui signifie que Londres est située à 530 km *Est* et 180 km *Nord* de l'origine du SCR.
+Cette même localisation pourrait également être approximée dans un SCR projeté avec des valeurs "Est/Nord" de `c(530000, 180000)` dans le [*British National Grid*] (https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid), ce qui signifie que Londres est située à 530 km *Est* et 180 km *Nord* de l'origine du SCR.
 Ceci peut être vérifié visuellement : un peu plus de 5 "boîtes" --- des zones carrées délimitées par les lignes de grille grises de 100 km de large --- séparent le point représentant Londres de l'origine (Figure \@ref(fig:vectorplots), panneau de droite).
 
-L'emplacement de l'origine de la grille Nationale, dans la mer au-delà de la péninsule du sud-ouest de l’Angleterre, garantit que la plupart des lieux du Royaume-Uni auront des valeurs positives en abscisse et ordonnée.^[ 
+L'emplacement de l'origine de la grille nationale, dans la mer au-delà de la péninsule du sud-ouest de l’Angleterre, garantit que la plupart des lieux du Royaume-Uni auront des valeurs positives en abscisse et ordonnée.^[ 
 L'origine à laquelle nous faisons référence, représentée en bleu sur la figure \@ref(fig:vectorplots), est en fait la "fausse" origine.
 L'origine " réelle ", c'est-à-dire l'endroit où les distorsions sont minimales, est située à 2° W et 49° N. 
 Cette origine a été choisie par l'*Ordnance Survey of the United States* afin de se situer approximativement au centre de la masse continentale britannique dans le sens longitudinal.
@@ -108,15 +108,15 @@ source("https://github.com/Robinlovelace/geocompr/raw/main/code/02-vectorplots.R
 knitr::include_graphics(c("figures/vector_lonlat.png", "figures/vector_projected.png"))
 ```
 
-**sf** fournis des classes informatiques pour les données géographiques vectorielles ainsi qu'une interface en ligne de commande pour des bibliothèques de géocomputation de bas niveau : 
+**sf** fournit des classes informatiques pour les données géographiques vectorielles ainsi qu'une interface en ligne de commande pour des bibliothèques de géocomputation de bas niveau : 
 
 - GDAL\index{GDAL}, pour la lecture, l'écriture et la manipulation d'une large gamme de formats de données géographiques, couverte dans le chapitre \@ref(read-write)
 - PROJ, une puissante bibliothèque pour les transformations de systèmes de coordonnées, qui sous-tend le chapitre \@ref(reproj-geo-data)
-- GEOS\index{GEOS}, un moteur de géométrie éuclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre \@ref(geometric-operations)
+- GEOS\index{GEOS}, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre \@ref(geometric-operations)
 - [S2](https://s2geometry.io/), un moteur de géométrie sphérique écrit en C++ développé par Google, via le paquet [**s2**](https://r-spatial.github.io/s2/), couvert dans la section \@ref(s2) ci-dessous et dans le chapitre \@ref(reproj-geo-data).
 <!-- - [liblwgeom](https://github.com/postgis/postgis/tree/master/liblwgeom), a geometry engine used by PostGIS, via the [**lwgeom**](https://r-spatial.github.io/lwgeom/) package -->
 
-Les informations concernant ces interfaces sont indiquées par *sf* lorsque que celui ci est chargé pour la première fois: via le message `Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE` apparue en dessous de ;a commande `library(sf)` au tout début de ce chapitre. Ce message indique les versions des bibliothèques liées GEOS, GDAL et PROJ (chiffre pouvant varier au cours du temps et entre les ordinateurs) et si oui ou non l'interface avec S2 est activée. 
+Les informations concernant ces interfaces sont indiquées par *sf* lorsque que celui ci est chargé pour la première fois: via le message `Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE` apparue en dessous de la commande `library(sf)` au tout début de ce chapitre. Ce message indique les versions des bibliothèques liées GEOS, GDAL et PROJ (chiffre pouvant varier au cours du temps et entre les ordinateurs) et si oui ou non l'interface avec S2 est activée. 
 Aujourd'hui, nous considérons que c'est un acquis, cependant, c'est grâce à l’intégration étroite entre les différentes bibliothèques géographiques qu'un travail de géocomputation reproductible est possible.
 
 Une fonctionnalité intéressante de **sf** est que vous pouvez changer le moteur de géométrie par défaut utilisé sur les données non projetées : "Désactiver" S2 peut être fait avec la commande `sf::sf_use_s2("FALSE")`, ce qui signifie que le moteur de géométrie euclidienne GEOS sera utilisé par défaut pour toutes les opérations de géométrie, y compris celles sur les données non projetées.
@@ -147,7 +147,7 @@ knitr::include_graphics("figures/sf-classes.png")
 **sf** fournit la même fonctionnalité (et plus) que celle fournie précédemment dans trois packages --- **sp** pour les classes de données [@R-sp], **rgdal** pour la lecture/écriture de données via une interface avec GDAL et PROJ [@R-rgdal] et **rgeos** pour les opérations spatiales via une interface avec GEOS [@R-rgeos].
 
 
-Pour réitérer le message du chapitre 1, les paquets géographiques de Ront une longue histoire d'interfaçage avec des bibliothèques de plus bas inférieur, et **sf** poursuit cette tradition avec une interface unifiée vers les versions récentes de GEOS pour les opérations de géométrie, la bibliothèque GDAL pour la lecture et l'écriture de fichiers de données géographiques, et la bibliothèque PROJ pour la représentation et la transformation des systèmes de référence de coordonnées projetées.
+Comme expliqué au chapitre 1, les paquets géographiques de R ont une longue histoire d'interfaçage avec des bibliothèques de niveau inférieur, et **sf** poursuit cette tradition avec une interface unifiée vers les versions récentes de GEOS pour les opérations de géométrie, la bibliothèque GDAL pour la lecture et l'écriture de fichiers de données géographiques, et la bibliothèque PROJ pour la représentation et la transformation des systèmes de référence de coordonnées projetées.
 Grâce à **s2**,
 <!-- **s2** functions have replaced **lwgeom** ones (Bivand 2021). -->
 <!-- and **lwgeom**, **sf** also has an inter to PostGIS's [`liblwgeom`](https://github.com/postgis/postgis/tree/master/liblwgeom) library  -->
@@ -185,7 +185,7 @@ class(world)
 names(world)
 ```
 
-Le contenu de cette colonne `geom` donne aux objets `sf` leurs proprités spatialles : `world$geom` est une '[colonne de type liste](https://adv-r.hadley.nz/vectors-chap.html#list-columns)' qui contient toutes les coordonnées des polygones du pays.
+Le contenu de cette colonne `geom` donne aux objets `sf` leurs propriétés spatiales : `world$geom` est une '[colonne de type liste](https://adv-r.hadley.nz/vectors-chap.html#list-columns)' qui contient toutes les coordonnées des polygones du pays.
 \index{list column}
 Les objets `sf` peuvent être tracés rapidement avec la fonction de base de R, `plot()` ;
 la commande suivante crée la figure \@ref(fig:world-all).
@@ -236,7 +236,7 @@ Puis, à leur tour, les objets `sfc` sont composés d'un ou plusieurs objets de 
 \index{simple feature columns|see {sf!sfc}}
 
 Pour comprendre comment fonctionnent les composantes spatiales des *simples features*, il est essentiel de comprendre comment leurs géométries sont prises en comptes.
-C'est pourquoi nous couvrirons chacun des types de géométrie *simples features* actuellement pris en charge dans la section \@ref(geometry) puis nous continuerons en montrant comment ils peuvent être représentés dans R en utilisant avec des objets `sf`, formés à la base d'objets `sfg` et `sfc`.
+C'est pourquoi nous couvrirons chacun des types de géométrie *simples features* actuellement pris en charge dans la section \@ref(geometry) puis nous continuerons en montrant comment ils peuvent être représentés dans R avec des objets `sf`, formés à la base d'objets `sfg` et `sfc`.
 
 ```{bloc2 affectation, type='rmdnote'}
 Le morceau de code précédent utilise `=` pour créer un nouvel objet appelé `world_mini` dans la commande `world_mini = world[1:2, 1:3]`.
@@ -255,13 +255,13 @@ L'un des principaux avantages de cette approche est que l'utilisation du modèle
 Une question plus spécifique du point de vue de R est "pourquoi utiliser le paquet **sf** alors que **sp** est déjà éprouvé" ?
 Il existe de nombreuses raisons (liées notamment aux avantages du modèle des *simple features*) :
 
-- Lecture et écriture rapides des données  
-- Amélioration des performances de représentation graphique  
-- Les objets **sf** peuvent être traités comme des tableau de données dans la plupart des opérations.  
-- Les noms des fonctions **sf** sont relativement cohérents et intuitifs (tous commencent par `st_`)  
-- Les fonctions **sf** peuvent être combinées à l'aide de l'opérateur `%>%` et fonctionnent bien avec la collection [tidyverse](http://tidyverse.org/) des paquets R\index{tidyverse}.  
+- lecture et écriture rapides des données ;
+- amélioration des performances de représentation graphique ;
+- les objets **sf** peuvent être traités comme des tableaux de données dans la plupart des opérations ; 
+- les noms des fonctions **sf** sont relativement cohérents et intuitifs (tous commencent par `st_`) ; 
+- les fonctions **sf** peuvent être combinées à l'aide de l'opérateur `%>%` et fonctionnent bien avec la collection [tidyverse](http://tidyverse.org/) des paquets R\index{tidyverse}.  
 
-L'intégration de **sf** pour les paquets **tidyverse** est illustré avec la fonction de lecture des données géographiques vectorisées: `read_sf()`.
+L'intégration de **sf** pour les paquets **tidyverse** est illustrée avec la fonction de lecture des données géographiques vectorisées: `read_sf()`.
 Au contraire de la fonction `st_read()` qui va retourner les attributs dans les classes de base R `data.frame` (et affiche un message de compte rendu plus complet qui dans l'extrait de code ci dessous a été omis) la fonction `read_sf()` va retourner un **tidyverse** `tibble`.
 Vous en trouvez la démonstration ci-dessous (voir la section \@ref(iovec) sur la lecture et l'écriture des données géographiques vectorielles avec R) : 
 
@@ -272,9 +272,9 @@ class(nc_dfr)
 class(nc_tbl)
 ```
 
-Comme illusté dans le Chapitre \@ref(attr), montrant la manipulation d'objet `sf avec le **tidyverse**,  **sf** est désormais la bibliothèquee de référence pour l'analyse des données vectorielles spatiales dans R (sans oublier l'écosystème des pacquets **spatstat** qui fournit de nombreuses fonctions pour les statistiques spatiales).
+Comme illusté dans le Chapitre \@ref(attr), montrant la manipulation d'objets `sf avec le **tidyverse**,  **sf** est désormais la bibliothèquee de référence pour l'analyse des données vectorielles spatiales dans R (sans oublier l'écosystème des paquets **spatstat** qui fournit de nombreuses fonctions pour les statistiques spatiales).
 De nombreux paquets populaires reposent sur **sf**, comme le montre l'augmentation de sa popularité en termes de nombre de téléchargements par jour, comme indiqué dans la section \@ref(r-ecosystem) du chapitre précédent.
-La transition de paquets et de chaîne de processus reposant sur les anciens paquets **rgeos** et **rgdal** prends du temps [@bivand_progress_2021], mais le processus a été acceleré par le sentiments d'urgence par les messages indiquant qu'ils "seraient indisponible à partir de fin 2023".
+La transition de paquets et de chaînes de processus reposant sur les anciens paquets **rgeos** et **rgdal** prends du temps [@bivand_progress_2021], mais le processus a été acceleré par le sentiments d'urgence par les messages indiquant qu'ils "seraient indisponibles à partir de fin 2023".
 Cela signifie que quiconque utilisant encore ces paquets se doit de "**passer aux fonctions de sf/stars/terra pour utiliser GDAL et PROJ le plus rapidement possible.**".
 
 En d'autres termes, **sf** est à l'épreuve du futur mais **sp** ne l'est pas.
@@ -302,7 +302,7 @@ plot(world["pop"])
 
 Les graphiques sont ajoutés en tant que couches aux images existantes en ajoutant dans la fonction l'argument `add = TRUE`.^[
 L'appel de la fonction `plot()` sur un objet **sf** va en réalité appeler `sf::::plot.sf()`. 
-La fonction `plot()` est une méthode géneique qui se comporte différemment selon la classe de l'objet en entré.
+La fonction `plot()` est une méthode générique qui se comporte différemment selon la classe de l'objet en entrée.
 ]
 Pour illustrer cela et donner un avant-goût du contenu des chapitres \@ref(attr) et \@ref(spatial-operations) sur les attributs et les opérations sur les données spatiales, l'extrait de code suivant combine des pays d'Asie :
 
@@ -311,11 +311,11 @@ world_asia = world[world$continent == "Asia", ]
 asia = st_union(world_asia)
 ```
 
-Ainsi pouvons maintenant dessiner le continent asiatique sur une carte du monde.
-Notez que le premier graphe ne doit avoir qu'un seul encart pour que `add = TRUE` fonctionne.
-Si le premier graphe a une légende, `reset = FALSE` doit être utilisé (résultat non montré) :
+Ainsi, nous pouvons maintenant dessiner le continent asiatique sur une carte du monde.
+Notez que le premier graphique ne doit avoir qu'un seul encart pour que `add = TRUE` fonctionne.
+Si le premier graphique a une légende, `reset = FALSE` doit être utilisé (résultat non montré) :
 
-```{r asia, out.width='50%', fig.cap="L'Asia surajoutée comme une couche par dessus les pays mondiaux.", eval=FALSE}
+```{r asia, out.width='50%', fig.cap="L'Asie ajoutée comme une couche par dessus les pays mondiaux.", eval=FALSE}
 plot(world["pop"], reset = FALSE)
 plot(asia, add = TRUE, col = "red")
 ```
@@ -341,7 +341,7 @@ world_cents = st_centroid(world, of_largest = TRUE)
 plot(st_geometry(world_cents), add = TRUE, cex = cex)
 ```
 
-```{r contpop, fig.cap="Pays coloriés par continents et leurs populations en  2015 populations (cercles proportionnels à la population).", echo=FALSE, warning=FALSE, fig.scap="Pays par continents et leur population en 2015."}
+```{r contpop, fig.cap="Pays coloriés par continent et leur population en 2015 (cercles proportionnels à la population).", echo=FALSE, warning=FALSE, fig.scap="Pays par continent et leur population en 2015."}
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/02-contpop.R")
 ```
 
@@ -349,8 +349,8 @@ Le code ci-dessus utilise la fonction `st_centroid()` pour convertir un type de 
 
 \index{bounding box}
 La méthode plot de **sf** possède également des arguments spécifiques aux données géographiques. `expandBB`, par exemple, peut être utilisé pour dessiner un objet `sf` dans son contexte :
-elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en  lsuivant l'ordre : bas, gauche, haut, droite.
-C'est ce que nous avons utilisé dans le morceau de code suivant pour représenter l'Inde et les pays avoisinants de ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
+elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en suivant l'ordre : bas, gauche, haut, droite.
+Dans le programme suivant, ce paramètre est utilisé pour représenter l'Inde et ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
 
 ```{r 02-spatial-data-17, eval=FALSE}
 india = world[world$name_long == "India", ]
@@ -358,7 +358,7 @@ plot(st_geometry(india), expandBB = c(0, 0.2, 0.1, 1), col = "gray", lwd = 3)
 plot(world_asia[0], add = TRUE)
 ```
 
-```{r china, fig.cap="L'Inde et les pays avoisinants, demonstration de l'argument the expandBB.", warning=FALSE, echo=FALSE, out.width="50%"}
+```{r china, fig.cap="L'Inde et ses pays voisins, exemple d'utilisation du paramètre expandBB.", warning=FALSE, echo=FALSE, out.width="50%"}
 old_par = par(mar = rep(0, 4))
 india = world[world$name_long == "India", ]
 indchi = world_asia[grepl("Indi|Chi", world_asia$name_long), ]
@@ -373,10 +373,10 @@ par(old_par)
 Notez l'utilisation de `[0]` pour ne garder que la colonne de géométrie et de `lwd` pour mettre l'accent sur l'Inde.
 La prochaine section \@ref(other-mapping-packages) présente d'autres techniques de visualisation permettant de représenter une gamme de types de géométrie.
 
-### Les types de geométries {#geometry}
+### Les types de géométries {#geometry}
 
-Les géométries sont les éléments de base de *simples features*.
-Ils peuvent prendre dans R l'un des 18 types de géométrie pris en charge par le paquet **sf**.
+Les géométries sont les éléments de base des *simples features*.
+Ces derniers peuvent prendre dans R l'un des 18 types de géométrie pris en charge par le paquet **sf**.
 \index{geometry types|see {sf!geometry types}}
 \index{sf!geometry types}
 Dans ce chapitre, nous nous concentrerons sur les sept types les plus couramment utilisés : `POINT`, `LINESTRING`, `POLYGON`, `MULTIPOINT`, `MULTILINESTRING`, `MULTIPOLYGON` et `GEOMETRYCOLLECTION`.
@@ -392,7 +392,7 @@ Le WKT, quant à lui, est une description de balisage textuel lisible par l'homm
 Les deux formats sont échangeables, et si nous en présentons un, nous choisirons naturellement la représentation WKT.
 
 La base de chaque type de géométrie est le point. 
-Un point est simplement une coordonnée dans un espace 2D, 3D ou 4D (cf. `vignette("sf1")` pour plus d'information). Un exemple est disponible sur le second panneau de la figure \@ref(fig:sfcs):
+Un point est simplement une coordonnée dans un espace 2D, 3D ou 4D (cf. `vignette("sf1")` pour plus d'informations). Un exemple est disponible sur le second panneau de la figure \@ref(fig:sfcs):
 \index{sf!point}
 
 - `POINT (5 2)`
@@ -454,13 +454,13 @@ plot(st_as_sfc("GEOMETRYCOLLECTION (MULTIPOINT (5 2, 1 3, 3 4, 3 2), LINESTRING 
 par(old_par)
 ```
 
-### The sf class {#sf}
+### La classe sf {#sf}
 
 Les *Simple features* sont composés de deux parties principales : les géométries et les attributs non géographiques.
 La figure \@ref(fig:02-sfdiagram) montre comment un objet sf est créé -- les géométries proviennent d'un objet `sfc`, tandis que les attributs sont pris dans un `data.frame` ou un `tibble`.
 Les sections \@ref(sfg) et \@ref(sfc) reprennent la création de géometries sf à partir de rien.
 
-```{r 02-sfdiagram, fig.cap="Building blocks of sf objects.", echo=FALSE}
+```{r 02-sfdiagram, fig.cap="Différentes étapes de construction des objets sf.", echo=FALSE}
 # source("code/02-sfdiagram.R")
 knitr::include_graphics("figures/02-sfdiagram.png")
 ```
@@ -468,8 +468,8 @@ knitr::include_graphics("figures/02-sfdiagram.png")
 Les attributs non géographiques permettent la représentation du nom de l'entité ou d'autres attributs, mesures, appartenance à des groupes et autres.
 \index{sf!class}
 Pour l'illustrer nous allons représenter une température de 25°C à Londres le 21 juin 2017.
-Cet exemple à une géométrie (les coordonnées) et trois attributs de trois classes différentes (le nom, la température et la data).^[
-D'autres attributs pourraient être des types de villes (grandes, moyennes), ou une remarque indiquant si la mesure est produit par une station automatique.
+Cet exemple à une géométrie (les coordonnées) et trois attributs de trois classes différentes (le nom, la température et la date).^[
+D'autres attributs pourraient être des types de villes (grandes, moyennes), ou une remarque indiquant si la mesure est produite par une station automatique.
 ]
 Les objets de la classe `sf` représentent de telles données en combinant les attributs (`data.frame`) avec la colonne de géométrie *simple feature* (`sfc`).
 Ils sont créés avec `st_sf()`, comme l'illustre le code ci-dessous, créant l'exemple londonien :
@@ -485,10 +485,10 @@ lnd_attrib = data.frame(                           # objet data.frame
 lnd_sf = st_sf(lnd_attrib, geometry = lnd_geom)    # objet sf
 ```
 
-Que s'est-il passé ? Premièrement, les coordonnés ont été utilisé pour créer la *simple feature geometry* (`sfg`).
+Que s'est-il passé ? Premièrement, les coordonnés ont été utilisées pour créer la *simple feature geometry* (`sfg`).
 Deuxièmement, la géométrie a été convertie en une colonne de type *simple feature* (`sfc`), avec un SCR.
 Troisièmement, les attributs ont été stockés dans un `data.frame`, qui a été combiné avec l'objet `sfc` avec `st_sf()`.
-Le résultat est un objet `sf`, comme démontré ci-dessous (une partie de la sortie de code est omise) :
+Le résultat est un objet `sf`, comme montré ci-dessous (une partie de la sortie de code est omise) :
 
 ```{r 02-spatial-data-34, eval=FALSE}
 lnd_sf
@@ -503,7 +503,7 @@ class(lnd_sf)
 ```
 
 Le résultat montre que les objets `sf` ont en fait deux classes informatiques, `sf` et `data.frame`.
-Les *Simple features* sont simplement des tableau de données mais avec un attribut spatial stocké dans une colonne de type liste, souvent nommée `geometry`, comme décrit dans la section \@ref(intro-sf).
+Les *Simple features* sont simplement des tableaux de données mais avec un attribut spatial stocké dans une colonne de type liste, souvent nommée `geometry`, comme décrit dans la section \@ref(intro-sf).
 Cette dualité est au coeur du concept de *Simple features*: 
 la plupart du temps un objet `sf` peut être traité comme un `data.frame` et se comporté comme tel.
 Les *Simple features* sont, par essence, des tableaux de données avec une extension spatiale.
@@ -540,13 +540,13 @@ Les noms de ces fonctions sont simples et cohérents, ils commencent tous par le
 - Un multipolygone : `st_multipolygon()`
 - Une collection de géométries : `st_geometrycollection()`
 
-Les objets `sfg` peuvent être créer à partir de trois de types de données de R:
+Les objets `sfg` peuvent être créés à partir de trois de types de données de R:
 
 1. Un vecteur numérique: un point unique  
 2. Un matrice: un ensemble de points, où chaque ligne représente un point, un multipoint ou une ligne
 3. Une liste: une collection d'objets comme des matrices, des multilignes ou des collections de géométries.
 
-La fonction `st_point()` créée un point à partir de vecteurs numériques :
+La fonction `st_point()` crée un point à partir de vecteurs numériques :
 
 ```{r 02-spatial-data-18}
 st_point(c(5, 2))                 # point en XY
@@ -680,7 +680,7 @@ st_crs(points_sfc_wgs) # indique le SCR (seulement les 4 premières lignes sont 
 #> ...
 ```
 
-### le pacquet sfheaders
+### le paquet sfheaders
 
 ```{r sfheaers-setup, echo=FALSE}
 ## Detatch {sf} to remove 'print' methods
@@ -700,9 +700,9 @@ Pour la plupart des gens, les fonctions R seront plus que suffisantes pour bén�
 
 Les cas le plus simple d'utilisation de **sfheaders** sont présentés dans les morceaux de code ci-dessous avec des exemples de construction d'objets `sfg`, `sfc`, et `sf` :
 
-- Un vecteur converti en `sfg_POINT`.
-- Une matrice convertie en `sfg_LINESTRING`.
-- Un cadre de données converti en `sfg_POLYGON`.
+- un vecteur converti en `sfg_POINT`;
+- une matrice convertie en `sfg_LINESTRING`;
+- un tableau de données converti en `sfg_POLYGON`.
 
 Nous allons commencer par créer l'objet `sfg` le plus simple possible, une seule paire de coordonnées, assignée à un vecteur nommé `v` :
 
@@ -739,7 +739,7 @@ dim(v_sfg_sfh)
 attr(v_sfg_sfh, "dim")
 ```
 
-Les exemples suivants montrent comment **sfheaders** crée des objets `sfg` à partir de matrices et de tableau de données :
+Les exemples suivants montrent comment **sfheaders** crée des objets `sfg` à partir de matrices et de tableaux de données :
 
 ```{r sfheaders-sfg_linestring}
 # matrices
