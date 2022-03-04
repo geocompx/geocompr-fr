@@ -42,14 +42,14 @@ sfg
 sfc
 le-paquet-sfheaders
 s2
-données-raster
+les-données-raster
 les-paquets-de-r-pour-travailler-avec-des-rasters
 une-introduction-à-terra
 basic-map-raster
 raster-classes
 crs-intro
-système-de-référence-des-coordonnées
-système-de-réference-projetées
+les-systèmes-de-coordonnées-géographiques
+les-systèmes-de-coordonnées-projetés
 unités
 ex2
 attr

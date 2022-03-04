@@ -879,7 +879,7 @@ Ces cas limites incluent des opérations sur des polygones qui ne sont pas valid
 Si vous voyez un message d'erreur tel que `#> Error in s2_geography_from_wkb ...`, il peut être utile de réessayer la commande qui a généré le message d'erreur, après avoir désactivé S2. 
 Pour désactiver S2 pour la totalité d'un projet, vous pouvez créer un fichier appelé .Rprofile dans le répertoire racine (le dossier principal) de votre projet contenant la commande `sf::sf_use_s2(FALSE)`.</div>\EndKnitrBlock{rmdnote}
 
-## Données Raster
+## Les données raster
 
 Le modèle de données raster représente le monde à l'aide d'une grille continue de cellules (souvent aussi appelées pixels ; Figure \@ref(fig:raster-intro-plot):A).
 Ce modèle de données fait souvent référence à des grilles dites régulières, dans lesquelles chaque cellule a une taille identique et constante - et nous nous concentrerons uniquement sur les grilles régulières dans cet ouvrage.
@@ -887,12 +887,12 @@ Cependant, plusieurs autres types de grilles existent, notamment les grilles tou
 
 Un raster se compose généralement d'un en-tête \index{raster!header}
 et d'une matrice (avec des lignes et des colonnes) représentant des cellules équidistantes (souvent aussi nommées pixels; Figure \@ref(fig:raster-intro-plot):A).)^[
-Selon le format de fichier, l'en-tête fait partie du fichier de données d'image proprement dit, par exemple GeoTIFF, ou peut-être stocké dans un fichier d'en-tête supplémentaire un *world file*, par exemple dans les formats de grille ASCII. 
+Selon le format de fichier, l'en-tête fait partie du fichier de données d'image proprement dit, par exemple GeoTIFF, ou peut être stocké dans un fichier d'en-tête supplémentaire un *world file*, par exemple dans les formats de grille ASCII. 
 Il existe également le format raster binaire sans en-tête (plat) qui devrait faciliter l'importation dans divers logiciels.]
-L'en-tête du raster \index{raster!header} définit le système de coordonnées et références, l'étendue et l'origine.
+L'en-tête du raster \index{raster!header} définit le système de coordonnées de référence, l'étendue et l'origine.
 \index{raster}
 \index{modèle de données matricielles}
-L'origine (ou point de départ) est souvent la coordonnée du coin inférieur gauche de la matrice (LE paquet **terra** utilise toutefois le coin supérieur gauche, par défaut (Figure \@ref(fig:raster-intro-plot):B)).
+L'origine (ou point de départ) est souvent la coordonnée du coin inférieur gauche de la matrice (le paquet **terra** utilise toutefois le coin supérieur gauche, par défaut (Figure \@ref(fig:raster-intro-plot):B)).
 L'en-tête définit l'étendue via le nombre de colonnes, le nombre de lignes et la résolution de la taille des cellules.
 Ainsi, en partant de l'origine, nous pouvons facilement accéder à chaque cellule et la modifier, soit en utilisant l'ID d'une cellule (Figure \@ref(fig:raster-intro-plot):B), soit en spécifiant explicitement les lignes et les colonnes.
 Cette représentation matricielle évite de stocker explicitement les coordonnées des quatre points d'angle (en fait, elle ne stocke qu'une seule coordonnée, à savoir l'origine) de chaque coin de cellule, comme ce serait le cas pour les polygones vectoriels rectangulaires.
@@ -901,13 +901,13 @@ Cependant, contrairement aux données vectorielles, la cellule d'une couche rast
 Cette valeur peut être numérique ou catégorique (Figure \@ref(fig:raster-intro-plot):C).
 
 <div class="figure" style="text-align: center">
-<img src="02-spatial-data_files/figure-html/raster-intro-plot-1.png" alt="Données raster types: (A) identifiant des pixels, (B) Valeur des pixels, (C) une carte raster colorisée." width="100%" />
-<p class="caption">(\#fig:raster-intro-plot)Données raster types: (A) identifiant des pixels, (B) Valeur des pixels, (C) une carte raster colorisée.</p>
+<img src="02-spatial-data_files/figure-html/raster-intro-plot-1.png" alt="Le modèle des données raster: (A) identifiant des pixels, (B) valeur des pixels, (C) une carte raster colorisée." width="100%" />
+<p class="caption">(\#fig:raster-intro-plot)Le modèle des données raster: (A) identifiant des pixels, (B) valeur des pixels, (C) une carte raster colorisée.</p>
 </div>
 
-Les rasters représentent généralement des phénomènes continus tels que l'élévation, la température, la densité de population ou des données spectrales.
-Les variables discrètes telles que les classes de sol ou de couverture terrestre peuvent également être représentées dans le modèle de données raster.
-Ces deux utilisations sont illustrées dans la figure \@ref(fig:raster-intro-plot2), elle montre comment les limites des caractéristiques discrètes peuvent devenir floues dans les ensembles de données matricielles.
+Les rasters représentent généralement des phénomènes continus tels que l'altitude, la température, la densité de population ou des données spectrales.
+Les variables discrètes telles que la classification des sols ou les typologies d'occupation des sols peuvent également être représentées dans le modèle de données raster.
+Ces deux utilisations sont illustrées dans la figure \@ref(fig:raster-intro-plot2) qui montre que les limites des caractéristiques discrètes peuvent devenir floues dans les ensembles de données matricielles.
 Selon la nature de l'application, les représentations vectorielles des caractéristiques discrètes peuvent être plus adaptées.
 
 <div class="figure" style="text-align: center">
@@ -919,21 +919,21 @@ Selon la nature de l'application, les représentations vectorielles des caracté
 
 Au cours des deux dernières décennies, plusieurs paquets permettant de lire et de traiter des ensembles de données matricielles ont été développés.
 Comme indiqué dans la section \@ref(the-history-of-r-spatial), le principal d'entre eux était **raster**. Il a conduit à un changement radical dans les capacités de traitement des rasters avec R lorsqu'il a été lancé en 2010 et il a dominé ce segment jusqu'au développement de **terra** et **stars**.
-Les deux paquets développés plus récemment offrent des fonctions puissantes et performantes pour travailler avec des jeux de données raster et ils ont d'important recoupement entre leurs cas d'usages.
+Développés plus récemment, ces deux paquets offrent des fonctions puissantes et performantes pour travailler avec des jeux de données raster et ils offrent de nombreuses fonctionnalités communes.
 Dans ce livre, nous nous concentrons sur **terra**, qui remplace **raster**, plus ancien et (dans la plupart des cas) plus lent.
 Avant de découvrir le fonctionnement du système de classes de **terra**, cette section décrit les similitudes et les différences entre **terra** et **stars** ; ces connaissances aideront à décider lequel est le plus approprié dans différentes situations.
 
 Tout d'abord, **terra** se concentre sur le modèle de données raster le plus courant (grilles régulières), tandis que **stars** permet également de stocker des modèles moins populaires (notamment des grilles régulières, tournées, cisaillées, rectilignes et curvilignes).
-Alors que **terra** gère généralement des rasters à une ou plusieurs couches^[Il possède également une classe supplémentaire `SpatRasterDataset` pour stocker de nombreuses collections de jeux de données], le paquet **stars** fournit des moyens de stocker des cubes de données raster -- un objet raster avec de nombreuses couches (par exemple, des bandes), pour de nombreux moments dans le temps (par exemple, des mois), et de nombreux attributs (par exemple, le type de capteur A et le type de capteur B).
+Alors que **terra** gère généralement des rasters à une ou plusieurs couches^[Il possède également une classe supplémentaire `SpatRasterDataset` pour stocker de nombreuses collections de jeux de données], le paquet **stars** fournit des moyens de stocker des cubes de données raster -- un objet raster avec de nombreuses couches (par exemple, des bandes), pour plusieurs points dans le temps (par exemple, chaque mois), et de nombreux attributs (par exemple, le type de capteur A et le type de capteur B).
 Premièrement, il est important de noter que dans les deux paquets, toutes les couches ou éléments d'un cube de données doivent avoir les mêmes dimensions spatiales et la même étendue.
 Deuxièmement, les deux paquets permettent soit de lire toutes les données raster en mémoire, soit de lire uniquement leurs métadonnées, ce qui est généralement effectué automatiquement en fonction de la taille du fichier d'entrée.
-Cependant, ils stockent raster  de manière très différente. 
+Cependant, ils stockent différement les valeurs associées aux cellules. 
 **terra** est basé sur du code C++ et utilise principalement des pointeurs C++.
 **stars** stocke les valeurs sous forme de listes de tableaux pour les plus petits rasters ou juste un chemin de fichier pour les plus grands.
 Troisièmement, les fonctions de **stars** sont étroitement liées aux objets et fonctions vectorielles de **sf**, alors que **terra** utilise sa propre classe d'objets pour les données vectorielles, à savoir `SpatVector`.
 Quatrièmement, les deux paquets approchent différemment la façon dont leurs fonctions agissent sur leurs objets.
 Le paquet **terra** s'appuie principalement sur un grand nombre de fonctions intégrées, où chaque fonction a un but spécifique (par exemple, le rééchantillonnage ou le recadrage).
-De son coté **stars** utilise quelques fonctions intégrées (généralement avec des noms commençant par `st_`) avec en complément de ses propres méthodes pour les fonctions de R existantes (par exemple, `split()` ou `aggregate()`), et des méthodes pour les fonctions de **dplyr** (par exemple, `filter()` ou `slice()`).
+De son coté **stars** propose quelques fonctions intégrées (généralement avec des noms commençant par `st_`) mais a aussi ses propres méthodes pour les fonctions de R (par exemple, `split()` ou `aggregate()`) et celles de **dplyr** (par exemple, `filter()` ou `slice()`).
 
 Il est important de noter qu'il est facile de convertir des objets de **terra** en **stars** (en utilisant `st_as_stars()`) et inversement (en utilisant `rast()`).
 Nous vous encourageons également à lire @pebesma_spatial_2022 pour l'introduction la plus complète au paquet **stars**.
@@ -942,7 +942,7 @@ Nous vous encourageons également à lire @pebesma_spatial_2022 pour l'introduct
 
 Le paquet **terra** prend en charge les objets raster dans R.
 Comme son prédécesseur **raster** (créé par le même développeur, Robert Hijmans), il fournit un ensemble complet de fonctions pour créer, lire, exporter, manipuler et traiter des jeux de données rasters.
-Les fonctionnalités de **terra** sont en grande partie les mêmes que celles du paquetage **raster**, plus mature, mais il existe quelques différences : Les fonctions **terra** sont généralement plus efficientes en calcul que les équivalents **raster**.
+Les fonctionnalités de **terra** sont en grande partie les mêmes que celles de **raster**, plus mature, mais il existe quelques différences : les fonctions **terra** sont généralement plus efficientes en calcul que leurs équivalents **raster**.
 <!-- todo : ajouter des preuves (RL 2021-11) -->
 D'autre part, le système de classes de **raster** est populaire et utilisé par de nombreux autres paquets.
 Vous pouvez passer sans problème d'un type d'objet à l'autre pour assurer la compatibilité avec les anciens scripts et paquets, par exemple avec les fonctions [`raster()`](https://rspatial.github.io/raster/reference/raster.html), [`stack()`](https://rspatial.github.io/raster/reference/stack.html) et `brick()` du paquet **raster** (cf. le chapitre précédent pour en savoir plus sur l'évolution des paquets R pour travailler avec des données géographiques).
@@ -954,9 +954,9 @@ En plus des fonctions de manipulation des données matricielles, **terra** fourn
 **terra** vous permet également de travailler sur de grands jeux de données raster qui sont trop volumineux pour tenir dans la RAM.
 Dans ce cas, **terra** offre la possibilité de diviser l'image raster en petits morceaux et de les traiter de manière itérative au lieu de charger un fichier entier dans la RAM.
 
-Pour l'illustration des concepts **terra**, nous utiliserons des jeux de données de la **spDataLarge**.
+Pour l'illustration des concepts **terra**, nous utiliserons des jeux de données de **spDataLarge**.
 Il s'agit de quelques objets raster et d'un objet vectoriel couvrant une zone du parc national de Zion (Utah, USA).
-Par exemple, `srtm.tif` est un modèle numérique d'élévation de cette zone (pour plus de détails, voir sa documentation `?srtm`).
+Par exemple, `srtm.tif` est un modèle numérique de terrain de cette zone (pour plus de détails, voir sa documentation `?srtm`).
 Tout d'abord, créons un objet `SpatRaster` nommé `my_rast` :
 
 
@@ -985,7 +985,7 @@ my_rast
 #> max value   : 2892
 ```
 
-Des fonctions dédiées renseignent chaque composant : `dim(my_rast)` renvoie le nombre de lignes, de colonnes et de couches ; `ncell()` le nombre de cellules (pixels) ; `res()` la résolution spatiale ; `ext()` son étendue spatiale ; et `crs()` son système de référence de coordonnées (la reprojection matricielle est traitée dans la section \@ref(reproj-ras)).
+Des fonctions dédiées renseignent sur chaque composant : `dim(my_rast)` renvoie le nombre de lignes, de colonnes et de couches ; `ncell()` le nombre de cellules (pixels) ; `res()` la résolution spatiale ; `ext()` son étendue spatiale ; et `crs()` son système de coordonnées de référence (la reprojection matricielle est traitée dans la section \@ref(reproj-ras)).
 `inMemory()` indique si le raster est stocké en mémoire vive ou sur disque.
 
 `help("terra-package")` renvoie une liste complète de toutes les fonctions **terra** disponibles.
@@ -1001,17 +1001,17 @@ plot(my_rast)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="02-spatial-data_files/figure-html/basic-new-raster-plot-1.png" alt="Basic raster plot." width="100%" />
-<p class="caption">(\#fig:basic-new-raster-plot)Basic raster plot.</p>
+<img src="02-spatial-data_files/figure-html/basic-new-raster-plot-1.png" alt="Une représentation raster basique." width="100%" />
+<p class="caption">(\#fig:basic-new-raster-plot)Une représentation raster basique.</p>
 </div>
 
 Il existe plusieurs autres approches pour représenter des données raster dans R qui sortent du cadre de cette section, notamment :
 
-- la fonction `plotRGB()` du paquet **terra** pour créer *une composition colorée rouge-vert-bleu (RGB)* basée sur trois couches dans un objet `SpatRaster`.
-- Des paquets tels que **tmap** pour créer des cartes statiques et interactives d'objets rasters et vectoriels (voir le chapitre \@ref(adv-map)) 
-- D'autres fonctions, par exemple `levelplot()` du paquet **rasterVis**, pour créer des vignettes, une technique courante pour visualiser les changements dans le temps.
+- la fonction `plotRGB()` du paquet **terra** pour créer *une composition colorée rouge-vert-bleu (RGB)* basée sur trois couches dans un objet `SpatRaster`;
+- des paquets tels que **tmap** pour créer des cartes statiques et interactives d'objets rasters et vectoriels (voir le chapitre \@ref(adv-map)) ;
+- d'autres fonctions, par exemple `levelplot()` du paquet **rasterVis**, pour créer des vignettes, une technique courante pour visualiser les changements dans le temps.
 
-### Les classes Raster {#raster-classes}
+### Les classes raster {#raster-classes}
 
 La classe `SpatRaster` représente les rasters dans **terra**.
 La façon la plus simple de créer un objet raster dans R est de lire un fichier raster à partir du disque ou d'un serveur (Section \@ref(raster-data-read).
@@ -1023,16 +1023,16 @@ single_raster_file = system.file("raster/srtm.tif", package = "spDataLarge")
 single_rast = rast(raster_filepath)
 ```
 
-Le paquet **terra** supporte de nombreux pilotes à l'aide de la bibliothèque GDAL.
+Le paquet **terra** supporte de nombreux pilotes grâce à la bibliothèque GDAL.
 Les rasters provenant de fichiers ne sont généralement pas lus entièrement en RAM, à l'exception de leur en-tête et d'un pointeur vers le fichier lui-même.
 
 Les rasters peuvent aussi être créés à partir de zéro en utilisant la même fonction `rast()`.
-Ceci est illustré dans l'extrait de code suivant produisant en un nouvel objet `SpatRaster`.
+Ceci est illustré dans l'extrait de code suivant créant un nouvel objet `SpatRaster`.
 Ce raster consiste en 36 cellules (6 colonnes et 6 lignes spécifiées par `nrows` et `ncols`) centrées autour du Méridien d'origine et de l’Équateur (voir les paramètres `xmin`, `xmax`, `ymin` et `ymax`).
 Le SCR par défaut des objets rasters est WGS84, mais peut être changé avec l'argument `crs`.
 Cela signifie que l'unité de résolution est en degrés, que nous fixons à 0.5 (`resolution`). 
 Des valeurs (`vals`) sont assignées à chaque cellule : 1 à la cellule 1, 2 à la cellule 2, et ainsi de suite.
-Rappelez-vous : `rast()` remplit les cellules par rangées (contrairement à `matrix()`) en commençant par le coin supérieur gauche, ce qui signifie que la première rangée contient les valeurs 1 à 6, la seconde 7 à 12, etc.
+Rappelez-vous : `rast()` remplit les cellules par ligne (contrairement à `matrix()`) en commençant par le coin supérieur gauche, ce qui signifie que la première ligne contient les valeurs 1 à 6, la seconde 7 à 12, etc.
 
 
 ```r
@@ -1041,7 +1041,7 @@ new_raster = rast(nrows = 6, ncols = 6, resolution = 0.5,
                   vals = 1:36)
 ```
 
-`?rast` permet de découvrir d'autre facons de créer des objets rasters.
+`?rast` permet de découvrir d'autre façons de créer des objets rasters.
 
 La classe `SpatRaster` gère également les couches multiples, qui correspondent généralement à un seul fichier satellite multispectral ou à une série temporelle de rasters.
 
@@ -1069,8 +1069,7 @@ nlyr(multi_rast)
 #> [1] 4
 ```
 
-Pour les objets raster multi-couches, les couches peuvent être sélectionnées avec `terra::subset()`.^[Les opérateurs `[[` et `$` peuvent également être utilisés pour la sélection des couches].
-Elle accepte un numéro de couche ou son nom comme second argument :
+Pour les objets raster multi-couches, les couches peuvent être sélectionnées avec `terra::subset()`^[Les opérateurs `[[` et `$` peuvent également être utilisés pour la sélection des couches] qui accepte un numéro ou un nom de couche comme second argument :
 
 
 ```r
@@ -1093,7 +1092,7 @@ Dans ces cas, il y a deux solutions possibles : (1) l´utilisation de la fonctio
 <!--consider new section with other data models-->
 <!-- e.g. point clouds, data cubes, meshes, etc. -->
 
-## Système de Coordonnés et de Réferences géographiques et projetés {#crs-intro}
+## Les systèmes de référence des coordonnées {#crs-intro}
 
 \index{CRS!introduction}
 Les types de données spatiales vectorielles et rasters partagent des concepts intrinsèques aux données spatiales.
@@ -1101,7 +1100,7 @@ Le plus fondamental d'entre eux est peut-être le système de référence des co
 Les CRS sont soit géographiques, soit projetés, comme nous l'avons présenté au début de ce chapitre (voir Figure \@ref(fig:vectorplots)).
 Cette section reprend chaque type, posant ainsi les bases du chapitre \@ref(reproj-geo-data), qui offre une plongée en profondeur dans la configuration, la transformation et l'interrogation des SCR.
 
-### Système de référence des coordonnées 
+### Les systèmes de coordonnées géographiques 
 
 \index{CRS!geographic}
 Les systèmes de coordonnées géographiques identifient tout emplacement sur la surface de la Terre à l'aide de deux valeurs --- la longitude et la latitude (voir le panneau gauche de la figure \@ref(fig:vector-crs)). 
@@ -1136,11 +1135,11 @@ Les deux référentiels de la figure \@ref(fig:datum-fig) sont placés au-dessus
 <p class="caption">(\#fig:datum-fig)(ref:datum-fig)</p>
 </div>
 
-### Système de réference projetées 
+### Les systèmes de coordonnées projetés
 
 \index{CRS!projected}
 Tous les SCR projetés sont basés sur un SCR géographique, décrit dans la section précédente, et s'appuient sur des projections cartographiques pour convertir la surface tridimensionnelle de la Terre en valeurs d'abscisses et d'ordonnées (x et y) dans un SCR projeté.
-Les SRC projetés sont basés sur des coordonnées cartésiennes sur une surface implicitement plane (panneau de droite de la figure \@ref(fig:vector-crs)).
+Les SRC projetés reposent sur des coordonnées cartésiennes sur une surface implicitement plane (panneau de droite de la figure \@ref(fig:vector-crs)).
 Ils ont une origine, des axes x et y, et une unité de mesure linéaire telle que le mètre.
 
 Cette transition ne peut se faire sans ajouter certaines déformations.
@@ -1151,9 +1150,9 @@ Les projections sont souvent nommées en fonction de la propriété qu'elles pr�
 Il existe trois groupes principaux de types de projection : conique, cylindrique et plane (azimutale).
 Dans une projection conique, la surface de la Terre est projetée sur un cône le long d'une seule ligne de tangence ou de deux lignes de tangence. 
 Les distorsions sont minimisées le long des lignes de tangence et augmentent avec la distance à ces lignes dans cette projection.
-Elle est donc le mieux adaptée aux cartes des zones de latitude moyenne.
+Elle est donc mieux adaptée aux cartes des zones de latitude moyenne.
 Une projection cylindrique représente la surface sur un cylindre.
-Cette projection peut également être créée en touchant la surface de la Terre le long d'une seule ligne de tangence ou de deux lignes de tangence. 
+Cette projection peut également être créée en plaçant la surface de la Terre le long d'une seule ligne de tangence ou de deux lignes de tangence. 
 Les projections cylindriques sont le plus souvent utilisées pour cartographier le monde entier.
 Une projection plane projette les données sur une surface plate en touchant le globe en un point ou le long d'une ligne de tangence. 
 Elle est généralement utilisée pour cartographier les régions polaires.
