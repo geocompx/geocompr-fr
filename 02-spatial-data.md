@@ -91,7 +91,7 @@ La plupart des géométries construites avec des points ne sont qu'en deux dimen
 Dans ce système, Londres, par exemple, peut être représentée par les coordonnées `c(-0,1, 51,5)`.
 Cela signifie que sa position est  -0,1 degré est et 51,5 degrés nord par rapport au point d'origine.
 Ce dernier se situe à 0 degré de longitude (le méridien d'origine) et à 0 degré de latitude (l'équateur) dans un SCR géographique ('long/lat') (Figure \@ref(fig:vectorplots), panneau de gauche).
-Cette même localisation pourrait également être approximée dans un SCR projeté avec des valeurs "Est/Nord" de `c(530000, 180000)` dans le [*British National Grid*] (https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid), ce qui signifie que Londres est située à 530 km *Est* et 180 km *Nord* de l'origine du SCR.
+Cette même localisation pourrait également être approximée dans un SCR projeté avec des valeurs "Est/Nord" de `c(530000, 180000)` dans le [*British National Grid*](https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid), ce qui signifie que Londres est située à 530 km *Est* et 180 km *Nord* de l'origine du SCR.
 Ceci peut être vérifié visuellement : un peu plus de 5 "boîtes" --- des zones carrées délimitées par les lignes de grille grises de 100 km de large --- séparent le point représentant Londres de l'origine (Figure \@ref(fig:vectorplots), panneau de droite).
 
 L'emplacement de l'origine de la grille nationale, dans la mer au-delà de la péninsule du sud-ouest de l’Angleterre, garantit que la plupart des lieux du Royaume-Uni auront des valeurs positives en abscisse et ordonnée.^[ 
