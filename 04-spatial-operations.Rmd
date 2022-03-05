@@ -42,17 +42,17 @@ Dans la dernière section avant les exercices (\@ref(merging-rasters)), le proce
 Il est important de noter que les opérations spatiales qui utilisent deux objets spatiaux reposent sur le fait que les deux objets ont le même système  de coordonnées de référence, un sujet qui a été introduit dans la section \@ref(crs-intro) et qui sera traité plus en profondeur dans le chapitre \@ref(reproj-geo-data).
 ```
 
-## Spatial operations on vector data {#spatial-vec}
+## Géotraitements sur des données vectorielles {#spatial-vec}
 
-This section provides an overview of spatial operations on vector geographic data represented as simple features in the **sf** package.
-Section \@ref(spatial-ras) presents spatial operations on raster datasets using classes and functions from the **terra** package.
+Cette section fournit une vue d'ensemble des opérations spatiales sur les données géographiques vectorielles représentées sous forme de *simple features* du package **sf**.
+La section \@ref(spatial-ras) présente les opérations spatiales sur les ensembles de données raster à l'aide des classes et des fonctions du paquet **terra**.
 
-### Spatial subsetting
+### Sélection spatiale
 
-Spatial subsetting is the process of taking a spatial object and returning a new object containing only features that *relate* in space to another object.
-Analogous to *attribute subsetting* (covered in Section \@ref(vector-attribute-subsetting)), subsets of `sf` data frames can be created with square bracket (`[`) operator using the syntax `x[y, , op = st_intersects]`, where `x` is an `sf` object from which a subset of rows will be returned, `y` is the 'subsetting object' and `, op = st_intersects` is an optional argument that specifies the topological relation (also known as the binary predicate) used to do the subsetting.
-The default topological relation used when an `op` argument is not provided is `st_intersects()`: the command `x[y, ]` is identical to `x[y, , op = st_intersects]` shown above but not `x[y, , op = st_disjoint]` (the meaning of these and other topological relations is described in the next section).
-The `filter()` function from the **tidyverse**\index{tidyverse (package)} can also be used but this approach more verbose, as we will see in the examples below.
+La sélection spatial est le processus qui consiste à prendre un objet spatial et à renvoyer un nouvel objet contenant uniquement les caractéristiques en relation dans l'espace à un autre objet.
+De manière analogue à la  *sélection d'attributs* (traité dans la section \@ref(vector-attribute-subsetting)), des sélection de jeux de données `sf` peuvent être créés avec l'opérateur de crochets (`[`) en utilisant la syntaxe `x[y, , op = st_intersects]`, où `x` est un objet `sf` à partir duquel un sous-ensemble de lignes sera retourné, `y` est l'objet de sous-ensemble et `, op = st_intersects` est un argument optionnel qui spécifie la relation topologique (également connue sous le nom de prédicat binaire) utilisée pour faire la sélection.
+La relation topologique par défaut utilisée lorsqu'un argument `op` n'est pas fourni est `st_intersects()` : la commande `x[y, ]` est identique à `x[y, , op = st_intersects]` montrée ci-dessus mais pas à `x[y, , op = st_disjoint]` (la signification de ces relations topologiques et des autres est décrite dans la section suivante).
+La fonction `filter()` du **tidyverse**\index{tidyverse (package)} peut également être utilisée mais cette approche est plus verbeuse, comme nous le verrons dans les exemples ci-dessous.
 \index{vector!subsetting}
 \index{spatial!subsetting}
 
@@ -64,37 +64,37 @@ canterbury = nz %>% filter(Name == "Canterbury")
 canterbury_height = nz_height[canterbury, ]
 ```
 
-```{r nz-subset, echo=FALSE, warning=FALSE, fig.cap="Illustration of spatial subsetting with red triangles representing 101 high points in New Zealand, clustered near the central Canterbuy region (left). The points in Canterbury were created with the `[` subsetting operator (highlighted in gray, right).", fig.scap="Illustration of spatial subsetting.", message=FALSE}
+```{r nz-subset, echo=FALSE, warning=FALSE, fig.cap="Exemple de sélection spatiale avec des triangles rouges représentant 101 points hauts en Nouvelle-Zélande, regroupés près de la région centrale de Canterbury (à gauche). Les points dans la région de Canterbury ont été créés avec l'opérateur de sélection `[` (surligné en gris, à droite).", fig.scap="Exemple de sélection spatiale..", message=FALSE}
 library(tmap)
 p_hpnz1 = tm_shape(nz) + tm_polygons(col = "white") +
   tm_shape(nz_height) + tm_symbols(shape = 2, col = "red", size = 0.25) +
-  tm_layout(main.title = "High points in New Zealand", main.title.size = 1,
+  tm_layout(main.title = "Sommets en Nouvelle Zélande", main.title.size = 1,
             bg.color = "lightblue")
 p_hpnz2 = tm_shape(nz) + tm_polygons(col = "white") +
   tm_shape(canterbury) + tm_fill(col = "gray") + 
   tm_shape(canterbury_height) + tm_symbols(shape = 2, col = "red", size = 0.25) +
-  tm_layout(main.title = "High points in Canterbury", main.title.size = 1,
+  tm_layout(main.title = "Sommets à Canterbury", main.title.size = 1,
             bg.color = "lightblue")
 tmap_arrange(p_hpnz1, p_hpnz2, ncol = 2)
 ```
 
-Like attribute subsetting, the command `x[y, ]` (equivalent to `nz_height[canterbury, ]`) subsets features of a *target* `x` using the contents of a *source* object `y`.
-Instead of `y` being a vector of class `logical` or `integer`, however, for spatial subsetting both `x` and `y` must be geographic objects.
-Specifically, objects used for spatial subsetting in this way must have the class `sf` or `sfc`: both `nz` and `nz_height` are geographic vector data frames and have the class `sf`, and the result of the operation returns another `sf` object representing the features in the target `nz_height` object that intersect with (in this case high points that are located within) the `canterbury` region. 
+Comme pour la sélection d'attributs, la commande `x[y, ]` (équivalente à `nz_height[canterbury, ]`) sélectionne les caractéristiques d'une *cible* `x` en utilisant le contenu d'un objet *source* `y`.
+Cependant, au lieu que `y` soit un vecteur de classe `logical` ou `integer`, pour la sélection spatiale, `x` et `y` doivent être des objets géographiques.
+Plus précisément, les objets utilisés pour la sélection spatiale de cette manière doivent avoir la classe `sf` ou `sfc` : `nz` et `nz_height` sont tous deux des jeux de données vectorielles géographiques et ont la classe `sf`, et le résultat de l'opération renvoie un autre objet `sf` représentant les caractéristiques de l'objet cible `nz_height` qui intersectent (dans ce cas, les points hauts qui sont situés dans) la région de `canterbury`.
 
-Various *topological relations* can be used for spatial subsetting which determine the type of spatial relationship that features in the target object must have with the subsetting object to be selected.
-These include *touches*, *crosses* or *within*, as we will see shortly in Section \@ref(topological-relations). 
-The default setting `st_intersects` is a 'catch all' topological relation that will return features in the target that *touch*, *cross* or are *within* the source 'subsetting' object.
-As indicated above, alternative spatial operators can be specified with the `op =` argument, as demonstrated in the following command which returns the opposite of `st_intersects()`, points that do not intersect with Canterbury (see Section \@ref(topological-relations)):
+Diverses *relations topologiques* peuvent être utilisées pour le sélection spatiale. Elles déterminent le type de relation spatiale que les caractéristiques de l'objet cible doivent avoir avec l'objet de  sélection.
+Il peut s'agir de *touches* (touche), *crosses* (croisse) ou *within* (dedans), comme nous le verrons bientôt dans la section \@ref(topological-relations). 
+Le paramètre par défaut `st_intersects` est une relation topologique 'attrape-tout' qui retournera les éléments de la cible qui *touchent*, *croissent* ou sont *within* (dedans) l'objet source 'sélectionnant'.
+Comme indiqué ci-dessus, d'autres opérateurs spatiaux peuvent être spécifiés avec l'argument `op =`, comme le montre la commande suivante qui renvoie l'opposé de `st_intersects()`, les points qui ne sont pas en intersection avec `Canterbury` (voir la section \@ref(topological-relations)) :
 
 ```{r 04-spatial-operations-4, eval=FALSE}
 nz_height[canterbury, , op = st_disjoint]
 ```
 
 ```{block2 04-spatial-operations-5, type='rmdnote'}
-Note the empty argument --- denoted with `, ,` --- in the preceding code chunk is included to highlight `op`, the third argument in `[` for `sf` objects.
-One can use this to change the subsetting operation in many ways.
-`nz_height[canterbury, 2, op = st_disjoint]`, for example, returns the same rows but only includes the second attribute column (see `` sf:::`[.sf` `` and the `?sf` for details).
+Notez que l´argument vide --- dénoté par `, ,` --- dans l´extrait de code précédent est inclus pour mettre en évidence `op`, le troisième argument dans `[` pour les objets `sf`.
+On peut l´utiliser pour modifier l´opération de sélection de plusieurs façons.
+`nz_height[canterbury, 2, op = st_disjoint]`, par exemple, retourne les mêmes lignes mais n´inclut que la deuxième colonne d´attributs (voir ``sf:::`[.sf`` et le `?sf`` pour plus de détails).
 ```
 
 For many applications, this is all you'll need to know about spatial subsetting for vector data: it just works.
