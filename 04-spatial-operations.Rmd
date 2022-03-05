@@ -1,8 +1,8 @@
-# Spatial data operations {#spatial-operations}
+# Traitements specifiques des données spatiales {#spatial-operations}
 
-## Prerequisites {-}
+## Prérequis {-}
 
-- This chapter requires the same packages used in Chapter \@ref(attr): 
+- Ce chapitre nécessité les mêmes paquets que ceux utilisés dans le chapitre \@ref(attr): 
 
 ```{r 04-spatial-operations-1, message=FALSE, results='hide'}
 library(sf)
@@ -11,7 +11,7 @@ library(dplyr)
 library(spData)
 ```
 
-- You also need to read in a couple of datasets as follows for Section \@ref(spatial-ras)
+- Vous devrez également charger deux jeux de  données pour cette section \@ref(spatial-ras)
 
 ```{r 04-spatial-operations-1-1}
 elev = rast(system.file("raster/elev.tif", package = "spData"))
@@ -21,25 +21,25 @@ grain = rast(system.file("raster/grain.tif", package = "spData"))
 
 ## Introduction
 
-Spatial operations, including spatial joins between vector datasets and local and focal operations on raster datasets, are a vital part of geocomputation\index{geocomputation}.
-This chapter shows how spatial objects can be modified in a multitude of ways based on their location and shape.
-Many spatial operations have a non-spatial (attribute) equivalent, so concepts such as subsetting and joining datasets demonstrated in the previous chapter are applicable here.
-This is especially true for *vector* operations: Section \@ref(vector-attribute-manipulation) on vector attribute manipulation provides the basis for understanding its spatial counterpart, namely spatial subsetting (covered in Section \@ref(spatial-subsetting)).
-Spatial joining (Section \@ref(spatial-joining)) and aggregation (Section \@ref(spatial-aggr)) also have non-spatial counterparts, covered in the previous chapter.
+Les opérations spatiales, y compris les jointures spatiales entre les ensembles de données vectorielles et les opérations locales et focales sur les ensembles de données raster, constituent une partie essentielle de la géocomputation\index{geocomputation}.
+Ce chapitre montre comment les objets spatiaux peuvent être modifiés d'une multitude de façons en fonction de leur emplacement et de leur forme.
+De nombreuses opérations spatiales ont un équivalent non spatial (par exemple via leurs attributs), de sorte que des concepts tels que la sélection et la jonction de jeux de données démontrés dans le chapitre précédent sont applicables ici.
+Cela est particulièrement vrai pour les opérations *vectorielles* : La section \@ref(vector-attribute-manipulation) sur la manipulation des tables attributaires fournit la base pour comprendre son équivalent spatial, à savoir la sélection spatial (traitée dans la section \@ref(spatial-subsetting)).
+La jointure spatiale (section \@ref(spatial-joining)) et l'agrégation (section \@ref(spatial-aggr)) ont également des contreparties non spatiales, traitées dans le chapitre précédent.
 
-Spatial operations differ from non-spatial operations in a number of ways, however:
-Spatial joins, for example, can be done in a number of ways --- including matching entities that intersect with or are within a certain distance of the target dataset --- while the attribution joins discussed in Section \@ref(vector-attribute-joining) in the previous chapter can only be done in one way (except when using fuzzy joins, as described in the documentation of the [**fuzzyjoin**](https://cran.r-project.org/package=fuzzyjoin) package).
-The *type* of spatial relationship between objects must be considered when undertaking spatial operations, as described in Section \@ref(topological-relations), on topological relations between vector features.
+Les opérations spatiales diffèrent toutefois des opérations non spatiales à plusieurs égards :
+Les jointures spatiales, par exemple, peuvent être effectuées de plusieurs manières --- y compris la mise en correspondance d'entités qui se croisent ou se trouvent à une certaine distance de l'ensemble de données cible --- alors que les jointures de table attributaire abordées dans la section \@ref(vector-attribute-joining) du chapitre précédent ne peuvent être effectuées que d'une seule manière (sauf lorsqu'on utilise des jointures floues, comme décrit dans la documentation du paquet [**fuzzyjoin**](https://cran.r-project.org/package=fuzzyjoin)).
+Le *type* de relation spatiale entre les objets doit être pris en compte lors de l'exécution des opérations spatiales, comme décrit dans la section \@ref(topological-relations), sur les relations topologiques entre les caractéristiques vectorielles.
 \index{spatial operations}.
-Another unique aspect of spatial objects is distance: all spatial objects are related through space, and distance calculations can be used to explore the strength of this relationship, as described in the context of vector data in Section \@ref(distance-relations).
+Un autre aspect unique des objets spatiaux est la distance : tous les objets spatiaux sont liés par l'espace et les calculs de distance peuvent être utilisés pour explorer la force de cette relation, comme décrit dans le contexte des données vectorielles à la section \@ref(relations-distance).
 
-Spatial operations on raster objects include subsetting --- covered in Section \@ref(spatial-raster-subsetting) --- and merging several raster 'tiles' into a single object, as demonstrated in Section \@ref(merging-rasters).
-*Map algebra* covers a range of operations that modify raster cell values, with or without reference to surrounding cell values, is vital for many applications.
-The concept of map algebra is introduced in Section \@ref(map-algebra); local, focal and zonal map algebra operations are covered in sections \@ref(local-operations), \@ref(focal-operations), and \@ref(zonal-operations), respectively. Global map algebra operations, which generate summary statistics representing an entire raster dataset, and distance calculations on rasters, are discussed in Section \@ref(global-operations-and-distances).
-In the final section before the exercises (\@ref(merging-rasters)) the process of merging two raster datasets is discussed and demonstrated with reference to a reproducible example.
+Les opérations spatiales sur les rasters comprennent la sélection --- traité dans la section \@ref(spatial-raster-subsetting) --- et la fusion de plusieurs " tuiles " raster en un seul objet, comme le montre la section \@ref(merging-rasters).
+*L'algèbre de raster* couvre une gamme d'opérations qui modifient les valeurs des cellules, avec ou sans référence aux valeurs des cellules environnantes, ce qui est vital pour de nombreuses applications.
+Le concept d'algèbre de raster est présenté dans la section \@ref(map-algebra) ; les opérations d'algèbre de raster locales, focales et zonales sont traitées respectivement dans les sections \@ref(local-operations), \@ref(focal-operations) et \\@ref(zonal-operations). Les opérations d'algèbre globales, qui génèrent des statistiques synthétiques représentant l'ensemble d'un jeu de données raster, et les calculs de distance sur les données raster, sont abordés dans la section \@ref(global-operations-and-distances).
+Dans la dernière section avant les exercices (\@ref(merging-rasters)), le processus de fusion de deux ensembles de données raster est abordé et démontré à l'aide d'un exemple reproductible.
 
 ```{block2 04-spatial-operations-2, type='rmdnote'}
-It is important to note that spatial operations that use two spatial objects rely on both objects having the same coordinate reference system, a topic that was introduced in Section \@ref(crs-intro) and which will be covered in more depth in Chapter \@ref(reproj-geo-data).
+Il est important de noter que les opérations spatiales qui utilisent deux objets spatiaux reposent sur le fait que les deux objets ont le même système  de coordonnées de référence, un sujet qui a été introduit dans la section \@ref(crs-intro) et qui sera traité plus en profondeur dans le chapitre \@ref(reproj-geo-data).
 ```
 
 ## Spatial operations on vector data {#spatial-vec}
