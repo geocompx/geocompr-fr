@@ -97,12 +97,12 @@ On peut l´utiliser pour modifier l´opération de sélection de plusieurs faço
 `nz_height[canterbury, 2, op = st_disjoint]`, par exemple, retourne les mêmes lignes mais n´inclut que la deuxième colonne d´attributs (voir ``sf:::`[.sf`` et le `?sf`` pour plus de détails).
 ```
 
-For many applications, this is all you'll need to know about spatial subsetting for vector data: it just works.
-If you are impatient to learn about more topological relations, beyond `st_intersects()` and `st_disjoint()`, skip to the next section (\@ref(topological-relations)).
-If you're interested in the details, including other ways of subsetting, read on.
+Pour de nombreuses applications, c'est tout ce que vous aurez besoin de savoir sur les sélections spatiales avec les données vectorielles !
+Si vous êtes impatient d'en savoir plus sur les relations topologiques, au-delà de `st_intersects()` et `st_disjoint()`, passez à la section suivante (\@ref(topological-relations)).
+Si vous êtes intéressé par les détails, y compris les autres façons de faire des sélections, c'est par ici.
 
-Another way of doing spatial subsetting uses objects returned by topological operators.
-These objects can be useful in their own right, for example when exploring the graph network of relationships between contiguous regions, but they can also be used for subsetting, as demonstrated in the code chunk below:
+Une autre façon d'effectuer une sélection spatiale est d'utiliser les objets retournés par les opérateurs topologiques.
+Ces objets peuvent être utiles en soi, par exemple lors de l'exploration du réseau de relations entre des régions contiguës, mais ils peuvent également être utilisés pour sélectionner comme le montre le morceau de code ci-dessous :
 
 ```{r 04-spatial-operations-6}
 sel_sgbp = st_intersects(x = nz_height, y = canterbury)
@@ -112,17 +112,17 @@ sel_logical = lengths(sel_sgbp) > 0
 canterbury_height2 = nz_height[sel_logical, ]
 ```
 
-The above code chunk creates an object of class `sgbp` (a sparse geometry binary predicate, a list of length `x` in the spatial operation) and then converts it into a logical vector `sel_logical` (containing only `TRUE` and `FALSE` values, something that can also be used by **dplyr**'s filter function).
+Le code ci-dessus crée un objet de classe `sgbp` (un prédicat binaire de géométrie "creuse", une liste de longueur `x` dans l'opération spatiale) et le convertit ensuite en un vecteur logique `sel_logical` (contenant seulement les valeurs `TRUE` et `FALSE`, quelque chose qui peut aussi être utilisé par la fonction filtre de **dplyr**).
 \index{binary predicate|seealso {topological relations}}
-The function `lengths()` identifies which features in `nz_height` intersect with *any* objects in `y`.
-In this case 1 is the greatest possible value but for more complex operations one could use the method to subset only features that intersect with, for example, 2 or more features from the source object.
+La fonction `lengths()` identifie les éléments de `nz_height` qui ont une intersection avec *tout* objet de `y`.
+Dans ce cas, 1 est la plus grande valeur possible, mais pour des opérations plus complexes, on peut utiliser la méthode pour sélectionner uniquement les caractéristiques qui ont une intersection avec, par exemple, 2 caractéristiques ou plus de l'objet source.
 
 ```{block2 04-spatial-operations-7, type='rmdnote'}
-Note: another way to return a logical output is by setting `sparse = FALSE` (meaning 'return a dense matrix not a sparse one') in operators such as `st_intersects()`. The command `st_intersects(x = nz_height, y = canterbury, sparse = FALSE)[, 1]`, for example, would return an output identical to `sel_logical`.
-Note: the solution involving `sgbp` objects is more generalisable though, as it works for many-to-many operations and has lower memory requirements.
+Note : une autre façon de retourner une sortie logique est de mettre `sparse = FALSE` (ce qui signifie retourner une matrice dense et non une matrice 'creuse') dans des opérateurs tels que `st_intersects()`. La commande `st_intersects(x = nz_height, y = canterbury, sparse = FALSE)[, 1]`, par exemple, retournerait une sortie identique à `sel_logical`.
+Note : la solution impliquant les objets `sgbp` est cependant plus généralisable, car elle fonctionne pour les opérations *many-to-many* et a des besoins en mémoire plus faibles.
 ```
 
-The same result can be achieved with the **sf** function `st_filter()` which was [created](https://github.com/r-spatial/sf/issues/1148) to increase compatibility between `sf` objects and **dplyr** data manipulation code:
+Le même résultat peut être obtenu avec la fonction de **sf** `st_filter()` qui a été [créée](https://github.com/r-spatial/sf/issues/1148) pour augmenter la compatibilité entre les objets `sf` et les manipulation de données de **dplyr** :
 
 ```{r}
 canterbury_height3 = nz_height %>%
@@ -143,24 +143,24 @@ identical(canterbury_height, canterbury_height4)
 waldo::compare(canterbury_height2, canterbury_height4)
 ```
 
-At this point, there are three identical (in all but row names) versions of `canterbury_height`, one created using the `[` operator, one created via an intermediary selection object, and another using **sf**'s convenience function `st_filter()`.
+A ce stade, il y a trois versions identiques (à l'exception des noms de lignes) de `canterbury_height`, une créée en utilisant l'opérateur `[`, une créée via un objet de sélection intermédiaire, et une autre utilisant la fonction de commodité de **sf** `st_filter()`.
 <!-- RL: commented out for now as old. Todo: if we ever update that vignette uncomment the next line. -->
 <!-- To explore spatial subsetting in more detail, see the supplementary vignettes on `subsetting` and [`tidyverse-pitfalls`](https://geocompr.github.io/geocompkg/articles/) on the [geocompkg website](https://geocompr.github.io/geocompkg/articles/). -->
-The next section explores different types of spatial relation, also known as binary predicates, that can be used to identify whether or not two features are spatially related or not.
+La section suivante explore différents types de relations spatiales, également connues sous le nom de prédicats binaires, qui peuvent être utilisées pour identifier si deux éléments sont spatialement liés ou non.
 
-### Topological relations
+### Relations topologiques
 
-Topological relations describe the spatial relationships between objects.
-"Binary topological relationships", to give them their full name, are logical statements (in that the answer can only be `TRUE` or `FALSE`) about the spatial relationships between two objects defined by ordered sets of points (typically forming points, lines and polygons) in two or more dimensions [@egenhofer_mathematical_1990].
-That may sound rather abstract and, indeed, the definition and classification of topological relations is based on mathematical foundations first published in book form in 1966 [@spanier_algebraic_1995], with the field of algebraic topology continuing into the 21^st^ century [@dieck_algebraic_2008].
+Les relations topologiques décrivent les relations spatiales entre les objets.
+Les "relations topologiques binaires", pour leur donner leur nom complet, sont des énoncés logiques (en ce sens que la réponse ne peut être que `VRAI` ou `FAUX`) sur les relations spatiales entre deux objets définis par des ensembles ordonnés de points (formant typiquement des points, des lignes et des polygones) en deux dimensions ou plus [@egenhofer_mathematical_1990].
+Cela peut sembler plutôt abstrait et, en effet, la définition et la classification des relations topologiques reposent sur des fondements mathématiques publiés pour la première fois sous forme de livre en 1966 [@spanier_algebraic_1995], le domaine de la topologie algébrique se poursuivant au 21^e^ siècle [@dieck_algebraic_2008].
 
-Despite their mathematical origins, topological relations can be understood intuitively with reference to visualizations of commonly used functions that test for common types of spatial relationships.
-Figure \@ref(fig:relations) shows a variety of geometry pairs and their associated relations.
-The third and fourth pairs in Figure \@ref(fig:relations) (from left to right and then down) demonstrate that, for some relations, order is important: while the relations *equals*, *intersects*, *crosses*, *touches* and *overlaps* are symmetrical, meaning that if `function(x, y)` is true, `function(y, x)` will also by true, relations in which the order of the geometries are important such as *contains* and *within* are not.
-Notice that each geometry pair has a "DE-9IM" string such as FF2F11212, described in the next section.
+Malgré leur origine mathématique, les relations topologiques peuvent être comprises intuitivement en se référant à des visualisations de fonctions couramment utilisées qui testent les types courants de relations spatiales.
+La figure \@ref(fig:relations) montre une variété de paires géométriques et leurs relations associées.
+Les troisième et quatrième paires de la figure \@ref(fig:relations) (de gauche à droite puis vers le bas) montrent que, pour certaines relations, l'ordre est important : alors que les relations *equals*, *intersects*, *crosses*, *touches* et *overlaps* sont symétriques, ce qui signifie que si `function(x, y)` est vraie, `function(y, x)` le sera aussi, les relations dans lesquelles l'ordre des géométries est important, comme *contains* et *within*, ne le sont pas.
+Remarquez que chaque paire de géométries possède une chaîne "DE-9IM" telle que FF2F11212, décrite dans la section suivante.
 \index{topological relations}
 
-```{r relations, echo=FALSE, fig.cap="Topological relations between vector geometries, inspired by Figures 1 and 2 in Egenhofer and Herring (1990). The relations for which the function(x, y) is true are printed for each geometry pair, with x represented in pink and y represented in blue. The nature of the spatial relationship for each pair is described by the Dimensionally Extended 9-Intersection Model string.", fig.show='hold', message=FALSE, fig.asp=0.66, warning=FALSE}
+```{r relations, echo=FALSE, fig.cap="Relations topologiques entre géométries vectorielles, inspirées des figures 1 et 2 d'Egenhofer et Herring (1990). Les relations pour lesquelles la fonction(x, y) est vraie sont imprimées pour chaque paire de géométries, x étant représenté en rose et y en bleu. La nature de la relation spatiale pour chaque paire est décrite par la chaîne de caractères du Dimensionally Extended 9-Intersection Model.", fig.show='hold', message=FALSE, fig.asp=0.66, warning=FALSE}
 # source("https://github.com/Robinlovelace/geocompr/raw/c4-v2-updates-rl/code/de_9im.R")
 source("code/de_9im.R")
 library(sf)
@@ -178,9 +178,9 @@ tmap::tmap_arrange(de_9im(p1, p2), de_9im(p1, p3), de_9im(p1, p4),
                    de_9im(p7, p1), de_9im(p1, p5), de_9im(p1, p6), nrow = 2)
 ```
 
-In `sf`, functions testing for different types of topological relations are called 'binary predicates', as described in the vignette *Manipulating Simple Feature Geometries*, which can be viewed with the command [`vignette("sf3")`](https://r-spatial.github.io/sf/articles/sf3.html), and in the help page [`?geos_binary_pred`](https://r-spatial.github.io/sf/reference/geos_binary_ops.html).
-To see how topological relations work in practice, let's create a simple reproducible example, building on the relations illustrated in Figure \@ref(fig:relations) and consolidating knowledge of how vector geometries are represented from a previous chapter (Section \@ref(geometry)).
-Note that to create tabular data representing coordinates (x and y) of the polygon vertices, we use the base R function `cbind()` to create a matrix representing coordinates points, a `POLYGON`, and finally an `sfc` object, as described in Chapter \@ref(spatial-class):
+Dans `sf`, les fonctions testant les différents types de relations topologiques sont appelées binary predicates", comme décrit dans la vignette *Manipulating Simple Feature Geometries*, qui peut être consultée avec la commande [`vignette("sf3")`](https://r-spatial.github.io/sf/articles/sf3.html), et dans la page d'aide [`?geos_binary_pred`](https://r-spatial.github.io/sf/reference/geos_binary_ops.html).
+Pour voir comment les relations topologiques fonctionnent en pratique, créons un exemple simple et reproductible, en nous appuyant sur les relations illustrées dans la Figure \@ref(fig:relations) et en consolidant les connaissances sur la représentation des géométries vectorielles acquises dans un chapitre précédent (Section \@ref(geometry)).
+Notez que pour créer des données tabulaires représentant les coordonnées (x et y) des sommets du polygone, nous utilisons la fonction R de base `cbind()` pour créer une matrice représentant les points de coordonnées, un `POLYGON`, et enfin un objet `sfc`, comme décrit au chapitre \@ref(spatial-class)) :
 
 ```{r}
 polygon_matrix = cbind(
@@ -190,8 +190,8 @@ polygon_matrix = cbind(
 polygon_sfc = st_sfc(st_polygon(list(polygon_matrix)))
 ```
 
-We will create additional geometries to demonstrate spatial relations with the following commands which, when plotted on top of the polygon created above, relate in space to one another, as shown in Figure \@ref(fig:relation-objects).
-Note the use of the function `st_as_sf()` and the argument `coords` to efficiently convert from a data frame containing columns representing coordinates to an `sf` object containing points:
+Nous allons créer des géométries supplémentaires pour démontrer les relations spatiales à l'aide des commandes suivantes qui, lorsqu'elles sont tracées sur le polygone créé ci-dessus, se rapportent les unes aux autres dans l'espace, comme le montre la Figure \@ref(fig:relation-objects).
+Notez l'utilisation de la fonction `st_as_sf()` et de l'argument `coords` pour convertir efficacement un tableau de données contenant des colonnes représentant des coordonnées en un objet `sf` contenant des points :
 
 ```{r}
 line_sfc = st_sfc(st_linestring(cbind(
