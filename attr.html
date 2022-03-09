@@ -98,7 +98,7 @@
 Un arrêt de bus en est un exemple simple : sa position est généralement représentée par des coordonnées de latitude et de longitude (données géométriques), en plus de son nom.
 L’arrêt <a href="https://www.openstreetmap.org/relation/6610626">Elephant &amp; Castle / New Kent Road</a> à Londres, par exemple, a pour coordonnées -0,098 degrés de longitude et 51,495 degrés de latitude, ce qui peut être représenté par <code>POINT (-0,098 51,495)</code> dans la représentation <code>sfc</code> décrite au chapitre <a href="spatial-class.html#spatial-class">2</a>.
 Les attributs tels que le nom <em>attribut</em> de élément POINT (pour utiliser la terminologie de <em>Simple Features</em>) sont le sujet de ce chapitre.</p>
-<p>Un autre exemple est la valeur d’élévation (attribut) pour un pixel spécifique dans les données raster.
+<p>Un autre exemple est la valeur d’altitude (attribut) pour un pixel spécifique dans les données raster.
 Contrairement au modèle de données vectorielles, le modèle de données raster stocke indirectement les coordonnées de la cellule de grille, ce qui signifie que la distinction entre attribut et information spatiale est moins claire.
 Pour illustrer ce point, pensez à un pixel dans la 3<sup>e</sup> ligne et la 4<sup>e</sup> colonne d’une matrice matricielle.
 Son emplacement spatial est défini par son indice dans la matrice : déplacez-vous depuis l’origine de quatre cellules dans la direction x (généralement vers l’est et la droite sur les cartes) et de trois cellules dans la direction y (généralement vers le sud et le bas).
@@ -106,7 +106,7 @@ La <em>résolution</em> de la trame définit la distance pour chaque étape x et
 L’en-tête est un composant essentiel des ensembles de données raster qui spécifie comment les pixels se rapportent aux coordonnées géographiques (voir également le chapitre <a href="#spatial-operations"><strong>??</strong></a>).</p>
 <p>Vous apprendrez ainsi à manipuler des objets géographiques en fonction d’attributs, tels que le nom des arrêts de bus, dans un jeux de données vectorielles et l’altitude des pixels dans un jeux de données raster.
 Pour les données vectorielles, cela implique des techniques telles que le sous-ensemble et l’agrégation (voir les sections <a href="#vector-attribute-subsetting"><strong>??</strong></a> et <a href="#vector-attribute-aggregation"><strong>??</strong></a>).
-Les sections <a href="#vector-attribute-joining"><strong>??</strong></a> et <a href="attr.html#vec-attr-creation">3.2.5</a> montrent respectivement comment joindre des données à des objets <em>simple features</em> à l’aide d’un ID (identifiant) partagé et comment créer de nouvelles variables.
+Les sections <a href="#vector-attribute-joining"><strong>??</strong></a> et <a href="attr.html#vec-attr-creation">3.2.5</a> montrent respectivement comment joindre des données à des objets d’entités simples (<em>simple features</em>) à l’aide d’un ID (identifiant) partagé et comment créer de nouvelles variables.
 Chacune de ces opérations a un équivalent spatial :
 L’opérateur <code>[</code> de la version de base de R, par exemple, fonctionne pour faire des sous-ensembles d’objets basé sur leur attribut que ces objets soient spatiaux ou non ; vous pouvez également joindre les attributs de deux jeux de données géographiques à l’aide de jointures spatiales.
 C’est une bonne nouvelle : les compétences développées dans ce chapitre sont transférables.
@@ -119,7 +119,7 @@ La section <a href="#summarizing-raster-objects"><strong>??</strong></a> fournit
 <span class="header-section-number">3.2</span> Manipulations des attributs de données vectorielles.<a class="anchor" aria-label="anchor" href="#manipulations-des-attributs-de-donn%C3%A9es-vectorielles."><i class="fas fa-link"></i></a>
 </h2>
 <p>Les jeux de données géographiques vectorielles sont bien supportés dans R grâce à la classe <code>sf</code>, qui étend la classe <code>data.frame</code> de R.
-Comme les tableaux de données, les objets <code>sf</code> ont une colonne par variable attributaire (comme le ‘nom’) et une ligne par observation ou <em>élément</em> (par exemple, par station de bus).
+Comme les tableaux de données, les objets <code>sf</code> ont une colonne par variable attributaire (comme le ‘nom’) et une ligne par observation ou <em>entité</em> (par exemple, par station de bus).
 Les objets <code>sf</code> diffèrent des cadres de données de base parce qu’ils ont une colonne <code>geometry</code> de la classe <code>sfc</code> qui peut contenir une gamme d’entités géographiques (points simples et ‘multi’, lignes et polygones) par ligne.
 Ceci a été décrit dans le chapitre <a href="spatial-class.html#spatial-class">2</a>, qui a démontré comment les <em>méthodes génériques</em> telles que <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> et <code><a href="https://rdrr.io/pkg/terra/man/summary.html">summary()</a></code> fonctionnent avec les objets <code>sf</code>.
 <strong>sf</strong> fournit également des méthodes génériques permettant aux objets <code>sf</code> de se comporter comme des tableaux de données ordinaires, comme le montre l’impression des méthodes de la classe :</p>
@@ -487,7 +487,7 @@ En utilisant le tableau de données mis à jour, <code><a href="https://dplyr.ti
 <span class="co">#&gt; Joining, by = "name_long"</span>
 <span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html">nrow</a></span><span class="op">(</span><span class="va">world_coffee_match</span><span class="op">)</span>
 <span class="co">#&gt; [1] 46</span></code></pre></div>
-<p>Il est également possible d’effectuer une jointure dans l’autre sens : en partant d’un ensemble de données non spatiales et en ajoutant des variables provenant d’un objet <em>simple features</em>.
+<p>Il est également possible d’effectuer une jointure dans l’autre sens : en partant d’un ensemble de données non spatiales et en ajoutant des variables provenant d’un objet entités simples.
 Ci-dessous, on commence avec l’objet <code>coffee_data</code> et on ajoute les variables du jeux de données <code>world</code>.
 Contrairement aux jointures précédentes, le résultat n’est <em>pas</em> un autre objet <em>simple features</em> , mais un tableau de données sous la forme d’un tibble <strong>tidyverse</strong> :
 Le résultat d’une jointure tend à correspondre à son premier argument :</p>
@@ -549,7 +549,7 @@ Ceci est illustré ci-dessous, qui produit le même objet <code>world</code>, ma
 <code class="sourceCode R"><span class="va">new_names</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html">c</a></span><span class="op">(</span><span class="st">"i"</span>, <span class="st">"n"</span>, <span class="st">"c"</span>, <span class="st">"r"</span>, <span class="st">"s"</span>, <span class="st">"t"</span>, <span class="st">"a"</span>, <span class="st">"p"</span>, <span class="st">"l"</span>, <span class="st">"gP"</span>, <span class="st">"geom"</span><span class="op">)</span>
 <span class="va">world</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span><span class="op">(</span><span class="va">new_names</span><span class="op">)</span></code></pre></div>
-<p>Il est important de noter que les opérations sur les données attributaires préservent la géométrie des <em>simple features</em>.
+<p>Il est important de noter que les opérations sur les données attributaires préservent la géométrie des entités simples.
 Comme mentionné au début du chapitre, il peut être utile de supprimer la géométrie.
 Pour ce faire, vous devez la supprimer explicitement.
 Par conséquent, une approche telle que <code>select(world, -geom)</code> sera infructueuse et vous devriez plutôt utiliser <code><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry()</a></code>.<a href="attr.html#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
@@ -564,7 +564,7 @@ Par conséquent, une approche telle que <code>select(world, -geom)</code> sera i
 <span class="header-section-number">3.3</span> Manipuler des objets raster<a class="anchor" aria-label="anchor" href="#manipuler-des-objets-raster"><i class="fas fa-link"></i></a>
 </h2>
 <!--jn-->
-<p>Contrairement au modèle de données vectorielles qui sous-tend les <em>simple features</em> (qui représente les points, les lignes et les polygones comme des entités discrètes dans l’espace), les données matricielles représentent des surfaces continues.
+<p>Contrairement au modèle de données vectorielles sous-tendu par les entités simples (qui représente les points, les lignes et les polygones comme des entités discrètes dans l’espace), les données matricielles représentent des surfaces continues.
 Cette section présente le fonctionnement des objets raster en les créant <em>de bout en bout</em>, en s’appuyant sur la section <a href="#an-introduction-to-terra"><strong>??</strong></a>.
 En raison de leur structure unique, les sélections et les autres opérations sur les jeux de données raster fonctionnent d’une manière différente, comme le montre la section <a href="#raster-subsetting"><strong>??</strong></a>.
 </p>

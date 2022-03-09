@@ -39,7 +39,7 @@ library(sf)          # classes et fonctions pour les données vectorielles
 #> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE
 ```
 
-Conformemant à la section \@ref(intro-sf), la sortie de `library(sf)` mentionne les versions des bibliothèques géographiques clés, comme GEOS, utilisées par ce paquet.
+Conformément à la section \@ref(intro-sf), la sortie de `library(sf)` mentionne les versions des bibliothèques géographiques clés, comme GEOS, utilisées par ce paquet.
 
 
 ```r
@@ -84,13 +84,13 @@ les données vectorielles géographiques et la classe `vector` (notez la police 
 Le premier est un modèle de données, le second est une classe informatique de R tout comme le sont `data.frame` et `matrix`.
 Il existe néanmoins un lien entre les deux : les coordonnées spatiales qui sont au cœur du modèle de données vectorielles géographiques peuvent être représentées en R à l´aide d´objets `vector`.</div>\EndKnitrBlock{rmdnote}
 
-Le modèle de données géographiques vectorielles est basé sur des points situés dans un système de coordonnées et de référence (SCR).
+Le modèle de données géographiques vectorielles est basé sur des points situés dans un système de coordonnées de référence (CRS).
 Les points peuvent représenter des caractéristiques propres (par exemple, l'emplacement d'un arrêt de bus) ou être reliés entre eux pour former des géométries plus complexes telles que des lignes et des polygones.
 La plupart des géométries construites avec des points ne sont qu'en deux dimensions (les CRS tridimensionnels contiennent une valeur supplémentaire $z$, représentant généralement la hauteur au-dessus du niveau de la mer).
 
 Dans ce système, Londres, par exemple, peut être représentée par les coordonnées `c(-0,1, 51,5)`.
 Cela signifie que sa position est  -0,1 degré est et 51,5 degrés nord par rapport au point d'origine.
-Ce dernier se situe à 0 degré de longitude (le méridien d'origine) et à 0 degré de latitude (l'équateur) dans un SCR géographique ('long/lat') (Figure \@ref(fig:vectorplots), panneau de gauche).
+Ce dernier se situe à 0 degré de longitude (le méridien d'origine) et à 0 degré de latitude (l'équateur) dans un CRS géographique ('long/lat') (Figure \@ref(fig:vectorplots), panneau de gauche).
 Cette même localisation pourrait également être approximée dans un SCR projeté avec des valeurs "Est/Nord" de `c(530000, 180000)` dans le [*British National Grid*](https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid), ce qui signifie que Londres est située à 530 km *Est* et 180 km *Nord* de l'origine du SCR.
 Ceci peut être vérifié visuellement : un peu plus de 5 "boîtes" --- des zones carrées délimitées par les lignes de grille grises de 100 km de large --- séparent le point représentant Londres de l'origine (Figure \@ref(fig:vectorplots), panneau de droite).
 
@@ -99,7 +99,7 @@ L'origine à laquelle nous faisons référence, représentée en bleu sur la fig
 L'origine " réelle ", c'est-à-dire l'endroit où les distorsions sont minimales, est située à 2° W et 49° N. 
 Cette origine a été choisie par l'*Ordnance Survey of the United States* afin de se situer approximativement au centre de la masse continentale britannique dans le sens longitudinal.
 ]
-Les SCR sont plus complexes, et seront abordées plus en détail dans les sections \@ref(crs-intro) et \@ref(reproj-geo-data). Cependant pour les besoins de cette section, il suffit de savoir que les coordonnées consistent en deux nombres représentant la distance par rapport à un point d'origine, généralement dans les dimensions $x$ puis $y$.
+Les CRS sont plus complexes, et seront abordées plus en détail dans les sections \@ref(crs-intro) et \@ref(reproj-geo-data). Cependant pour les besoins de cette section, il suffit de savoir que les coordonnées consistent en deux nombres représentant la distance par rapport à un point d'origine, généralement dans les dimensions $x$ puis $y$.
 
 
 
@@ -127,7 +127,7 @@ Cette section présente les classes **sf** en préparation des chapitres suivant
 
 ### Une introduction aux *Simple Features*
 
-*Simple features* est un [Format ouvert](http://portal.opengeospatial.org/files/?artifact_id=25355) développé et approuvé par l'Open Geospatial Consortium (OGC), une organisation à but non lucratif dont nous reviendrons sur les activités dans un chapitre ultérieur (section \@ref(file-formats)).
+*Simple features* ou "entités simples" est un [Format ouvert](http://portal.opengeospatial.org/files/?artifact_id=25355) développé et approuvé par l'Open Geospatial Consortium (OGC), une organisation à but non lucratif dont nous reviendrons sur les activités dans un chapitre ultérieur (section \@ref(file-formats)).
 \index{simple features |cf. {sf}}
 *Simple Features* est un modèle de données hiérarchique qui représente un large éventail de types géométriques.
 Sur les 18 types géométriques pris en charge par la spécification, seuls 7 sont utilisés dans la grande majorité des recherches géographiques (voir Figure \@ref(fig:sf-ogc)) ;
@@ -159,7 +159,7 @@ Nous aborderons **s2** dans les chapitres suivants.
 <!-- See sections \@ref(s2) and \@ref(buffers) for further details. -->
 
 La capacité de **sf** à intégrer plusieurs bibliothèques puissantes pour la géoinformatique dans un seul cadre est une réalisation remarquable qui réduit le "coût d'entrée" dans le monde de l'analyse reproductible des données géographiques avec des bibliothèques performantes.
-La fonctionnalité de **sf** est bien documentée sur son site web à l'adresse [r-spatial.github.io/sf/] (https://r-spatial.github.io/sf/index.html) qui contient 7 vignettes.
+La fonctionnalité de **sf** est bien documentée sur son site web à l'adresse [r-spatial.github.io/sf/] (https://r-spatial.github.io/sf/index.html) contient 7 vignettes.
 Celles-ci peuvent être visualisées hors ligne comme suit :
 
 
@@ -253,12 +253,12 @@ Avant de décrire chaque type de géométrie géré par le paquet **sf**, il est
 La section \@ref(sf) montre comment les objets *simples features* sont des tableau de données, avec des colonnes géométriques spéciales.
 Ces colonnes spatiales sont souvent appelées `geom` ou `geometry` : ainsi `world$geom` fait référence à l'élément spatial de l'objet `world` décrit plus haut.
 Ces colonnes géométriques sont des "colonnes de type liste" de la classe `sfc` (voir la section \@ref(sfc)).
-Puis, à leur tour, les objets `sfc` sont composés d'un ou plusieurs objets de la classe `sfg` : des géométries *simples features* que nous décriverons dans la section \@ref(sfg).
+Puis, à leur tour, les objets `sfc` sont composés d'un ou plusieurs objets de la classe `sfg` : des géométries d'entités simples que nous décriverons dans la section \@ref(sfg).
 \index{sf!sfc}
 \index{simple feature columns|see {sf!sfc}}
 
-Pour comprendre comment fonctionnent les composantes spatiales des *simples features*, il est essentiel de comprendre comment leurs géométries sont prises en comptes.
-C'est pourquoi nous couvrirons chacun des types de géométrie *simples features* actuellement pris en charge dans la section \@ref(geometry) puis nous continuerons en montrant comment ils peuvent être représentés dans R avec des objets `sf`, formés à la base d'objets `sfg` et `sfc`.
+Pour comprendre comment fonctionnent les composantes spatiales des entités simples, il est essentiel de comprendre comment leurs géométries sont prises en comptes.
+C'est pourquoi nous couvrirons chacun des types de géométrie d'entités simples actuellement pris en charge dans la section \@ref(geometry) puis nous continuerons en montrant comment ils peuvent être représentés dans R avec des objets `sf`, formés à la base d'objets `sfg` et `sfc`.
 
 
 ```bloc2
@@ -271,12 +271,12 @@ L´utilisation de l´un ou l´autre est une question de préférence, tant que v
 
 ### Pourquoi *simple features*?
 
-Les *simple features* sont un modèle de données largement utilisé qui sous-tend les structures de données de nombreuses applications SIG, notamment QGIS\index{QGIS} et PostGIS\index{PostGIS}.
+Les *simple features* ou entités simples sont un modèle de données largement utilisé qui sous-tend les structures de données de nombreuses applications SIG, notamment QGIS\index{QGIS} et PostGIS\index{PostGIS}.
 L'un des principaux avantages de cette approche est que l'utilisation du modèle de données garantit que votre travail est transférable à d'autres configurations, par exemple l'importation et l'exportation vers des bases de données spatiales.
 \index{sf!why simple features}
 
 Une question plus spécifique du point de vue de R est "pourquoi utiliser le paquet **sf** alors que **sp** est déjà éprouvé" ?
-Il existe de nombreuses raisons (liées notamment aux avantages du modèle des *simple features*) :
+Il existe de nombreuses raisons (liées notamment aux avantages du modèle des entités simples) :
 
 - lecture et écriture rapides des données ;
 - amélioration des performances de représentation graphique ;
@@ -413,7 +413,7 @@ La prochaine section \@ref(other-mapping-packages) présente d'autres techniques
 
 ### Les types de géométries {#geometry}
 
-Les géométries sont les éléments de base des *simples features*.
+Les géométries sont les éléments de base des éntités simples.
 Ces derniers peuvent prendre dans R l'un des 18 types de géométrie pris en charge par le paquet **sf**.
 \index{geometry types|see {sf!geometry types}}
 \index{sf!geometry types}
@@ -426,7 +426,7 @@ En général, le *well-known binary* (WKB) ou le *well-known text*  (WKT) sont l
 \index{well-known binary}
 Les WKB sont généralement représentés par des chaînes hexadécimales facilement lisibles par les ordinateurs.
 C'est pourquoi les SIG et les bases de données spatiales l'utilisent pour transférer et stocker des objets géométriques.
-Le WKT, quant à lui, est une description de balisage textuel lisible par l'homme pour des *simples features*. 
+Le WKT, quant à lui, est une description de balisage textuel lisible par l'homme pour des éntités simples. 
 Les deux formats sont échangeables, et si nous en présentons un, nous choisirons naturellement la représentation WKT.
 
 La base de chaque type de géométrie est le point. 
@@ -481,7 +481,7 @@ Enfin, une collection de géométries peut contenir n'importe quelle combinaison
 
 ### La classe sf {#sf}
 
-Les *Simple features* sont composés de deux parties principales : les géométries et les attributs non géographiques.
+Les *Simple features* ou entités simples sont composés de deux parties principales : les géométries et les attributs non géographiques.
 La figure \@ref(fig:02-sfdiagram) montre comment un objet sf est créé -- les géométries proviennent d'un objet `sfc`, tandis que les attributs sont pris dans un `data.frame` ou un `tibble`.
 Les sections \@ref(sfg) et \@ref(sfc) reprennent la création de géometries sf à partir de rien.
 
@@ -532,16 +532,16 @@ class(lnd_sf)
 ```
 
 Le résultat montre que les objets `sf` ont en fait deux classes informatiques, `sf` et `data.frame`.
-Les *Simple features* sont simplement des tableaux de données mais avec un attribut spatial stocké dans une colonne de type liste, souvent nommée `geometry`, comme décrit dans la section \@ref(intro-sf).
-Cette dualité est au coeur du concept de *Simple features*: 
+Les entités simples sont simplement des tableaux de données mais avec un attribut spatial stocké dans une colonne de type liste, souvent nommée `geometry`, comme décrit dans la section \@ref(intro-sf).
+Cette dualité est au coeur du concept d'éntités simple: 
 la plupart du temps un objet `sf` peut être traité comme un `data.frame` et se comporté comme tel.
-Les *Simple features* sont, par essence, des tableaux de données avec une extension spatiale.
+Les entités simples sont, par essence, des tableaux de données avec une extension spatiale.
 
 
 
 ### Simple feature geometries (sfg) {#sfg}
 
-La classe `sfg` représente les différents types de géométrie *simple feature* dans R : point, ligne, polygone (et leurs équivalents "multi", comme les multipoints) ou collection de géométries.
+La classe `sfg` représente les différents types de géométrie des éntités simples dans R : point, ligne, polygone (et leurs équivalents "multi", comme les multipoints) ou collection de géométries.
 \index{géométries d'entités simples|voir {sf!sfg}}
 
 En général, la tâche fastidieuse de création de géométries vous est épargnée car vous pouvez simplement importer un fichier spatial déjà existant.
@@ -645,8 +645,8 @@ st_geometrycollection(gemetrycollection_list)
 ### Simple feature columns (sfc) {#sfc}
 
 Un objet `sfg` ne contient qu'un seul élément géométrique *simple feature*.
-Une colonne de géométrie *simple feature** (`sfc`) est une liste d'objets `sfg`, qui peut en outre contenir des informations sur le système de référence des coordonnées utilisé.
-Par exemple, pour combiner deux *simples features* en un seul objet avec deux entités, nous pouvons utiliser la fonction `st_sfc()`.
+Une colonne de géométrie *simple feature* (`sfc`) est une liste d'objets `sfg`, qui peut en outre contenir des informations sur le système de référence des coordonnées utilisé.
+Par exemple, pour combiner deux entités simples en un seul objet avec deux entités, nous pouvons utiliser la fonction `st_sfc()`.
 \index{sf!simple feature columns (sfc)}
 C'est important car `sfc` va correspondre à la colonne de géométrie dans les tableaux de données **sf** :
 
@@ -709,7 +709,7 @@ st_geometry_type(point_multilinestring_sfc)
 #> 18 Levels: GEOMETRY POINT LINESTRING POLYGON MULTIPOINT ... TRIANGLE
 ```
 
-Comme indiqué précédemment, les objets `sfc` peuvent également stocker de l'information sur le système de coordonnées et de référence (SCR).
+Comme indiqué précédemment, les objets `sfc` peuvent également stocker de l'information sur le système de coordonnées et de référence (CRS).
 La valeur par défaut est `NA` (*Not Available*) et elle peut être vérifiée avec `st_crs()` :
 
 
@@ -719,7 +719,7 @@ st_crs(points_sfc)
 ```
 
 Toutes les géométries des objets `sfc` doivent avoir le même SCR.
-Un SCR peut être spécifié avec l'argument `crs` de `st_sfc()` (ou `st_sf()`), il prend un **identifiant SCR** fourni sous forme de chaîne de texte, comme `crs = "EPSG:4326"` (voir la section \@ref(crs-in-r) pour détails et mieux comprendre ce que cela signifie)
+Un SCR peut être spécifié avec l'argument `crs` de `st_sfc()` (ou `st_sf()`), il prend un **identifiant CRS** fourni sous forme de chaîne de texte, comme `crs = "EPSG:4326"` (voir la section \@ref(crs-in-r) pour détails et mieux comprendre ce que cela signifie)
 
 
 ```r
@@ -816,7 +816,7 @@ sfheaders::sf_polygon(obj = df)
 ```
 
 Dans chacun de ces exemples, le SCR (système de coordonnées et de référence) n'est pas défini.
-Si vous prévoyez d'effectuer des calculs ou des opérations géométriques à l'aide des fonctions **sf**, nous vous recommandons de définir le SCR (voir le chapitre \@ref(reproj-geo-data) pour plus de détails) :
+Si vous prévoyez d'effectuer des calculs ou des opérations géométriques à l'aide des fonctions **sf**, nous vous recommandons de définir le CRS (voir le chapitre \@ref(reproj-geo-data) pour plus de détails) :
 
 
 ```r
@@ -873,11 +873,11 @@ sf_use_s2(TRUE)
 #> Spherical geometry (s2) switched on
 ```
 
-\BeginKnitrBlock{rmdnote}<div class="rmdnote">Bien que l'utilisation de S2 par **sf** ait du sens dans de nombreux cas, dans certains cas, il y a de bonnes raisons de désactiver S2 pour la durée d'une session R ou même pour un projet entier.
+\BeginKnitrBlock{rmdnote}<div class="rmdnote">Bien que l´utilisation de S2 par **sf** ait du sens dans de nombreux cas, dans certains cas, il y a de bonnes raisons de désactiver S2 pour la durée d´une session R ou même pour un projet entier.
 Comme documenté dans la question [1771](https://github.com/r-spatial/sf/issues/1771) dans le repo GitHub de **sf**, le comportement par défaut peut faire échouer du code qui fonctionnerait avec S2 désactivé (et avec des versions plus anciennes de **sf**).
 Ces cas limites incluent des opérations sur des polygones qui ne sont pas valides selon la définition plus stricte de S2.
-Si vous voyez un message d'erreur tel que `#> Error in s2_geography_from_wkb ...`, il peut être utile de réessayer la commande qui a généré le message d'erreur, après avoir désactivé S2. 
-Pour désactiver S2 pour la totalité d'un projet, vous pouvez créer un fichier appelé .Rprofile dans le répertoire racine (le dossier principal) de votre projet contenant la commande `sf::sf_use_s2(FALSE)`.</div>\EndKnitrBlock{rmdnote}
+Si vous voyez un message d´erreur tel que `#> Error in s2_geography_from_wkb ...`, il peut être utile de réessayer la commande qui a généré le message d´erreur, après avoir désactivé S2. 
+Pour désactiver S2 pour la totalité d´un projet, vous pouvez créer un fichier appelé .Rprofile dans le répertoire racine (le dossier principal) de votre projet contenant la commande `sf::sf_use_s2(FALSE)`.</div>\EndKnitrBlock{rmdnote}
 
 ## Les données raster
 
@@ -1096,7 +1096,7 @@ Dans ces cas, il y a deux solutions possibles : (1) l´utilisation de la fonctio
 
 \index{CRS!introduction}
 Les types de données spatiales vectorielles et rasters partagent des concepts intrinsèques aux données spatiales.
-Le plus fondamental d'entre eux est peut-être le système de référence des coordonnées (SCR), qui définit la manière dont les éléments spatiaux des données se rapportent à la surface de la Terre (ou d'autres corps).
+Le plus fondamental d'entre eux est peut-être le système de référence des coordonnées (CRS), qui définit la manière dont les éléments spatiaux des données se rapportent à la surface de la Terre (ou d'autres corps).
 Les CRS sont soit géographiques, soit projetés, comme nous l'avons présenté au début de ce chapitre (voir Figure \@ref(fig:vectorplots)).
 Cette section reprend chaque type, posant ainsi les bases du chapitre \@ref(reproj-geo-data), qui offre une plongée en profondeur dans la configuration, la transformation et l'interrogation des SCR.
 
@@ -1118,7 +1118,7 @@ Comme $f$ est une valeur plutôt faible, les modèles numériques d'ellipsoïdes
 Les valeurs de $a$ et $rf$ dans divers modèles ellipsoïdaux peuvent être vues en exécutant `sf_proj_info(type = "ellps")`.
 ]
 
-Les ellipsoïdes font partie d'un composant plus large des SCR : le *datum*.
+Les ellipsoïdes font partie d'un composant plus large des CRS : le *datum*.
 Il contient des informations sur l'ellipsoïde à utiliser et la relation précise entre les coordonnées cartésiennes et l'emplacement sur la surface de la Terre.
 Il existe deux types de datum --- géocentrique (tel que `WGS84`) et local (tel que `NAD83`).
 Vous pouvez voir des exemples de ces deux types de référentiels dans la figure \@ref(fig:datum-fig).
@@ -1138,8 +1138,8 @@ Les deux référentiels de la figure \@ref(fig:datum-fig) sont placés au-dessus
 ### Les systèmes de coordonnées projetés
 
 \index{CRS!projected}
-Tous les SCR projetés sont basés sur un SCR géographique, décrit dans la section précédente, et s'appuient sur des projections cartographiques pour convertir la surface tridimensionnelle de la Terre en valeurs d'abscisses et d'ordonnées (x et y) dans un SCR projeté.
-Les SRC projetés reposent sur des coordonnées cartésiennes sur une surface implicitement plane (panneau de droite de la figure \@ref(fig:vector-crs)).
+Tous les CRS projetés sont basés sur un CRS géographique, décrit dans la section précédente, et s'appuient sur des projections cartographiques pour convertir la surface tridimensionnelle de la Terre en valeurs d'abscisses et d'ordonnées (x et y) dans un CRS projeté.
+Les CRS projetés reposent sur des coordonnées cartésiennes sur une surface implicitement plane (panneau de droite de la figure \@ref(fig:vector-crs)).
 Ils ont une origine, des axes x et y, et une unité de mesure linéaire telle que le mètre.
 
 Cette transition ne peut se faire sans ajouter certaines déformations.
@@ -1159,12 +1159,12 @@ Elle est généralement utilisée pour cartographier les régions polaires.
 `sf_proj_info(type = "proj")` donne une liste des projections disponibles supportées par la bibliothèque PROJ.
 
 Un résumé rapide des différentes projections, de leurs types, de leurs propriétés et de leur adéquation peut être trouvé dans @_map_1993 et sur https://www.geo-projections.com/.
-Nous nous étendrons sur les SCR et expliquerons comment projeter d'un SCR à un autre dans le chapitre \@ref(reproj-geo-data).
+Nous nous étendrons sur les CRS et expliquerons comment projeter d'un SCR à un autre dans le chapitre \@ref(reproj-geo-data).
 Pour l'instant, il suffit de savoir :
 
 - Les systèmes de coordonnées sont un élément clé des objets géographiques.
-- Il est important de savoir dans quel SCR se trouvent vos données, et s'il s'agit d'un système géographique (lon/lat) ou d'un système projeté (généralement en mètres), car cela a des conséquences sur la façon dont R gère les opérations spatiales et géométriques.
-- Les SCR des objets `sf` peuvent être interrogés avec la fonction `st_crs()`, les SCR des objets `terra` peuvent être interrogés avec la fonction `crs()`.
+- Il est important de savoir dans quel CRS se trouvent vos données, et s'il s'agit d'un système géographique (lon/lat) ou d'un système projeté (généralement en mètres), car cela a des conséquences sur la façon dont R gère les opérations spatiales et géométriques.
+- Les CRS des objets `sf` peuvent être interrogés avec la fonction `st_crs()`, les CRS des objets `terra` peuvent être interrogés avec la fonction `crs()`.
 
 <div class="figure" style="text-align: center">
 <img src="figures/02_vector_crs.png" alt="Exemples de systèmes de coordonnées géographiques (WGS 84 ; à gauche) et projetées (NAD83 / UTM zone 12N ; à droite) pour un type de données vectorielles." width="100%" />

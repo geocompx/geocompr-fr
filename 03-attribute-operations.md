@@ -27,7 +27,7 @@ Les attributs tels que le nom *attribut*\index{attribut} de élément POINT (pou
 
 
 
-Un autre exemple est la valeur d'élévation (attribut) pour un pixel spécifique dans les données raster.
+Un autre exemple est la valeur d'altitude (attribut) pour un pixel spécifique dans les données raster.
 Contrairement au modèle de données vectorielles, le modèle de données raster stocke indirectement les coordonnées de la cellule de grille, ce qui signifie que la distinction entre attribut et information spatiale est moins claire.
 Pour illustrer ce point, pensez à un pixel dans la 3^e^ ligne et la 4^e^ colonne d'une matrice matricielle.
 Son emplacement spatial est défini par son indice dans la matrice : déplacez-vous depuis l'origine de quatre cellules dans la direction x (généralement vers l'est et la droite sur les cartes) et de trois cellules dans la direction y (généralement vers le sud et le bas).
@@ -36,7 +36,7 @@ L'en-tête est un composant essentiel des ensembles de données raster qui spéc
 
 Vous apprendrez ainsi à manipuler des objets géographiques en fonction d'attributs, tels que le nom des arrêts de bus, dans un jeux de données vectorielles et l'altitude des pixels dans un jeux de données raster.
 Pour les données vectorielles, cela implique des techniques telles que le sous-ensemble et l'agrégation (voir les sections \@ref(vector-attribute-subsetting) et \@ref(vector-attribute-aggregation)).
-Les sections \@ref(vector-attribute-joining) et \@ref(vec-attr-creation) montrent respectivement comment joindre des données à des objets *simple features* à l'aide d'un ID (identifiant) partagé et comment créer de nouvelles variables.
+Les sections \@ref(vector-attribute-joining) et \@ref(vec-attr-creation) montrent respectivement comment joindre des données à des objets d'entités simples (*simple features*) à l'aide d'un ID (identifiant) partagé et comment créer de nouvelles variables.
 Chacune de ces opérations a un équivalent spatial :
 L'opérateur `[` de la version de base de R, par exemple, fonctionne pour faire des sous-ensembles d'objets basé sur leur attribut que ces objets soient spatiaux ou non ; vous pouvez également joindre les attributs de deux jeux de données géographiques à l'aide de jointures spatiales.
 C'est une bonne nouvelle : les compétences développées dans ce chapitre sont transférables.
@@ -48,7 +48,7 @@ La section \@ref(summarizing-raster-objects) fournit une vue d'ensemble des calc
 ## Manipulations des attributs de données vectorielles. 
 
 Les jeux de données géographiques vectorielles sont bien supportés dans R grâce à la classe `sf`, qui étend la classe `data.frame` de R.
-Comme les tableaux de données, les objets `sf` ont une colonne par variable attributaire (comme le 'nom') et une ligne par observation ou *élément* (par exemple, par station de bus).
+Comme les tableaux de données, les objets `sf` ont une colonne par variable attributaire (comme le 'nom') et une ligne par observation ou *entité* (par exemple, par station de bus).
 Les objets `sf` diffèrent des cadres de données de base parce qu'ils ont une colonne `geometry` de la classe `sfc` qui peut contenir une gamme d'entités géographiques (points simples et 'multi', lignes et polygones) par ligne.
 Ceci a été décrit dans le chapitre \@ref(spatial-class), qui a démontré comment les *méthodes génériques* telles que `plot()` et `summary()` fonctionnent avec les objets `sf`.
 **sf** fournit également des méthodes génériques permettant aux objets `sf` de se comporter comme des tableaux de données ordinaires, comme le montre l'impression des méthodes de la classe :
@@ -501,7 +501,7 @@ nrow(world_coffee_match)
 #> [1] 46
 ```
 
-Il est également possible d'effectuer une jointure dans l'autre sens : en partant d'un ensemble de données non spatiales et en ajoutant des variables provenant d'un objet *simple features*.
+Il est également possible d'effectuer une jointure dans l'autre sens : en partant d'un ensemble de données non spatiales et en ajoutant des variables provenant d'un objet entités simples.
 Ci-dessous, on commence avec l'objet `coffee_data` et on ajoute les variables du jeux de données  `world`.
 Contrairement aux jointures précédentes, le résultat n'est *pas* un autre objet *simple features* , mais un tableau de données sous la forme d'un tibble **tidyverse** :
 Le résultat d'une jointure tend à correspondre à son premier argument :
@@ -598,7 +598,7 @@ world %>%
   setNames(new_names)
 ```
 
-Il est important de noter que les opérations sur les données attributaires préservent la géométrie des *simple features*.
+Il est important de noter que les opérations sur les données attributaires préservent la géométrie des entités simples.
 Comme mentionné au début du chapitre, il peut être utile de supprimer la géométrie.
 Pour ce faire, vous devez la supprimer explicitement.
 Par conséquent, une approche telle que `select(world, -geom)` sera infructueuse et vous devriez plutôt utiliser `st_drop_geometry()`.^[
@@ -615,7 +615,7 @@ class(world_data)
 ## Manipuler des objets raster
 <!--jn-->
 
-Contrairement au modèle de données vectorielles qui sous-tend les *simple features* (qui représente les points, les lignes et les polygones comme des entités discrètes dans l'espace), les données matricielles représentent des surfaces continues.
+Contrairement au modèle de données vectorielles sous-tendu par les entités  simples (qui représente les points, les lignes et les polygones comme des entités discrètes dans l'espace), les données matricielles représentent des surfaces continues.
 Cette section présente le fonctionnement des objets raster en les créant *de bout en bout*, en s'appuyant sur la section \@ref(an-introduction-to-terra).
 En raison de leur structure unique, les sélections et les autres opérations sur les jeux de données raster fonctionnent d'une manière différente, comme le montre la section \@ref(raster-subsetting).
 \index{manipulation!raster}
