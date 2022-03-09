@@ -853,7 +853,7 @@ L'origine (ou point de départ) est souvent la coordonnée du coin inférieur ga
 L'en-tête définit l'étendue via le nombre de colonnes, le nombre de lignes et la résolution de la taille des cellules.
 Ainsi, en partant de l'origine, nous pouvons facilement accéder à chaque cellule et la modifier, soit en utilisant l'ID d'une cellule (Figure \@ref(fig:raster-intro-plot):B), soit en spécifiant explicitement les lignes et les colonnes.
 Cette représentation matricielle évite de stocker explicitement les coordonnées des quatre points d'angle (en fait, elle ne stocke qu'une seule coordonnée, à savoir l'origine) de chaque coin de cellule, comme ce serait le cas pour les polygones vectoriels rectangulaires.
-Grâce à cela et à l'algèbre matricielle (section \@ref(map-algebra)), le traitement raster est beaucoup plus efficace et rapide que le traitement des données vectorielles.
+Grâce à cela et à l'algèbre raster (section \@ref(map-algebra)), le traitement raster est beaucoup plus efficace et rapide que le traitement des données vectorielles.
 Cependant, contrairement aux données vectorielles, la cellule d'une couche raster ne peut contenir qu'une seule valeur.
 Cette valeur peut être numérique ou catégorique (Figure \@ref(fig:raster-intro-plot):C).
 
