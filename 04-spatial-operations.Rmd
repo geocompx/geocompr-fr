@@ -1,4 +1,4 @@
-# Traitements specifiques des données spatiales {#spatial-operations}
+# Géotraitements {#spatial-operations}
 
 ## Prérequis {-}
 
