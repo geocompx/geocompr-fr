@@ -63,4 +63,4 @@ vec-attr-creation
 manipuler-des-objets-raster
 sélection-sur-des-raster
 résumer-les-objets-raster
-exercises-1
+exercices

@@ -8,7 +8,7 @@
 ```r
 library(sf)      # paquet pour les données vectorielles présenté dans le Chapitre 2
 library(terra)   # paquet pour les données raster présenté dans le Chapitre 2
-library(dplyr)   # paquet du tidyverse pour la manipulation de tableau de donnée
+library(dplyr)   # paquet du tidyverse pour la manipulation de tableaux de données
 ```
 
 - Il s'appuie également sur **spData**, qui charge des jeux de données utilisés dans les exemples de ce chapitre :
@@ -29,7 +29,7 @@ Les attributs tels que le nom *attribut*\index{attribut} de élément POINT (pou
 
 Un autre exemple est la valeur d'altitude (attribut) pour un pixel spécifique dans les données raster.
 Contrairement au modèle de données vectorielles, le modèle de données raster stocke indirectement les coordonnées de la cellule de grille, ce qui signifie que la distinction entre attribut et information spatiale est moins claire.
-Pour illustrer ce point, pensez à un pixel dans la 3^e^ ligne et la 4^e^ colonne d'une matrice matricielle.
+Pour illustrer ce point, pensez à un pixel dans la 3^e^ ligne et la 4^e^ colonne d'une matrice raster.
 Son emplacement spatial est défini par son indice dans la matrice : déplacez-vous depuis l'origine de quatre cellules dans la direction x (généralement vers l'est et la droite sur les cartes) et de trois cellules dans la direction y (généralement vers le sud et le bas).
 La *résolution* de la trame définit la distance pour chaque étape x et y qui est spécifiée dans  l'*en-tête* du fichier.
 L'en-tête est un composant essentiel des ensembles de données raster qui spécifie comment les pixels se rapportent aux coordonnées géographiques (voir également le chapitre \@ref(spatial-operations)).
@@ -113,38 +113,38 @@ Dans la plupart des cas, cependant, il est judicieux de conserver la colonne gé
 Les opérations de données non spatiales sur les objets `sf` ne modifient la géométrie d'un objet que lorsque cela est approprié (par exemple, en supprimant les frontières entre les polygones adjacents après l'agrégation).
 Devenir compétent dans la manipulation des données d'attributs géographiques signifie devenir compétent dans la manipulation des tableaux de données.
 
-Pour de nombreuses applications, le paquet du tidyverse\index{tidyverse (package)} **dplyr** offre une approche efficace pour travailler avec des tableau de données.
+Pour de nombreuses applications, le paquet du tidyverse\index{tidyverse (package)} **dplyr** offre une approche efficace pour travailler avec des tableaux de données.
 La compatibilité avec le tidyverse est un avantage de **sf** par rapport à son prédécesseur **sp**, mais il y a quelques pièges à éviter (voir la vignette supplémentaire `tidyverse-pitfalls` à [geocompr.github.io](https://geocompr.github.io/geocompkg/articles/tidyverse-pitfalls.html) pour plus de détails).
 
-### Sélection de sous ensemble dans des attributs de données vectorielles
+### Sélection de sous-ensemble dans des attributs de données vectorielles
 
 Les méthodes de sélection de sous-ensembles de base de R incluent l'opérateur `[` et la fonction `subset()`.
 Les principales fonctions de sélection de sous-ensembles **dplyr** sont `filter()` et `slice()` pour la sélection des lignes, et `select()` pour la sélection des colonnes.
 Ces deux approches préservent les composantes spatiales des données attributaires dans les objets `sf`, tandis que l'utilisation de l'opérateur `$` ou de la fonction **dplyr** `pull()` pour retourner une seule colonne d'attribut sous forme de vecteur perdra les données d'attribut, comme nous le verrons plus loin.
 \index{attribut!subsetting} 
-Cette section se concentre sur la sélection de sous-ensemble de tableaux de données `sf` ; pour plus de détails sur les cas de vecteur et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section [2.7](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors) de An Introduction to R [@rcoreteam_introduction_2021] et le chapitre [4](https://adv-r.hadley.nz/subsetting.html) de Advanced R Programming [@wickham_advanced_2019].
+Cette section se concentre sur la sélection de sous-ensembles de tableaux de données `sf` ; pour plus de détails sur les cas de vecteurs et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section [2.7](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors) de An Introduction to R [@rcoreteam_introduction_2021] et le chapitre [4](https://adv-r.hadley.nz/subsetting.html) de Advanced R Programming [@wickham_advanced_2019].
 
 L'opérateur `[` peut sélectionner à la fois les lignes et les colonnes. 
-Des chiffres d'index placés entre crochets directement après le nom d'un objet de type tableau de données spécifient les éléments à conserver.
-La commande `object[i, j]` signifie 'retourner les lignes représentées par `i` et les colonnes représentées par `j`, où `i` et `j` contiennent typiquement des entiers ou des `TRUE`s et `FALSE`s (les index peuvent aussi être des chaînes de caractères, indiquant les noms de lignes ou de colonnes).
+Il est possible de spécifier les éléments à conserver en indiquant leur rang entre crochets, directement après le nom de l'objet de type tableau de données qui les contient.
+La commande `object[i, j]` signifie 'retourner les lignes représentées par `i` et les colonnes représentées par `j`, où `i` et `j` contiennent typiquement des entiers ou des `TRUE` et `FALSE` (les index peuvent aussi être des chaînes de caractères, indiquant les noms de lignes ou de colonnes).
 Par exemple, `objet[5, 1:3]` signifie 'retourner des données contenant la cinquième ligne et les colonnes 1 à 3 : le résultat devrait être un tableau de données avec seulement une ligne et trois colonnes, et une quatrième colonne de géométrie si c'est un objet `sf`.
 Laisser `i` ou `j` vide retourne toutes les lignes ou colonnes, donc `world[1:5, ]` retourne les cinq premières lignes et les 11 colonnes.
-Les exemples ci-dessous illustrent les sélections avec la base R.
+Les exemples ci-dessous illustrent les sélections avec cette syntaxe de base de R.
 Devinez le nombre de lignes et de colonnes dans les tableaux de données `sf` retournés par chaque commande et vérifiez les résultats sur votre propre ordinateur (cf. la fin du chapitre pour d'autres exercices) :
 
 
 ```r
 world[1:6, ]    # sélection de lignes par position
 world[, 1:3]    # sélection de colonnes par position
-world[1:6, 1:3] # sélection de lignes et  colonnes par position
+world[1:6, 1:3] # sélection de lignes et colonnes par position
 world[, c("name_long", "pop")] # sélection de colonnes par leurs noms
 world[, c(T, T, F, F, F, F, F, T, T, F, F)] # sélection en utilisant un vecteur logique
-world[, 888] # un index référencent une colonne non-existente
+world[, 888] # un index référençant une colonne non-existante
 ```
 
 
 
-Une démonstration de l'utilité de l'utilisation de vecteurs `logiques` pour la sélection est démontrée dans le morceau de code ci-dessous.
+Une démonstration de l'intérêt de l'utilisation de vecteurs `logiques` pour la sélection est démontrée dans le morceau de code ci-dessous.
 Il crée un nouvel objet, `small_countries`, contenant les nations dont la surface est inférieure à 10,000 km^2^ :
 
 
@@ -156,7 +156,7 @@ summary(i_small) # on confirme le vecteur logique
 small_countries = world[i_small, ]
 ```
 
-L'objet intermédiaire `i_small` (abréviation de l'index représentant les petits pays) est un vecteur logique qui peut être utilisé pour sélectionner les sept plus petits pays du `monde` en fonction de leur superficie.
+L'objet intermédiaire `i_small` (variable indicatrice des petits pays) est un vecteur logique qui peut être utilisé pour sélectionner les sept plus petits pays du `monde` en fonction de leur superficie.
 Une commande plus concise, qui omet l'objet intermédiaire, génère le même résultat :
 
 
@@ -229,7 +229,7 @@ La plupart des verbes de **dplyr** retournent un tableau de données, mais vous 
 <!-- Note: I have commented out the statement below because it is not true for `sf` objects, it's a bit confusing that the behaviour differs between data frames and `sf` objects. -->
 <!-- The subsetting operator in base R (see `?[`), by contrast, tries to return objects in the lowest possible dimension. -->
 <!-- This means selecting a single column returns a vector in base R as demonstrated in code chunk below which returns a numeric vector representing the population of countries in the `world`: -->
-Vous pouvez obtenir le même résultat grâce seulement avec la base de R avec les opérateurs de sélection de listes `$` et `[[`, les trois commandes suivantes retournent le même tableau numérique :
+Vous pouvez obtenir le même résultat via la syntaxe de base de R avec les opérateurs de sélection de listes `$` et `[[`, les trois commandes suivantes retournent le même tableau numérique :
 
 
 ```r
@@ -291,7 +291,7 @@ world7 = world %>%
   slice(1:5)
 ```
 
-Les lignes de code ci-dessus montre comment l'opérateur *pipe* permet d'écrire des commandes dans un ordre précis :
+Les lignes de code ci-dessus montrent comment l'opérateur *pipe* permet d'écrire des commandes dans un ordre précis :
 les commandes ci-dessus sont écrites de haut en bas (ligne par ligne) et de gauche à droite.
 L'alternative à `%>%` est un appel de fonction imbriqué, ce qui est plus difficile à lire :
 
@@ -338,7 +338,7 @@ nrow(world_agg2)
 ```
 
 L'objet `world_agg2` résultant est un objet spatial contenant 8 entités représentant les continents du monde (et les océans).
-`group_by() %>% summarize()` est l'équivalent **dplyr** de `aggregate()`, avec le nom de variable fourni dans la fonction `group_by()` spécifiant la variable de regroupement et les informations sur ce qui doit être résumé passées à la fonction `summarize()`, comme indiqué ci-dessous :
+`group_by() %>% summarize()` est l'équivalent **dplyr** de `aggregate()`: le nom de variable indiqué dans la fonction `group_by()` spécifie la variable de regroupement et les informations sur ce qui doit être résumé sont passées à la fonction `summarize()`, comme indiqué ci-dessous :
 
 
 ```r
@@ -371,7 +371,7 @@ world_agg5 = world %>%
   group_by(continent) %>%                     # regroupe par continents et synthétise:
   summarize(Pop = sum(pop, na.rm = TRUE), Superficie = sum(area_km2), N = n()) %>%
   mutate(Densité = round(Pop / Superficie)) %>%     # calcule la densité de population
-  top_n(n = 3, wt = Pop) %>%                  # ne garde que les 3 plus importants
+  top_n(n = 3, wt = Pop) %>%                  # ne garde que les 3 plus peuplés
   arrange(desc(N))                            # trie par ordre du nombre de pays
 ```
 
@@ -384,7 +384,7 @@ Table: (\#tab:continents)Les 3 continents les plus peuplés classés par densit�
 |Asia      | 4311408059|   31252459| 47|     138|
 |Europe    |  669036256|   23065219| 39|      29|
 
-\BeginKnitrBlock{rmdnote}<div class="rmdnote">Plus de détails sont fournis dans les pages d´aide (qui sont accessibles via `?summarize` et `vignette(package = "dplyr")` et le chapitre 5 de 5 of [R for Data Science](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarize). </div>\EndKnitrBlock{rmdnote}
+\BeginKnitrBlock{rmdnote}<div class="rmdnote">Plus de détails sont fournis dans les pages d´aide (qui sont accessibles via `?summarize` et `vignette(package = "dplyr")` et le chapitre 5 de [R for Data Science](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarize). </div>\EndKnitrBlock{rmdnote}
 
 ###  Jointures attributaires de données vectorielles
 
@@ -398,7 +398,7 @@ Le type le plus courant de jointure attributaures sur des données spatiales pre
 \index{join}
 \index{attribute!join}
 
-Pour démontrer les jointures, nous allons combiner les données sur la production de café avec l'ensemble de données `world`.
+Pour découvrir les jointures, nous allons combiner les données sur la production de café avec l'ensemble de données `world`.
 Les données sur le café sont dans un tableau de données appelé `coffee_data` du paquet **spData** (voir `?coffee_data` pour plus de détails).
 Il comporte 3 colonnes :
 `name_long` nomme les principales nations productrices de café et `coffee_production_2016` et `coffee_production_2017` contiennent les valeurs estimées de la production de café en unités de sacs de 60 kg pour chaque année.
@@ -440,7 +440,7 @@ Dans la majorité des cas où les noms des variables ne sont pas les mêmes, vou
 1. Renommez la variable clé dans l'un des objets pour qu'ils correspondent.
 2. Utiliser l'argument `by` pour spécifier les variables de jonction.
 
-Cette dernière approche est démontrée ci-dessous sur une version renommée de `coffee_data` :
+Cette dernière approche est présentée ci-dessous sur une version renommée de `coffee_data` :
 
 
 ```r
@@ -450,12 +450,12 @@ world_coffee2 = left_join(world, coffee_renamed, by = c(name_long = "nm"))
 
 
 
-Note that the name in the original object is kept, meaning that `world_coffee` and the new object `world_coffee2` are identical.
-Another feature of the result is that it has the same number of rows as the original dataset.
-Although there are only 47 rows of data in `coffee_data`, all 177 country records are kept intact in `world_coffee` and `world_coffee2`:
-rows in the original dataset with no match are assigned `NA` values for the new coffee production variables.
-What if we only want to keep countries that have a match in the key variable?
-In that case an inner join can be used:
+Remarquez que la dénomination initiale est conservée, ce qui signifie que `world_coffee` et le nouvel objet `world_coffee2` sont identiques.
+Une autre caractéristique de l'objet final est qu'il a le même nombre de lignes que le jeu de données initial.
+Bien qu'il n'y ait que 47 lignes de données dans `coffee_data`, les 177 enregistrements sont conservés tels quels dans `world_coffee` et `world_coffee2`:
+les lignes du jeu de données initial pour lesquelles aucune correspondance n'est trouvée contiennent alors des valeurs `NA` pour les nouvelles variables relatives à la production de café.
+Mais alors, comment procéder pour conserver uniquement les pays dont l'identifiant est présent dans les deux tables ?
+Dans ce cas, il faut recourir à une jointure interne, `ìnner join`:
 
 
 ```r
@@ -501,7 +501,7 @@ nrow(world_coffee_match)
 #> [1] 46
 ```
 
-Il est également possible d'effectuer une jointure dans l'autre sens : en partant d'un ensemble de données non spatiales et en ajoutant des variables provenant d'un objet entités simples.
+Il est également possible d'effectuer une jointure dans l'autre sens : en partant d'un ensemble de données non spatiales et en ajoutant des variables provenant d'un objet spatial en entités simples (`simples features`).
 Ci-dessous, on commence avec l'objet `coffee_data` et on ajoute les variables du jeux de données  `world`.
 Contrairement aux jointures précédentes, le résultat n'est *pas* un autre objet *simple features* , mais un tableau de données sous la forme d'un tibble **tidyverse** :
 Le résultat d'une jointure tend à correspondre à son premier argument :
@@ -515,8 +515,8 @@ class(coffee_world)
 ```
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Dans la plupart des cas, la colonne géométrique n´est utile que dans un objet `sf`.
-Elle ne peut être utilisée pour créer des cartes et des opérations spatiales que si R "sait" qu´il s´agit d´un objet spatial, défini par un package spatial tel que **sf**.
-Heureusement, les tableau de données non spatiaux avec une colonne de liste de géométrie (comme `coffee_world`) peuvent être converties en un objet `sf` comme suit : `st_as_sf(coffee_world)`. </div>\EndKnitrBlock{rmdnote}
+Elle ne peut être utilisée pour créer des cartes et des opérations spatiales que si R "sait" qu´il s´agit d´un objet spatial, défini par un paquet spatial tel que **sf**.
+Heureusement, les tableaux de données non spatiaux avec une colonne de liste de géométrie (comme `coffee_world`) peuvent être convertis en un objet `sf` comme suit : `st_as_sf(coffee_world)`. </div>\EndKnitrBlock{rmdnote}
 
 Cette section couvre la majorité des cas d'utilisation de la jointure.
 Pour plus d'informations, nous recommandons @grolemund_r_2016, la [vignette join](https://geocompr.github.io/geocompkg/articles/join.html) dans le paquet **geocompkg** qui accompagne ce livre, et la documentation du paquet **data.table** .^[
@@ -530,7 +530,7 @@ Un autre type de jointure est la jointure spatiale, traitée dans le chapitre su
 Souvent, nous souhaitons créer une nouvelle colonne à partir de colonnes déjà existantes.
 Par exemple, nous voulons calculer la densité de population pour chaque pays.
 Pour cela, nous devons diviser une colonne de population, ici `pop`, par une colonne de surface, ici `area_km2` avec une unité de surface en kilomètres carrés.
-En utilisant les fonctions de base de R, nous pouvons taper :
+En utilisant les fonctions de base de R, nous pouvons écrire :
 
 
 ```r
@@ -587,7 +587,7 @@ world %>%
 ```
 
 `setNames()` change tous les noms de colonnes en une fois, et nécessite un vecteur de caractères avec un nom correspondant pour chaque colonne.
-Ceci est illustré ci-dessous, qui produit le même objet `world`, mais avec des noms très courts : 
+Ceci est illustré ci-dessous et produit le même objet `world` mais avec des noms très courts : 
 
 
 
@@ -615,13 +615,13 @@ class(world_data)
 ## Manipuler des objets raster
 <!--jn-->
 
-Contrairement au modèle de données vectorielles sous-tendu par les entités  simples (qui représente les points, les lignes et les polygones comme des entités discrètes dans l'espace), les données matricielles représentent des surfaces continues.
+Contrairement au modèle de données vectorielles sous-tendu par les entités simples (qui représente les points, les lignes et les polygones comme des entités discrètes dans l'espace), les données matricielles représentent des surfaces continues.
 Cette section présente le fonctionnement des objets raster en les créant *de bout en bout*, en s'appuyant sur la section \@ref(an-introduction-to-terra).
 En raison de leur structure unique, les sélections et les autres opérations sur les jeux de données raster fonctionnent d'une manière différente, comme le montre la section \@ref(raster-subsetting).
 \index{manipulation!raster}
 
 Le code suivant recrée le jeu de données matricielles utilisé dans la section \@ref(raster-classes), dont le résultat est illustré dans la figure \@ref(fig:cont-raster).
-Cela montre comment la fonction `rast()` fonctionne pour créer un exemple de données matricielles nommé `elev` (représentant les élévations).
+Cela montre comment la fonction `rast()` fonctionne pour créer un exemple de données matricielles nommé `elev` (représentant les altitudes).
 
 
 ```r
@@ -647,7 +647,7 @@ grain = rast(nrows = 6, ncols = 6, resolution = 0.5,
 
 
 
-L'objet raster stocke la table de correspondance ou "Raster Attribute Table" (RAT) correspondante sous la forme d'une liste de tableau de données, qui peuvent être visualisés avec `cats(grain)` (cf. `?cats()` pour plus d'informations).
+L'objet raster stocke la table de correspondance ou "Raster Attribute Table" (RAT) correspondante sous la forme d'une liste de tableaux de données, qui peuvent être visualisés avec `cats(grain)` (cf. `?cats()` pour plus d'informations).
 Chaque élément de cette liste est une couche du raster.
 Il est également possible d'utiliser la fonction `levels()` pour récupérer et ajouter de nouveaux niveaux de facteurs ou remplacer des niveaux existants 
 
@@ -671,13 +671,13 @@ Il est important de noter que la sauvegarde d´un objet raster avec une table de
 
 ### Sélection sur des raster
 
-La sélection de données raster est réalisé à l'aide de l'opérateur de base de R `[`, qui accepte une large gamme d'entrées :
+La sélection de données raster est réalisée à l'aide de l'opérateur de base de R `[`, qui accepte une large gamme d'entrées :
 \index{raster!subsetting}
 
-- Indexation ligne-colonne
-- ID des cellules
-- Coordonnées (voir la section \@ref(spatial-raster-subsetting))
-- Autre objet spatial (voir la section \@ref(spatial-raster-subsetting))
+- indexation ligne-colonne ;
+- ID des cellules ;
+- coordonnées (voir la section \@ref(spatial-raster-subsetting)) ;
+- autre objet spatial (voir la section \@ref(spatial-raster-subsetting)).
 
 Nous ne présentons ici que les deux premières options, car elles peuvent être considérées comme des opérations non spatiales.
 Si nous avons besoin d'un objet spatial pour en sélectionner un autre ou si le résultat est un objet spatial, nous en parlerons comme une sélection spatiale.
@@ -695,7 +695,7 @@ elev[1]
 ```
 
 Les sélections d'objets raster à couches multiples renverront la ou les valeurs des cellules pour chaque couche.
-Par exemple, `c(elev, grain)[1]` renvoie un cadre de données avec une ligne et deux colonnes --- une pour chaque couche.
+Par exemple, `c(elev, grain)[1]` renvoie un tableau de données avec une ligne et deux colonnes --- une pour chaque couche.
 Pour extraire toutes les valeurs ou des lignes complètes, vous pouvez également utiliser `values()`.
 
 Les valeurs des cellules peuvent être modifiées en écrasant les valeurs existantes en conjonction avec une opération de sélection.
@@ -774,7 +774,7 @@ conduire à une utilisation restreinte des paquets dépendant du paquet
 détaché, et n’est donc pas recommandé.</p>
 </div>
 
-## Exercises
+## Exercices
 
 
 Pour ces exercices, nous allons utiliser les jeux de données `us_states` et `us_states_df` du paquetage **spData**.
