@@ -198,7 +198,7 @@ line_sfc = st_sfc(st_linestring(cbind(
   x = c(0.4, 1),
   y = c(0.2, 0.5)
 )))
-# create points
+# créer des points
 point_df = data.frame(
   x = c(0.2, 0.7, 0.4),
   y = c(0.1, 0.2, 0.8)
@@ -206,7 +206,7 @@ point_df = data.frame(
 point_sf = st_as_sf(point_df, coords = c("x", "y"))
 ```
 
-```{r relation-objects, echo=FALSE, fig.cap="Points (`point_df` 1 to 3), line and polygon objects arranged to illustrate topological relations.", fig.asp=1, out.width="50%", fig.scap="Demonstration of topological relations."}
+```{r relation-objects, echo=FALSE, fig.cap="Points (`point_df` 1 à 3), ligne et polygones arrangés pour illustrer les relations topologiques.", fig.asp=1, out.width="50%", fig.scap="Exemples des relations topologiques."}
 par(pty = "s")
 plot(polygon_sfc, border = "red", col = "gray", axes = TRUE)
 plot(line_sfc, lwd = 5, add = TRUE)
@@ -214,9 +214,9 @@ plot(point_sf, add = TRUE, lab = 1:4, cex = 2)
 text(point_df[, 1] + 0.02, point_df[, 2] + 0.04, 1:3, cex = 1.3)
 ```
 
-A simple query is: which of the points in `point_sf` intersect in some way with polygon `polygon_sfc`?
-The question can be answered by inspection (points 1 and 3 are touching and within the polygon, respectively).
-This question can be answered with the spatial predicate `st_intersects()` as follows:
+Une première question simple pourrait être : quels sont les points de `point_sf` en intersection avec le polygone `polygon_sfc` ?
+On peut répondre à cette question par inspection (les points 1 et 3 sont respectivement en contact et à l'intérieur du polygone).
+On peut répondre à cette question avec le prédicat spatial `st_intersects()` comme suit:
 
 ```{r 04-spatial-operations-9, eval=FALSE}
 st_intersects(point_sf, polygon_sfc)
@@ -226,49 +226,49 @@ st_intersects(point_sf, polygon_sfc)
 #>  3: 1
 ```
 
-The result should match your intuition:
-positive (`1`) results are returned for the first and third point, and a negative result (represented by an empty vector) for the second are outside the polygon's border.
-What may be unexpected is that the result comes in the form of a list of vectors.
-This *sparse matrix* output only registers a relation if one exists, reducing the memory requirements of topological operations on multi-feature objects.
-As we saw in the previous section, a *dense matrix* consisting of `TRUE` or `FALSE` values is returned when `sparse = FALSE`:
+Le résultat devrait correspondre à votre intuition :
+des résultats positifs (`1`) sont retournés pour le premier et le troisième point, et un résultat négatif (représenté par un vecteur vide "(empty)") pour le deuxième  en dehors de la frontière du polygone.
+Ce qui peut être inattendu, c'est que le résultat se présente sous la forme d'une liste de vecteurs.
+Cette sortie *matrice creuse* n'enregistre une relation que si elle existe, ce qui réduit les besoins en mémoire des opérations topologiques sur les objets avec de nombreuses entités.
+Comme nous l'avons vu dans la section précédente, une *matrice dense* composée de valeurs `TRUE` ou `FALSE` est retournée lorsque `sparse = FALSE` :
 
 ```{r 04-spatial-operations-10}
 st_intersects(point_sf, polygon_sfc, sparse = FALSE)
 ```
 
-In the above output each row represents a feature in the target (argument `x`) object and each column represents a feature in the selecting object (`y`).
-In this case, there is only one feature in the `y` object `polygon_sfc` so the result, which can be used for subsetting as we saw in Section \@ref(spatial-subsetting), has only one column.
+Dans la sortie ci-dessus, chaque ligne représente un élément dans l'objet cible (l'argument `x`) et chaque colonne représente un élément dans l'objet de sélection (`y`). 
+Dans ce cas, il n'y a qu'un seul élément dans l'objet `y` `polygon_sfc`, donc le résultat, qui peut être utilisé pour la sélection comme nous l'avons vu dans la section \@ref(spatial-subsetting), n'a qu'une seule colonne.
 
-`st_intersects()` returns `TRUE` even in cases where the features just touch: *intersects* is a 'catch-all' topological operation which identifies many types of spatial relation, as illustrated in Figure \@ref(fig:relations).
-More restrictive questions include which points lie within the polygon, and which features are on or contain a shared boundary with `y`?
-These can be answered as follows (results not show):
+`st_intersects()` renvoie `TRUE` même dans les cas où les éléments se touchent juste : *intersects* est une opération topologique "fourre-tout" qui identifie de nombreux types de relations spatiales, comme l'illustre la figure \@ref(fig:relations).
+Il y a des questions plus restrictives, par exemple  : quels sont les points situés à l'intérieur du polygone, et quelles sont les caractéristiques qui sont sur ou qui contiennent une frontière partagée avec `y` ?
+On peut répondre à ces questions de la manière suivante (résultats non montrés) :
 
 ```{r 04-spatial-operations-9-2, eval=FALSE}
 st_within(point_sf, polygon_sfc)
 st_touches(point_sf, polygon_sfc)
 ```
 
-Note that although the first point is *touches* the polygon, it is not within it; the third point is within the polygon but does not touch any part of its border.
-The opposite of `st_intersects()` is `st_disjoint()`, which returns only objects that do not spatially relate in any way to the selecting object (note `[, 1]` converts the result into a vector):
+Notez que bien que le premier point *touche* le polygone, il n'est pas à l'intérieur de celui-ci ; le troisième point est à l'intérieur du polygone mais ne touche aucune partie de sa frontière.
+L'opposé de `st_intersects()` est `st_disjoint()`, qui retourne uniquement les objets qui n'ont aucun rapport spatial avec l'objet sélectionné (ici `[, 1]` convertit le résultat en vecteur) :
 
 ```{r 04-spatial-operations-11}
 st_disjoint(point_sf, polygon_sfc, sparse = FALSE)[, 1]
 ```
 
-The function `st_is_within_distance()` detects features that *almost touch* the selection object, which has an additional `dist` argument.
-It can be used to set how close target objects need to be before they are selected.
-Note that although point 4 is one unit of distance from the nearest node of `polygon_sfc` (at point 2 in Figure \@ref(fig:relation-objects)), it is still selected when the distance is set to 0.9.
-This is illustrated in the code chunk below, which shows that every point is within 0.2 units of the polygon:
+La fonction `st_is_within_distance()` détecte les éléments qui  touchent *presque* l'objet de sélection. La fonction a un argument supplémentaire `dist`.
+Il peut être utilisé pour définir la distance à laquelle les objets cibles doivent se trouver avant d'être sélectionnés.
+Remarquez que bien que le point 4 soit à une unité de distance du nœud le plus proche de `polygon_sfc` (au point 2 de la figure \@ref(fig:relation-objets)), il est quand même sélectionné lorsque la distance est fixée à 0,9.
+Ceci est illustré dans le morceau de code ci-dessous, qui montre que chaque point se trouve à moins de 0,2 unité du polygone.
 
 ```{r 04-spatial-operations-14}
 st_is_within_distance(point_sf, polygon_sfc, dist = 0.2, sparse = FALSE)[, 1]
 ```
 
 ```{block2 04-spatial-operations-15, type='rmdnote'}
-Functions for calculating topological relations use spatial indices to largely speed up spatial query performance.
-They achieve that using the Sort-Tile-Recursive (STR) algorithm.
-The `st_join` function, mentioned in the next section, also uses the spatial indexing. 
-You can learn more at https://www.r-spatial.org/r/2017/06/22/spatial-index.html.
+Les fonctions de calcul des relations topologiques utilisent des indices spatiaux pour accélérer considérablement les performances des requêtes spatiales.
+Elles y parviennent en utilisant l´algorithme *Sort-Tile-Recursive* (STR).
+La fonction `st_join`, mentionnée dans la section suivante, utilise également l´indexation spatiale. 
+Vous pouvez en savoir plus à l´adresse suivante https://www.r-spatial.org/r/2017/06/22/spatial-index.html.
 ```
 
 ```{r 04-spatial-operations-16, eval=FALSE, echo=FALSE}
@@ -304,10 +304,10 @@ plot(l, add = TRUE)
 plot(p, add = TRUE)
 ```
 
-### DE-9IM strings
+### Les chaines DE-9IM
 
-Underlying the binary predicates demonstrated in the previous section is the Dimensionally Extended 9-Intersection Model (DE-9IM).
-The model was originally labelled "DE + 9IM" by its inventors, referring to the "dimension of the intersections of boundaries, interiors, and exteriors of two features" [@clementini_comparison_1995], but is now referred to as DE-9IM [@shen_classification_2018].
+Les prédicats binaires présentés dans la section précédente reposent sur le modèle *Dimensionally Extended 9-Intersection Model* (DE-9IM).
+Ce modèle était à l'origine intitulé " DE + 9IM " par ses inventeurs, en référence à la " dimension des intersections des limites, des intérieurs et des extérieurs de deux entités " [@clementini_comparison_1995], mais il est désormais désigné par DE-9IM [@shen_classification_2018].
 <!-- The model's workings can be demonstrated with reference to two intersecting polygons, as illustrated in Figure \@ref(fig:de-9im). -->
 
 ```{r de-9im, echo=FALSE, eval=FALSE}
@@ -343,10 +343,10 @@ plot(b)
 text(x = c(-0.5, 1.5), y = 1, labels = c("x", "y")) # add text
 ```
 
-To demonstrate how DE-9IM strings work, let's take a look at the various ways that the first geometry pair in Figure \@ref(fig:relations) relate.
-Figure \@ref(fig:de9imgg) illustrates the 9 intersection model (9IM) which shows the intersections between every combination of each object's interior, boundary and exterior: when each component of the first object `x` is arranged as columns and each component of `y` is arranged as rows, a facetted graphic is created with the intersections between each element highlighted.
+Pour démontrer le fonctionnement des chaînes DE-9IM, examinons les différentes façons dont la première paire de géométries peut-être reliée dans la figure \@ref(fig:relations).
+La figure \@ref(fig:de9imgg) illustre le modèle à 9 intersections (9IM).  Elle montre les intersections entre chaque combinaison possible entre l'intérieur, la limite et l'extérieur de chaque objet. Chaque composant du premier objet `x` est disposé en colonnes et que chaque composant de `y` est disposé en lignes, un graphique à facettes est créé avec les intersections entre chaque élément mises en évidence.
 
-```{r de9imgg, echo=FALSE, warning=FALSE, fig.cap="Illustration of how the Dimensionally Extended 9 Intersection Model (DE-9IM) works. Colors not in the legend represent the overlap between different components. The thick lines highlight 2 dimensional intesections, e.g. between the boundary of object x and the interior of object y, shown in the middle top facet.", message=FALSE}
+```{r de9imgg, echo=FALSE, warning=FALSE, fig.cap="Illustration du fonctionnement du Modèle Dimensionnel Étendu à 9 Intersections (DE-9IM). Les couleurs qui ne figurent pas dans la légende représentent le chevauchement entre les différentes composantes. Les lignes épaisses mettent en évidence les intersections bidimensionnelles, par exemple entre la limite de l'objet x et l'intérieur de l'objet y, illustrées dans la facette supérieure du milieu.", message=FALSE}
 p1_2 = st_as_sf(c(p1, p3))
 ii = st_as_sf(st_intersection(p1, p3))
 ii$Object = "Intersection"
@@ -442,8 +442,8 @@ ggplot(b9sf) +
   theme(legend.position = "top")
 ```
 
-DE-9IM strings are derived from the dimension of each type of relation.
-In this case the red intersections in Figure \@ref(fig:de9imgg) have dimensions of 0 (points), 1 (lines), and 2 (polygons), as shown in Table \@ref(tab:de9emtable).
+Les chaînes DE-9IM sont dérivées de la dimension de chaque type de relation.
+Dans ce cas, les intersections rouges de la figure \@ref(fig:de9imgg) ont des dimensions de 0 (points), 1 (lignes) et 2 (polygones), comme le montre le tableau \@ref(tab:de9emtable).
 
 ```{r de9emtable, echo=FALSE}
 # See https://github.com/Robinlovelace/geocompr/issues/699
@@ -457,9 +457,9 @@ matrix_de_9im = function(pattern) {
 }
 
 m = matrix_de_9im(pattern)
-colnames(m) = c("Interior (x)", "Boundary (x)", "Exterior (x)")
-rownames(m) = c("Interior (y)", "Boundary (y)", "Exterior (y)")
-knitr::kable(m, caption = "Table showing relations between interiors, boundaries and exteriors of geometries x and y.")
+colnames(m) = c("Intérieur (x)", "Limite (x)", "Extérieur (x)")
+rownames(m) = c("Intérieur (y)", "Limite (y)", "Extérieur (y)")
+knitr::kable(m, caption = "Tableau montrant les relations entre les intérieurs, les limites et les extérieurs des géométries x et y.")
 ```
 
 Flattening this matrix 'row-wise' (meaning concatenating the first row, then the second, then the third) results in the string `212111212`.
