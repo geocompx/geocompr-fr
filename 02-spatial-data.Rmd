@@ -266,10 +266,10 @@ Au contraire de la fonction `st_read()` qui va retourner les attributs dans les 
 Vous en trouvez la démonstration ci-dessous (voir la section \@ref(iovec) sur la lecture et l'écriture des données géographiques vectorielles avec R) : 
 
 ```{r}
-nc_dfr = st_read(system.file("shape/nc.shp", package = "sf"))
-nc_tbl = read_sf(system.file("shape/nc.shp", package = "sf"))
-class(nc_dfr)
-class(nc_tbl)
+world_dfr = st_read(system.file("shapes/world.shp", package = "spData"))
+world_tbl = read_sf(system.file("shapes/world.shp", package = "spData"))
+class(world_dfr)
+class(world_tbl)
 ```
 
 Comme illusté dans le Chapitre \@ref(attr), montrant la manipulation d'objets `sf avec le **tidyverse**,  **sf** est désormais la bibliothèquee de référence pour l'analyse des données vectorielles spatiales dans R (sans oublier l'écosystème des paquets **spatstat** qui fournit de nombreuses fonctions pour les statistiques spatiales).
