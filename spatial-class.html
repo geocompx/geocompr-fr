@@ -311,18 +311,18 @@ Il existe de nombreuses raisons (liées notamment aux avantages du modèle des e
 Au contraire de la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read()</a></code> qui va retourner les attributs dans les classes de base R <code>data.frame</code> (et affiche un message de compte rendu plus complet qui dans l’extrait de code ci dessous a été omis) la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf()</a></code> va retourner un <strong>tidyverse</strong> <code>tibble</code>.
 Vous en trouvez la démonstration ci-dessous (voir la section <a href="#iovec"><strong>??</strong></a> sur la lecture et l’écriture des données géographiques vectorielles avec R) :</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc_dfr</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Reading layer `nc' from data source </span>
-<span class="co">#&gt;   `/usr/local/lib/R/site-library/sf/shape/nc.shp' using driver `ESRI Shapefile'</span>
-<span class="co">#&gt; Simple feature collection with 100 features and 14 fields</span>
+<code class="sourceCode R"><span class="va">world_dfr</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shapes/world.shp"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; Reading layer `world' from data source </span>
+<span class="co">#&gt;   `/usr/local/lib/R/site-library/spData/shapes/world.shp' using driver `ESRI Shapefile'</span>
+<span class="co">#&gt; Simple feature collection with 177 features and 10 fields</span>
 <span class="co">#&gt; Geometry type: MULTIPOLYGON</span>
 <span class="co">#&gt; Dimension:     XY</span>
-<span class="co">#&gt; Bounding box:  xmin: -84.3 ymin: 33.9 xmax: -75.5 ymax: 36.6</span>
-<span class="co">#&gt; Geodetic CRS:  NAD27</span>
-<span class="va">nc_tbl</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">nc_dfr</span><span class="op">)</span>
+<span class="co">#&gt; Bounding box:  xmin: -180 ymin: -89.9 xmax: 180 ymax: 83.6</span>
+<span class="co">#&gt; Geodetic CRS:  WGS 84</span>
+<span class="va">world_tbl</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shapes/world.shp"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">world_dfr</span><span class="op">)</span>
 <span class="co">#&gt; [1] "sf"         "data.frame"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">nc_tbl</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">world_tbl</span><span class="op">)</span>
 <span class="co">#&gt; [1] "sf"         "tbl_df"     "tbl"        "data.frame"</span></code></pre></div>
 <p>Comme illusté dans le Chapitre <a href="attr.html#attr">3</a>, montrant la manipulation d’objets `sf avec le <strong>tidyverse</strong>, <strong>sf</strong> est désormais la bibliothèquee de référence pour l’analyse des données vectorielles spatiales dans R (sans oublier l’écosystème des paquets <strong>spatstat</strong> qui fournit de nombreuses fonctions pour les statistiques spatiales).
 De nombreux paquets populaires reposent sur <strong>sf</strong>, comme le montre l’augmentation de sa popularité en termes de nombre de téléchargements par jour, comme indiqué dans la section <a href="intro.html#r-ecosystem">1.4</a> du chapitre précédent.
@@ -1191,7 +1191,7 @@ Quel type d’information pouvez-vous en tirer ?</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-03-10.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-03-12.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
