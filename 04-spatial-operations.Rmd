@@ -248,7 +248,7 @@ st_within(point_sf, polygon_sfc)
 st_touches(point_sf, polygon_sfc)
 ```
 
-Notez que bien que le premier point *touche* le polygone, il n'est pas à l'intérieur de celui-ci ; le troisième point est à l'intérieur du polygone mais ne touche aucune partie de sa frontière.
+Notez que bien que le premier point *touche* la limite du polygone, il n'est pas à l'intérieur de celui-ci ; le troisième point est à l'intérieur du polygone mais ne touche aucune partie de sa frontière.
 L'opposé de `st_intersects()` est `st_disjoint()`, qui retourne uniquement les objets qui n'ont aucun rapport spatial avec l'objet sélectionné (ici `[, 1]` convertit le résultat en vecteur) :
 
 ```{r 04-spatial-operations-11}
@@ -257,12 +257,24 @@ st_disjoint(point_sf, polygon_sfc, sparse = FALSE)[, 1]
 
 La fonction `st_is_within_distance()` détecte les éléments qui  touchent *presque* l'objet de sélection. La fonction a un argument supplémentaire `dist`.
 Il peut être utilisé pour définir la distance à laquelle les objets cibles doivent se trouver avant d'être sélectionnés.
-Remarquez que bien que le point 4 soit à une unité de distance du nœud le plus proche de `polygon_sfc` (au point 2 de la figure \@ref(fig:relation-objets)), il est quand même sélectionné lorsque la distance est fixée à 0,9.
-Ceci est illustré dans le morceau de code ci-dessous, qui montre que chaque point se trouve à moins de 0,2 unité du polygone.
+Remarquez que bien que le point 2 soit à plus de 0,2 unités de distance du sommet le plus proche de `polygon_sfc`, il est quand même sélectionné lorsque la distance est fixée à 0,2. 
+En effet, la distance est mesurée par rapport à l'arête la plus proche, dans ce cas la partie du polygone qui se trouve directement au-dessus du point 2 dans la figure \@ref(fig:relation-objets).
+(Vous pouvez vérifier que la distance réelle entre le point 2 et le polygone est de 0,13 avec la commande `st_distance(point_sf, polygon_sfc)`).
+Le prédicat spatial binaire "is within distance" (es à distance de) est démontré dans l'extrait de code ci-dessous, dont les résultats montrent que chaque point est à moins de 0,2 unité du polygone :
 
 ```{r 04-spatial-operations-14}
 st_is_within_distance(point_sf, polygon_sfc, dist = 0.2, sparse = FALSE)[, 1]
 ```
+
+```{r, eval=FALSE, echo=FALSE}
+# verify distances to the polygon with reference to paragraph above:
+st_distance(point_sf, polygon_sfc)
+#           [,1]
+# [1,] 0.0000000
+# [2,] 0.1341641
+# [3,] 0.0000000
+```
+
 
 ```{block2 04-spatial-operations-15, type='rmdnote'}
 Les fonctions de calcul des relations topologiques utilisent des indices spatiaux pour accélérer considérablement les performances des requêtes spatiales.
