@@ -474,16 +474,16 @@ rownames(m) = c("Intérieur (y)", "Limite (y)", "Extérieur (y)")
 knitr::kable(m, caption = "Tableau montrant les relations entre les intérieurs, les limites et les extérieurs des géométries x et y.")
 ```
 
-Flattening this matrix 'row-wise' (meaning concatenating the first row, then the second, then the third) results in the string `212111212`.
-Another example will serve to demonstrate the system:
-the relation shown in Figure \@ref(fig:relations) (the third polygon pair in the third column and 1st row) can be defined in the DE-9IM system as follows:
+En aplatissant cette matrice "ligne par ligne" (c'est-à-dire en concaténant la première ligne, puis la deuxième, puis la troisième), on obtient la chaîne `212111212`.
+Un autre exemple va permettre d'expliciter ce système :
+la relation représentée sur la figure \@ref(fig:relations) (la troisième paire de polygones dans la troisième colonne et la première ligne) peut être définie dans le système DE-9IM comme suit :
 
-- The intersections between the *interior* of the larger object `x` and the interior, boundary and exterior of `y` have dimensions of 2, 1 and 2 respectively
-- The intersections between the *boundary* of the larger object `x` and the interior, boundary and exterior of `y` have dimensions of F, F and 1 respectively, where 'F' means 'false', the objects are disjoint
-- The intersections between the *exterior* of `x` and the interior, boundary and exterior of `y` have dimensions of F, F and 2 respectively: the exterior of the larger object does not touch the interior or boundary of `y`, but the exterior of the smaller and larger objects cover the same area
+- Les intersections entre l'*intérieur* du grand objet `x` et l'intérieur, la limite et l'extérieur de `y` ont des dimensions respectives de 2, 1 et 2.
+- Les intersections entre la *frontière* du grand objet `x` et l'intérieur, la frontière et l'extérieur de `y` ont des dimensions respectives de F, F et 1, où "F" signifie "faux", les objets sont disjoints.
+- Les intersections entre l'*extérieur* de `x` et l'intérieur, la limite et l'extérieur de `y` ont des dimensions respectives de F, F et 2 : l'extérieur du plus grand objet ne touche pas l'intérieur ou la limite de `y`, mais l'extérieur du plus petit et du plus grand objet couvre la même surface.
 
-These three components, when concatenated, create the string `212`, `FF1`, and `FF2`.
-This is the same as the result obtained from the function `st_relate()` (see the source code of this chapter to see how other geometries in Figure \@ref(fig:relations) were created):
+Ces trois composants, une fois concaténés, créent la chaîne `212`, `FF1`, et `FF2`.
+C'est le même résultat que celui obtenu par la fonction `st_relate()` (voir le code source de ce chapitre pour voir comment les autres géométries de la figure \@ref(fig:relations) ont été créées) :
 
 ```{r}
 xy2sfc = function(x, y) st_sfc(st_polygon(list(cbind(x, y))))
