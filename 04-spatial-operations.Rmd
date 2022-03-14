@@ -492,17 +492,17 @@ y = xy2sfc(x = c(0.7, 0.7, 0.9, 0.7), y = c(0.8, 0.5, 0.5, 0.8))
 st_relate(x, y)
 ```
 
-Understanding DE-9IM strings allows new binary spatial predicates to be developed.
-The help page `?st_relate` contains function definitions for 'queen' and 'rook' relations in which polygons share a border or only a point, respectively.
-'Queen' relations mean that 'boundary-boundary' relations (the cell in the second column and the second row in Table \@ref(tab:de9emtable), or the 5th element of the DE-9IM string) must not be empty, corresponding to the pattern `F***T****`, while for 'rook' relations the same element must be 1 (meaning a linear intersection).
-These are implemented as follows:
+La compréhension des chaînes DE-9IM permet de développer de nouveaux prédicats spatiaux binaires.
+La page d'aide `?st_relate` contient des définitions de fonctions pour les relations "reine" et "tour" dans lesquelles les polygones partagent une frontière ou seulement un point, respectivement.
+Les relations "reine" signifient que les relations "frontière-frontière" (la cellule de la deuxième colonne et de la deuxième ligne de la table \@ref(tab:de9emtable), ou le cinquième élément de la chaîne DE-9IM) ne doivent pas être vides, ce qui correspond au *pattern*  `F***T****`, tandis que pour les relations "tour", le même élément doit être 1 (ce qui signifie une intersection linéaire).
+Ces relations sont implémentées comme suit :
 
 ```{r}
 st_queen = function(x, y) st_relate(x, y, pattern = "F***T****")
 st_rook = function(x, y) st_relate(x, y, pattern = "F***1****")
 ```
 
-Building on the object `x` created previously, we can use the newly created functions to find out which elements in the grid are a 'queen' and 'rook' in relation to the middle square of the grid as follows:
+A partir de l'objet `x` créé précédemment, nous pouvons utiliser les fonctions nouvellement créées pour trouver quels éléments de la grille sont une 'reine' et une 'tour' par rapport à la case centrale de la grille comme suit :
 
 ```{r queenscode, fig.show='hide'}
 grid = st_make_grid(x, n = 3)
@@ -513,7 +513,7 @@ grid_sf$rooks = lengths(st_rook(grid, grid[5])) > 0
 plot(grid, col = grid_sf$rooks)
 ```
 
-```{r queens, fig.cap="Demonstration of custom binary spatial predicates for finding 'queen' (left) and 'rook' (right) relations to the central square in a grid with 9 geometries.", echo=FALSE, warning=FALSE}
+```{r queens, fig.cap="Démonstration de prédicats spatiaux binaires personnalisés permettant de trouver les relations "reine" (à gauche) et "tour" (à droite) par rapport à la case centrale dans une grille à 9 géométries.", echo=FALSE, warning=FALSE}
 tm_shape(grid_sf) +
   tm_fill(col = c("queens", "rooks"), palette = c("white", "black")) +
   tm_shape(grid_sf) +
@@ -578,34 +578,34 @@ sel_table
 
 ```
 
-### Spatial joining 
+### Jointure spatiale 
 
-Joining two non-spatial datasets relies on a shared 'key' variable, as described in Section \@ref(vector-attribute-joining).
-Spatial data joining applies the same concept, but instead relies on spatial relations, described in the previous section.
-As with attribute data, joining adds new columns to the target object (the argument `x` in joining functions), from a source object (`y`).
+La jointure de deux jeux de données non spatiales repose sur une variable "clé" partagée, comme décrit dans la section \@ref(vector-attribute-joining).
+La jointure de données spatiales applique le même concept, mais s'appuie sur les relations spatiales, décrites dans la section précédente.
+Comme pour les données attributaires, la jointure ajoute de nouvelles colonnes à l'objet cible (l'argument `x` dans les fonctions de jointure), à partir d'un objet source (`y`).
 \index{join!spatial}
 \index{spatial!join}
 
-The process is illustrated by the following example: imagine you have ten points randomly distributed across the Earth's surface and you ask, for the points that are on land, which countries are they in?
-Implementing this idea in a [reproducible example](https://github.com/Robinlovelace/geocompr/blob/main/code/04-spatial-join.R) will build your geographic data handling skills and show how spatial joins work.
-The starting point is to create points that are randomly scattered over the Earth's surface:
+Le processus est illustré par l'exemple suivant : imaginez que vous disposez de dix points répartis au hasard sur la surface de la Terre et que vous demandez, pour les points qui se trouvent sur la terre ferme, dans quels pays se trouvent-ils ?
+La mise en œuvre de cette idée dans un [exemple reproductible] (https://github.com/Robinlovelace/geocompr/blob/main/code/04-spatial-join.R) renforcera vos compétences en matière de traitement des données géographiques et vous montrera comment fonctionnent les jointures spatiales.
+Le point de départ consiste à créer des points dispersés de manière aléatoire sur la surface de la Terre :
 
 ```{r 04-spatial-operations-19}
-set.seed(2018) # set seed for reproducibility
-(bb = st_bbox(world)) # the world's bounds
+set.seed(2018) # définir la seed pour la reproductibilité
+(bb = st_bbox(world)) # les limites de la terre
 random_df = data.frame(
   x = runif(n = 10, min = bb[1], max = bb[3]),
   y = runif(n = 10, min = bb[2], max = bb[4])
 )
 random_points = random_df %>% 
-  st_as_sf(coords = c("x", "y")) %>% # set coordinates
-  st_set_crs("EPSG:4326") # set geographic CRS
+  st_as_sf(coords = c("x", "y")) %>% # définir les coordonnés
+  st_set_crs("EPSG:4326") # définir le CRS
 ```
 
-The scenario illustrated in Figure \@ref(fig:spatial-join) shows that the `random_points` object (top left) lacks attribute data, while the `world` (top right) has attributes, including country names shown for a sample of countries in the legend.
-Spatial joins are implemented with `st_join()`, as illustrated in the code chunk below.
-The output is the `random_joined` object which is illustrated in Figure \@ref(fig:spatial-join) (bottom left).
-Before creating the joined dataset, we use spatial subsetting to create `world_random`, which contains only countries that contain random points, to verify the number of country names returned in the joined dataset should be four (see the top right panel of Figure \@ref(fig:spatial-join)).
+Le scénario illustré dans la Figure \@ref(fig:spatial-join) montre que l'objet `random_points` (en haut à gauche) n'a pas d'attributs, alors que le `world` (en haut à droite) a des attributs, y compris les noms de pays indiqués pour un échantillon de pays dans la légende.
+Les jointures spatiales sont implémentées avec `st_join()`, comme illustré dans l'extrait de code ci-dessous.
+La sortie est l'objet `random_joined` qui est illustré dans la Figure \@ref(fig:spatial-join) (en bas à gauche).
+Avant de créer l'ensemble de données jointes, nous utilisons la sélection spatiale pour créer `world_random`, qui contient uniquement les pays qui contiennent des points aléatoires, afin de vérifier que le nombre de noms de pays retournés dans l'ensemble de données jointes doit être de quatre (cf. le panneau supérieur droit de la Figure \@ref(fig:spatial-join)).
 
 ```{r 04-spatial-operations-20, message=FALSE}
 world_random = world[random_points, ]
@@ -613,24 +613,24 @@ nrow(world_random)
 random_joined = st_join(random_points, world["name_long"])
 ```
 
-```{r spatial-join, echo=FALSE, fig.cap="Illustration of a spatial join. A new attribute variable is added to random points (top left) from source world object (top right) resulting in the data represented in the final panel.", fig.asp=0.5, warning=FALSE, message=FALSE, out.width="100%", fig.scap="Illustration of a spatial join."}
+```{r spatial-join, echo=FALSE, fig.cap="Illustration d'une jointure spatiale. Une nouvelle variable attributaire est ajoutée aux points aléatoires (en haut à gauche) de l'objet monde source (en haut à droite), ce qui donne les données représentées dans le dernier panneau.", fig.asp=0.5, warning=FALSE, message=FALSE, out.width="100%", fig.scap="Illustration d'une jointure spatiale."}
 # source("https://github.com/Robinlovelace/geocompr/raw/main/code/04-spatial-join.R")
 source("code/04-spatial-join.R")
 tmap_arrange(jm1, jm2, jm3, jm4, nrow = 2, ncol = 2)
 ```
 
-By default, `st_join()` performs a left join, meaning that the result is an object containing all rows from `x` including rows with no match in `y` (see Section \@ref(vector-attribute-joining)), but it can also do inner joins by setting the argument `left = FALSE`.
-Like spatial subsetting, the default topological operator used by `st_join()` is `st_intersects()`, which can be changed by setting the `join` argument (see `?st_join` for details).
-The example above demonstrates the addition of a column from a polygon layer to a point layer, but same approach works regardless of geometry types.
-In such cases, for example when `x` contains polygons, each of which match multiple objects in `y`, spatial joins will result in duplicate features, creates a new row for each match in `y`.
+Par défaut, `st_join()` effectue une jointure à gauche (*left join*), ce qui signifie que le résultat est un objet contenant toutes les lignes de `x`, y compris les lignes sans correspondance dans `y` (voir la section \@ref(vector-attribute-joining)), mais il peut également effectuer des jointures internes en définissant l'argument `left = FALSE`.
+Comme pour les sélections spatiales, l'opérateur topologique par défaut utilisé par `st_join()` est `st_intersects()`, qui peut être modifié en définissant l'argument `join` (cf. `?st_join` pour plus de détails).
+L'exemple ci-dessus montre l'ajout d'une colonne d'une couche de polygones à une couche de points, mais la même approche fonctionne indépendamment des types de géométrie.
+Dans de tels cas, par exemple lorsque `x` contient des polygones, dont chacun correspond à plusieurs objets dans `y`, les jointures spatiales résulteront en des caractéristiques dupliquées, crée une nouvelle ligne pour chaque correspondance dans `y`.
 
 <!-- Idea: demonstrate what happens when there are multiple matches with reprex (low priority, RL: 2021-12) -->
 
-### Non-overlapping joins
+### Jointure sans chevauchement
 
-Sometimes two geographic datasets do not touch but still have a strong geographic relationship.
-The datasets `cycle_hire` and `cycle_hire_osm`, already attached in the **spData** package, provide a good example.
-Plotting them shows that they are often closely related but they do not touch, as shown in Figure \@ref(fig:cycle-hire), a base version of which is created with the following code below:
+Parfois, deux jeux de données géographiques ne se touchent pas mais ont quand même une forte relation géographique.
+Les jeux de données `cycle_hire` et `cycle_hire_osm`, présent dans le paquet **spData**, en sont un bon exemple.
+Leur tracé montre qu'ils sont souvent étroitement liés mais qu'ils ne se touchent pas, comme le montre la figure \@ref(fig:cycle-hire), dont une version de base est créée avec le code suivant ci-dessous :
 \index{join!non-overlapping}
 
 ```{r 04-spatial-operations-21, eval=FALSE}
@@ -638,19 +638,19 @@ plot(st_geometry(cycle_hire), col = "blue")
 plot(st_geometry(cycle_hire_osm), add = TRUE, pch = 3, col = "red")
 ```
 
-We can check if any points are the same `st_intersects()` as shown below:
+Nous pouvons vérifier si certains points se superposent  avec `st_intersects()` :
 
 ```{r 04-spatial-operations-22, message=FALSE}
 any(st_touches(cycle_hire, cycle_hire_osm, sparse = FALSE))
 ```
 
 ```{r 04-spatial-operations-23, echo=FALSE, eval=FALSE}
-# included to show alternative ways of showing there's no overlap
+# include pour montrer d'autres façon de tester le chevauchement
 sum(st_geometry(cycle_hire) %in% st_geometry(cycle_hire_osm))
 sum(st_coordinates(cycle_hire)[, 1] %in% st_coordinates(cycle_hire_osm)[, 1])
 ```
 
-```{r cycle-hire, fig.cap="The spatial distribution of cycle hire points in London based on official data (blue) and OpenStreetMap data (red).", echo=FALSE, warning=FALSE, fig.scap="The spatial distribution of cycle hire points in London."}
+```{r cycle-hire, fig.cap="La distribution spatiale des points de location de vélos à Londres, basée sur les données officielles (bleu) et les données OpenStreetMap (rouge).", echo=FALSE, warning=FALSE, fig.scap="La répartition spatiale des points de location de vélos à Londres."}
 if (knitr::is_latex_output()){
   knitr::include_graphics("figures/cycle-hire-1.png")
 } else if (knitr::is_html_output()){
@@ -670,9 +670,9 @@ if (knitr::is_latex_output()){
 }
 ```
 
-Imagine that we need to join the `capacity` variable in `cycle_hire_osm` onto the official 'target' data contained in `cycle_hire`.
-This is when a non-overlapping join is needed.
-The simplest method is to use the topological operator `st_is_within_distance()`, as demonstrated below using a threshold distance of 20 m (note that this works with projected and unprojected data).
+Imaginons que nous ayons besoin de joindre la variable "capacité" de `cycle_hire_osm` aux données officielles "cible" contenues dans `cycle_hire`.
+Dans ce cas, une jointure sans chevauchement est nécessaire.
+La méthode la plus simple est d'utiliser l'opérateur topologique `st_is_within_distance()`, comme démontré ci-dessous en utilisant une distance seuil de 20 m (notez que cela fonctionne avec des données projetées et non projetées).
 
 ```{r 04-spatial-operations-24}
 sel = st_is_within_distance(cycle_hire, cycle_hire_osm, dist = 20)
@@ -697,9 +697,9 @@ sel = st_is_within_distance(cycle_hire_P, cycle_hire_osm_P, dist = 20)
 summary(lengths(sel) > 0)
 ```
 
-This shows that there are `r sum(lengths(sel) > 0)` points in the target object `cycle_hire` within the threshold distance of `cycle_hire_osm`.
-How to retrieve the *values* associated with the respective `cycle_hire_osm` points?
-The solution is again with `st_join()`, but with an addition `dist` argument (set to 20 m below):
+Cela montre qu'il y a `r sum(lengths(sel) > 0)` des points dans l'objet cible `cycle_hire` dans la distance seuil (20 m) de `cycle_hire_osm`.
+Comment récupérer les *valeurs* associées aux points respectifs de `cycle_hire_osm` ?
+La solution est à nouveau avec `st_join()`, mais avec un argument `dist` supplémentaire (fixé à 20 m en dessous) :
 
 ```{r 04-spatial-operations-25}
 z = st_join(cycle_hire, cycle_hire_osm, st_is_within_distance, dist = 20)
@@ -707,9 +707,9 @@ nrow(cycle_hire)
 nrow(z)
 ```
 
-Note that the number of rows in the joined result is greater than the target.
-This is because some cycle hire stations in `cycle_hire` have multiple matches in `cycle_hire_osm`.
-To aggregate the values for the overlapping points and return the mean, we can use the aggregation methods learned in Chapter \@ref(attr), resulting in an object with the same number of rows as the target:
+Remarquez que le nombre de lignes dans le résultat joint est supérieur à la cible.
+Cela est dû au fait que certaines stations de location de vélos dans `cycle_hire` ont plusieurs correspondances dans `cycle_hire_osm`.
+Pour agréger les valeurs des points qui se chevauchent et renvoyer la moyenne, nous pouvons utiliser les méthodes d'agrégation apprises au chapitre \@ref(attr), ce qui donne un objet avec le même nombre de lignes que la cible :
 
 ```{r 04-spatial-operations-26}
 z = z %>% 
@@ -718,14 +718,14 @@ z = z %>%
 nrow(z) == nrow(cycle_hire)
 ```
 
-The capacity of nearby stations can be verified by comparing a plot of the capacity of the source `cycle_hire_osm` data with the results in this new object (plots not shown):
+La capacité des stations proches peut être vérifiée en comparant les cartes de la capacité des données source `cycle_hire_osm` avec les résultats dans ce nouvel objet (cartes non montrées) :
 
 ```{r 04-spatial-operations-27, eval=FALSE}
 plot(cycle_hire_osm["capacity"])
 plot(z["capacity"])
 ```
 
-The result of this join has used a spatial operation to change the attribute data associated with simple features; the geometry associated with each feature has remained unchanged.
+Le résultat de cette jointure a utilisé une opération spatiale pour modifier les données attributaires associées aux entités simples ; la géométrie associée à chaque entité est restée inchangée.
 
 ### Spatial aggregation {#spatial-aggr}
 
