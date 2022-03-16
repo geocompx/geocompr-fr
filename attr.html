@@ -23,7 +23,10 @@
 <link href="libs/_Roboto%20Mono-0.4.0/font.css" rel="stylesheet">
 <link href="libs/_Montserrat-0.4.0/font.css" rel="stylesheet">
 <script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="libs/leaflet-binding-2.1.0/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
 <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -63,6 +66,7 @@
 <li class="book-part">Foundations</li>
 <li><a class="" href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></li>
 <li><a class="active" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
+<li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
 </ul>
 
         <div class="book-extra">
@@ -103,14 +107,14 @@ Contrairement au modèle de données vectorielles, le modèle de données raster
 Pour illustrer ce point, pensez à un pixel dans la 3<sup>e</sup> ligne et la 4<sup>e</sup> colonne d’une matrice raster.
 Son emplacement spatial est défini par son indice dans la matrice : déplacez-vous depuis l’origine de quatre cellules dans la direction x (généralement vers l’est et la droite sur les cartes) et de trois cellules dans la direction y (généralement vers le sud et le bas).
 La <em>résolution</em> de la trame définit la distance pour chaque étape x et y qui est spécifiée dans l’<em>en-tête</em> du fichier.
-L’en-tête est un composant essentiel des ensembles de données raster qui spécifie comment les pixels se rapportent aux coordonnées géographiques (voir également le chapitre <a href="#spatial-operations"><strong>??</strong></a>).</p>
+L’en-tête est un composant essentiel des ensembles de données raster qui spécifie comment les pixels se rapportent aux coordonnées géographiques (voir également le chapitre <a href="spatial-operations.html#spatial-operations">4</a>).</p>
 <p>Vous apprendrez ainsi à manipuler des objets géographiques en fonction d’attributs, tels que le nom des arrêts de bus, dans un jeux de données vectorielles et l’altitude des pixels dans un jeux de données raster.
 Pour les données vectorielles, cela implique des techniques telles que le sous-ensemble et l’agrégation (voir les sections <a href="#vector-attribute-subsetting"><strong>??</strong></a> et <a href="#vector-attribute-aggregation"><strong>??</strong></a>).
 Les sections <a href="#vector-attribute-joining"><strong>??</strong></a> et <a href="attr.html#vec-attr-creation">3.2.5</a> montrent respectivement comment joindre des données à des objets d’entités simples (<em>simple features</em>) à l’aide d’un ID (identifiant) partagé et comment créer de nouvelles variables.
 Chacune de ces opérations a un équivalent spatial :
 L’opérateur <code>[</code> de la version de base de R, par exemple, fonctionne pour faire des sous-ensembles d’objets basé sur leur attribut que ces objets soient spatiaux ou non ; vous pouvez également joindre les attributs de deux jeux de données géographiques à l’aide de jointures spatiales.
 C’est une bonne nouvelle : les compétences développées dans ce chapitre sont transférables.
-Le chapitre <a href="#spatial-operations"><strong>??</strong></a> étend les méthodes présentées ici au monde spatial.</p>
+Le chapitre <a href="spatial-operations.html#spatial-operations">4</a> étend les méthodes présentées ici au monde spatial.</p>
 <p>Après une exploration en profondeur dans les différents types d’opérations sur les attributs <em>vectoriels</em>, les opérations sur les données attributaires <em>raster</em> sont abordées dans la section <a href="#manipulating-raster-objects"><strong>??</strong></a>. Elle montrera comment créer des couches raster contenant des attributs continus et catégoriels et comment extraire les valeurs des cellules d’une ou de plusieurs couches (sous-ensemble raster).
 La section <a href="#summarizing-raster-objects"><strong>??</strong></a> fournit une vue d’ensemble des calculs matricielles “globaux” qui peuvent être utilisées pour résumer des jeux de données raster entiers.</p>
 </div>
@@ -175,7 +179,7 @@ La compatibilité avec le tidyverse est un avantage de <strong>sf</strong> par r
 Les principales fonctions de sélection de sous-ensembles <strong>dplyr</strong> sont <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> et <code><a href="https://dplyr.tidyverse.org/reference/slice.html">slice()</a></code> pour la sélection des lignes, et <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> pour la sélection des colonnes.
 Ces deux approches préservent les composantes spatiales des données attributaires dans les objets <code>sf</code>, tandis que l’utilisation de l’opérateur <code>$</code> ou de la fonction <strong>dplyr</strong> <code><a href="https://dplyr.tidyverse.org/reference/pull.html">pull()</a></code> pour retourner une seule colonne d’attribut sous forme de vecteur perdra les données d’attribut, comme nous le verrons plus loin.
 
-Cette section se concentre sur la sélection de sous-ensembles de tableaux de données <code>sf</code> ; pour plus de détails sur les cas de vecteurs et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors">2.7</a> de An Introduction to R <span class="citation">(<a href="attr.html#ref-rcoreteam_introduction_2021" role="doc-biblioref">R Core Team, Smith, and Team 2021</a>)</span> et le chapitre <a href="https://adv-r.hadley.nz/subsetting.html">4</a> de Advanced R Programming <span class="citation">(<a href="attr.html#ref-wickham_advanced_2019" role="doc-biblioref">Wickham 2019</a>)</span>.</p>
+Cette section se concentre sur la sélection de sous-ensembles de tableaux de données <code>sf</code> ; pour plus de détails sur les cas de vecteurs et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors">2.7</a> de An Introduction to R <span class="citation">(<a href="spatial-operations.html#ref-rcoreteam_introduction_2021" role="doc-biblioref">R Core Team, Smith, and Team 2021</a>)</span> et le chapitre <a href="https://adv-r.hadley.nz/subsetting.html">4</a> de Advanced R Programming <span class="citation">(<a href="spatial-operations.html#ref-wickham_advanced_2019" role="doc-biblioref">Wickham 2019</a>)</span>.</p>
 <p>L’opérateur <code>[</code> peut sélectionner à la fois les lignes et les colonnes.
 Il est possible de spécifier les éléments à conserver en indiquant leur rang entre crochets, directement après le nom de l’objet de type tableau de données qui les contient.
 La commande <code>object[i, j]</code> signifie ’retourner les lignes représentées par <code>i</code> et les colonnes représentées par <code>j</code>, où <code>i</code> et <code>j</code> contiennent typiquement des entiers ou des <code>TRUE</code> et <code>FALSE</code> (les index peuvent aussi être des chaînes de caractères, indiquant les noms de lignes ou de colonnes).
@@ -297,7 +301,7 @@ Elle ne conserve que les lignes correspondant à des critères donnés, par exem
 <h3>
 <span class="header-section-number">3.2.2</span> Enchainement de commandes avec des <em>pipes</em><a class="anchor" aria-label="anchor" href="#enchainement-de-commandes-avec-des-pipes"><i class="fas fa-link"></i></a>
 </h3>
-<p>La clé des flux de travail utilisant les fonctions <strong>dplyr</strong> est l’opérateur <a href="http://r4ds.had.co.nz/pipes.html">‘pipe’</a> <code>%&gt;%</code> (ou depuis R <code>4.1.0</code> le <em>pipe</em> natif <code>|&gt;</code>), qui tire son nom du <em>pipe</em> Unix <code>|</code> <span class="citation">(<a href="attr.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.
+<p>La clé des flux de travail utilisant les fonctions <strong>dplyr</strong> est l’opérateur <a href="http://r4ds.had.co.nz/pipes.html">‘pipe’</a> <code>%&gt;%</code> (ou depuis R <code>4.1.0</code> le <em>pipe</em> natif <code>|&gt;</code>), qui tire son nom du <em>pipe</em> Unix <code>|</code> <span class="citation">(<a href="spatial-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.
 Les <em>pipes</em> permettent un code expressif : la sortie d’une fonction précédente devient le premier argument de la fonction suivante, permettant l’<em>enchaînement</em>.
 Ceci est illustré ci-dessous, dans lequel seuls les pays d’Asie sont filtrés de l’ensemble de données <code>world</code>, l’objet est ensuite sélectionné par les colonnes (<code>name_long</code> et <code>continent</code>) et les cinq premières lignes (résultat non montré).</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
@@ -411,7 +415,7 @@ Plus de détails sont fournis dans les pages d´aide (qui sont accessibles via <
 <p>La combinaison de données provenant de différentes sources est une tâche courante dans la préparation des données.
 Les jointures le font en combinant des tables basées sur une variable “clé” partagée.
 <strong>dplyr</strong> possède plusieurs fonctions de jointure, dont <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> et <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> — voir <code><a href="https://dplyr.tidyverse.org/articles/two-table.html">vignette("two-table")</a></code> pour une liste complète.
-Ces noms de fonctions suivent les conventions utilisées dans le langage des base de données <a href="http://r4ds.had.co.nz/relational-data.html">SQL</a> <span class="citation">(<a href="attr.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>, Chapitre 13)</span> ; leur utilisation pour joindre des ensembles de données non spatiales à des objets <code>sf</code> est l’objet de cette section.
+Ces noms de fonctions suivent les conventions utilisées dans le langage des base de données <a href="http://r4ds.had.co.nz/relational-data.html">SQL</a> <span class="citation">(<a href="spatial-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>, Chapitre 13)</span> ; leur utilisation pour joindre des ensembles de données non spatiales à des objets <code>sf</code> est l’objet de cette section.
 Les fonctions de jointure <strong>dplyr</strong> fonctionnent de la même manière sur les tableau de données et les objets <code>sf</code>, la seule différence importante étant la colonne de liste <code>geometry</code>.
 Le résultat des jointures de données peut être un objet <code>sf</code> ou <code>data.frame</code>.
 Le type le plus courant de jointure attributaures sur des données spatiales prend un objet <code>sf</code> comme premier argument et lui ajoute des colonnes à partir d’un <code>data.frame</code> spécifié comme second argument.
@@ -503,7 +507,7 @@ Elle ne peut être utilisée pour créer des cartes et des opérations spatiales
 Heureusement, les tableaux de données non spatiaux avec une colonne de liste de géométrie (comme <code>coffee_world</code>) peuvent être convertis en un objet <code>sf</code> comme suit : <code>st_as_sf(coffee_world)</code>.
 </div>
 <p>Cette section couvre la majorité des cas d’utilisation de la jointure.
-Pour plus d’informations, nous recommandons <span class="citation">Grolemund and Wickham (<a href="attr.html#ref-grolemund_r_2016" role="doc-biblioref">2016</a>)</span>, la <a href="https://geocompr.github.io/geocompkg/articles/join.html">vignette join</a> dans le paquet <strong>geocompkg</strong> qui accompagne ce livre, et la documentation du paquet <strong>data.table</strong> .<a href="attr.html#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a>
+Pour plus d’informations, nous recommandons <span class="citation">Grolemund and Wickham (<a href="spatial-operations.html#ref-grolemund_r_2016" role="doc-biblioref">2016</a>)</span>, la <a href="https://geocompr.github.io/geocompkg/articles/join.html">vignette join</a> dans le paquet <strong>geocompkg</strong> qui accompagne ce livre, et la documentation du paquet <strong>data.table</strong> .<a href="spatial-operations.html#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a>
 Un autre type de jointure est la jointure spatiale, traitée dans le chapitre suivant (section <a href="#spatial-joining"><strong>??</strong></a>).</p>
 </div>
 <div id="vec-attr-creation" class="section level3" number="3.2.5">
@@ -552,7 +556,7 @@ Ceci est illustré ci-dessous et produit le même objet <code>world</code> mais 
 <p>Il est important de noter que les opérations sur les données attributaires préservent la géométrie des entités simples.
 Comme mentionné au début du chapitre, il peut être utile de supprimer la géométrie.
 Pour ce faire, vous devez la supprimer explicitement.
-Par conséquent, une approche telle que <code>select(world, -geom)</code> sera infructueuse et vous devriez plutôt utiliser <code><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry()</a></code>.<a href="attr.html#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
+Par conséquent, une approche telle que <code>select(world, -geom)</code> sera infructueuse et vous devriez plutôt utiliser <code><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry()</a></code>.<a href="spatial-operations.html#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">world_data</span> <span class="op">=</span> <span class="va">world</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">world_data</span><span class="op">)</span>
@@ -615,12 +619,12 @@ Il est important de noter que la sauvegarde d´un objet raster avec une table de
 <ul>
 <li>indexation ligne-colonne ;</li>
 <li>ID des cellules ;</li>
-<li>coordonnées (voir la section <a href="#spatial-raster-subsetting"><strong>??</strong></a>) ;</li>
-<li>autre objet spatial (voir la section <a href="#spatial-raster-subsetting"><strong>??</strong></a>).</li>
+<li>coordonnées (voir la section <a href="spatial-operations.html#spatial-raster-subsetting">4.3.1</a>) ;</li>
+<li>autre objet spatial (voir la section <a href="spatial-operations.html#spatial-raster-subsetting">4.3.1</a>).</li>
 </ul>
 <p>Nous ne présentons ici que les deux premières options, car elles peuvent être considérées comme des opérations non spatiales.
 Si nous avons besoin d’un objet spatial pour en sélectionner un autre ou si le résultat est un objet spatial, nous en parlerons comme une sélection spatiale.
-Par conséquent, les deux dernières options seront présentées dans le chapitre suivant (voir la section <a href="#spatial-raster-subsetting"><strong>??</strong></a>).</p>
+Par conséquent, les deux dernières options seront présentées dans le chapitre suivant (voir la section <a href="spatial-operations.html#spatial-raster-subsetting">4.3.1</a>).</p>
 <p>Les deux premières options de sous-ensembles sont présentées dans les commandes ci-dessous —
 toutes deux renvoient la valeur du pixel supérieur gauche dans l’objet raster <code>elev</code> (résultats non montrés) :</p>
 <div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
@@ -748,273 +752,11 @@ Sélectionnez les valeurs des cellules de chaque coin.</p>
 <p>E16. Quelle est la classe la plus commune de notre exemple de raster <code>grain</code> (indice : <code>modal</code>) ?</p>
 <p>E17. Utilisez un histogramme et un boxplot sur le fichier <code>dem.tif</code> du paquet <strong>spDataLarge</strong> (<code>system.file("raster/dem.tif", package = "spDataLarge")</code>).</p>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-akima_akima_2016" class="csl-entry">
-Akima, Hiroshi, and Albrecht Gebhardt. 2016. <em>Akima: <span>Interpolation</span> of <span>Irregularly</span> and <span>Regularly Spaced Data</span></em>. <a href="https://CRAN.R-project.org/package=akima">https://CRAN.R-project.org/package=akima</a>.
 </div>
-<div id="ref-baddeley_spatial_2015" class="csl-entry">
-Baddeley, Adrian, Ege Rubak, and Rolf Turner. 2015. <em>Spatial Point Patterns: Methodology and Applications with <span>R</span></em>. <span>CRC Press</span>.
-</div>
-<div id="ref-bivand_using_2000" class="csl-entry">
-Bivand, Roger. 2000. <span>“Using the <span>R</span> Statistical Data Analysis Language on <span>GRASS</span> 5.0 <span>GIS</span> Database Files.”</span> <em>Computers &amp; Geosciences</em> 26 (9): 1043–52. <a href="https://doi.org/10.1016/S0098-3004(00)00057-1">https://doi.org/10.1016/S0098-3004(00)00057-1</a>.
-</div>
-<div id="ref-bivand_more_2001" class="csl-entry">
-———. 2001. <span>“More on <span>Spatial Data Analysis</span>.”</span> <em>R News</em> 1 (3): 13–17.
-</div>
-<div id="ref-hornik_approaches_2003" class="csl-entry">
-———. 2003. <span>“Approaches to <span>Classes</span> for <span>Spatial Data</span> in <span>R</span>.”</span> In <em>Proceedings of <span>DSC</span></em>, edited by Kurt Hornik, Friedrich Leisch, and Achim Zeileis. <a href="https://www.r-project.org/nosvn/conferences/DSC-2003/Proceedings/Bivand.pdf">https://www.r-project.org/nosvn/conferences/DSC-2003/Proceedings/Bivand.pdf</a>.
-</div>
-<div id="ref-bivand_rgrass7_2016" class="csl-entry">
-———. 2016a. <em>Rgrass7: <span>Interface Between GRASS</span> 7 <span>Geographical Information System</span> and <span>R</span></em>. <a href="https://CRAN.R-project.org/package=rgrass7">https://CRAN.R-project.org/package=rgrass7</a>.
-</div>
-<div id="ref-bivand_spgrass6_2016" class="csl-entry">
-———. 2016b. <em>Spgrass6: <span>Interface</span> Between <span>GRASS</span> 6 and <span>R</span></em>. <a href="http://CRAN.R-project.org/package=spgrass6">http://CRAN.R-project.org/package=spgrass6</a>.
-</div>
-<div id="ref-bivand_spdep_2017" class="csl-entry">
-———. 2017. <em>Spdep: <span>Spatial Dependence</span>: <span>Weighting Schemes</span>, <span>Statistics</span> and <span>Models</span></em>. <a href="https://CRAN.R-project.org/package=spdep">https://CRAN.R-project.org/package=spdep</a>.
-</div>
-<div id="ref-bivand_progress_2021" class="csl-entry">
-———. 2021. <span>“Progress in the <span>R</span> Ecosystem for Representing and Handling Spatial Data.”</span> <em>Journal of Geographical Systems</em> 23 (4): 515–46. <a href="https://doi.org/ghnwg3">https://doi.org/ghnwg3</a>.
-</div>
-<div id="ref-bivand_implementing_2000" class="csl-entry">
-Bivand, Roger, and Albrecht Gebhardt. 2000. <span>“Implementing Functions for Spatial Statistical Analysis Using the Language.”</span> <em>Journal of Geographical Systems</em> 2 (3): 307–17. <a href="https://doi.org/10.1007/PL00011460">https://doi.org/10.1007/PL00011460</a>.
-</div>
-<div id="ref-R-rgdal" class="csl-entry">
-Bivand, Roger, Tim Keitt, and Barry Rowlingson. 2018. <em>Rgdal: Bindings for the ’Geospatial’ Data Abstraction Library</em>. <a href="https://CRAN.R-project.org/package=rgdal">https://CRAN.R-project.org/package=rgdal</a>.
-</div>
-<div id="ref-bivand_maptools_2017" class="csl-entry">
-Bivand, Roger, and Nicholas Lewin-Koh. 2017. <em>Maptools: <span>Tools</span> for <span>Reading</span> and <span>Handling Spatial Objects</span></em>. <a href="https://CRAN.R-project.org/package=maptools">https://CRAN.R-project.org/package=maptools</a>.
-</div>
-<div id="ref-bivand_open_2000" class="csl-entry">
-Bivand, Roger, and Markus Neteler. 2000. <span>“Open Source Geocomputation: Using the <span>R</span> Data Analysis Language Integrated with <span>GRASS GIS</span> and <span>PostgreSQL</span> Data Base Systems.”</span> In <em>Proceedings of the 5th <span>International Conference</span> on <span>GeoComputation</span></em>, edited by Markus Neteler and Roger S. Bivand. <a href="http://www.geocomputation.org/2000/GC009/Gc009.htm">http://www.geocomputation.org/2000/GC009/Gc009.htm</a>.
-</div>
-<div id="ref-bivand_applied_2013" class="csl-entry">
-Bivand, Roger, Edzer Pebesma, and Virgilio Gómez-Rubio. 2013. <em>Applied Spatial Data Analysis with <span>R</span></em>. Vol. 747248717. <span>Springer</span>. <a href="https://books.google.com?id=v0eIU9ObJXgC">https://books.google.com?id=v0eIU9ObJXgC</a>.
-</div>
-<div id="ref-R-rgeos" class="csl-entry">
-Bivand, Roger, and Colin Rundel. 2018. <em>Rgeos: Interface to Geometry Engine - Open Source (’GEOS’)</em>. <a href="https://CRAN.R-project.org/package=rgeos">https://CRAN.R-project.org/package=rgeos</a>.
-</div>
-<div id="ref-bondaruk_assessing_2020" class="csl-entry">
-Bondaruk, Ben, Steven A. Roberts, and Colin Robertson. 2020. <span>“Assessing the State of the Art in <span>Discrete Global Grid Systems</span>: <span>OGC</span> Criteria and Present Functionality.”</span> <em>Geomatica</em> 74 (1): 9–30. <a href="https://doi.org/10.1139/geomat-2019-0015">https://doi.org/10.1139/geomat-2019-0015</a>.
-</div>
-<div id="ref-brenning_arcgis_2012" class="csl-entry">
-Brenning, Alexander. 2012. <em><span>ArcGIS Geoprocessing</span> in <span>R</span> via <span>Python</span></em>. <a href="https://CRAN.R-project.org/package=RPyGeo">https://CRAN.R-project.org/package=RPyGeo</a>.
-</div>
-<div id="ref-R-RSAGA" class="csl-entry">
-Brenning, Alexander, Donovan Bangs, and Marc Becker. 2018. <em>RSAGA: SAGA Geoprocessing and Terrain Analysis</em>. <a href="https://CRAN.R-project.org/package=RSAGA">https://CRAN.R-project.org/package=RSAGA</a>.
-</div>
-<div id="ref-brzustowicz_data_2017" class="csl-entry">
-Brzustowicz, Michael R. 2017. <em>Data Science with <span>Java</span>: [Practical Methods for Scientists and Engineers]</em>. First. <span>Beijing Boston Farnham</span>: <span>O´Reilly</span>.
-</div>
-<div id="ref-calenge_package_2006" class="csl-entry">
-Calenge, C. 2006. <span>“The Package Adehabitat for the <span>R</span> Software: Tool for the Analysis of Space and Habitat Use by Animals.”</span> <em>Ecological Modelling</em> 197: 1035. <a href="https://doi.org/10.1016/j.ecolmodel.2006.03.017">https://doi.org/10.1016/j.ecolmodel.2006.03.017</a>.
-</div>
-<div id="ref-chambers_extending_2016" class="csl-entry">
-Chambers, John M. 2016. <em>Extending <span>R</span></em>. <span>CRC Press</span>. <a href="https://books.google.com?id=kxxjDAAAQBAJ">https://books.google.com?id=kxxjDAAAQBAJ</a>.
-</div>
-<div id="ref-cooley_sfheaders_2020" class="csl-entry">
-Cooley, David. 2020. <em>Sfheaders: <span>Converts</span> Between r Objects and Simple Feature Objects</em>. Manual. <a href="https://CRAN.R-project.org/package=sfheaders">https://CRAN.R-project.org/package=sfheaders</a>.
-</div>
-<div id="ref-coppock_history_1991" class="csl-entry">
-Coppock, J Terry, and David W Rhind. 1991. <span>“The History of <span>GIS</span>.”</span> <em>Geographical Information Systems: Principles and Applications, Vol. 1.</em> 1 (1): 21–43. <a href="https://www.geos.ed.ac.uk/~gisteac/ilw/generic_resources/books_and_papers/Thx1ARTICLE.pdf">https://www.geos.ed.ac.uk/~gisteac/ilw/generic_resources/books_and_papers/Thx1ARTICLE.pdf</a>.
-</div>
-<div id="ref-dunnington_ggspatial_2021" class="csl-entry">
-Dunnington, Dewey. 2021. <em>Ggspatial: <span>Spatial</span> Data Framework for Ggplot2</em>. Manual. <a href="https://CRAN.R-project.org/package=ggspatial">https://CRAN.R-project.org/package=ggspatial</a>.
-</div>
-<div id="ref-eddelbuettel_extending_2018" class="csl-entry">
-Eddelbuettel, Dirk, and James Joseph Balamuta. 2018. <span>“Extending <span>R</span> with <span>C</span>++: <span>A Brief Introduction</span> to <span>Rcpp</span>.”</span> <em>The American Statistician</em> 72 (1): 28–36. <a href="https://doi.org/gdg3fb">https://doi.org/gdg3fb</a>.
-</div>
-<div id="ref-garrard_geoprocessing_2016" class="csl-entry">
-Garrard, Chris. 2016. <em>Geoprocessing with <span>Python</span></em>. <span>Shelter Island, NY</span>: <span>Manning Publications</span>.
-</div>
-<div id="ref-gillespie_efficient_2016" class="csl-entry">
-Gillespie, Colin, and Robin Lovelace. 2016. <em>Efficient <span>R Programming</span>: <span>A Practical Guide</span> to <span>Smarter Programming</span></em>. <span>O’Reilly Media</span>. <a href="https://csgillespie.github.io/efficientR/">https://csgillespie.github.io/efficientR/</a>.
-</div>
-<div id="ref-giraud_mapsf_2021" class="csl-entry">
-Giraud, Timothée. 2021. <em>Mapsf: <span>Thematic</span> Cartography</em>. Manual. <a href="https://CRAN.R-project.org/package=mapsf">https://CRAN.R-project.org/package=mapsf</a>.
-</div>
-<div id="ref-grolemund_r_2016" class="csl-entry">
-Grolemund, Garrett, and Hadley Wickham. 2016. <em>R for <span>Data Science</span></em>. <span>O’Reilly Media</span>.
-</div>
-<div id="ref-hijmans_geosphere_2016" class="csl-entry">
-Hijmans, Robert J. 2016. <em>Geosphere: <span>Spherical Trigonometry</span></em>. <a href="https://CRAN.R-project.org/package=geosphere">https://CRAN.R-project.org/package=geosphere</a>.
-</div>
-<div id="ref-R-raster" class="csl-entry">
-———. 2017. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.
-</div>
-<div id="ref-hijmans_terra_2021" class="csl-entry">
-———. 2021. <em>Terra: <span>Spatial</span> Data Analysis</em>. Manual. <a href="https://rspatial.org/terra/">https://rspatial.org/terra/</a>.
-</div>
-<div id="ref-essd-11-647-2019" class="csl-entry">
-Ince, E. S., F. Barthelmes, S. Reißland, K. Elger, C. Förste, F. Flechtner, and H. Schuh. 2019. <span>“<span>ICGEM</span> – 15 Years of Successful Collection and Distribution of Global Gravitational Models, Associated Services, and Future Plans.”</span> <em>Earth System Science Data</em> 11 (2): 647–74. <a href="https://doi.org/gg5tzm">https://doi.org/gg5tzm</a>.
-</div>
-<div id="ref-jr_geor_2016" class="csl-entry">
-Jr, Paulo J. Ribeiro, and Peter J. Diggle. 2016. <em><span class="nocase">geoR</span>: <span>Analysis</span> of <span>Geostatistical Data</span></em>. <a href="https://CRAN.R-project.org/package=geoR">https://CRAN.R-project.org/package=geoR</a>.
-</div>
-<div id="ref-kahle_ggmap_2013" class="csl-entry">
-Kahle, D, and Hadley Wickham. 2013. <span>“Ggmap: <span>Spatial Visualization</span> with Ggplot2.”</span> <em>The R Journal</em> 5: 144–61. <a href="https://doi.org/10.32614/RJ-2013-014">https://doi.org/10.32614/RJ-2013-014</a>.
-</div>
-<div id="ref-lamigueiro_displaying_2018" class="csl-entry">
-Lamigueiro, Oscar Perpinan. 2018. <em>Displaying <span>Time Series</span>, <span>Spatial</span>, and <span>Space-Time Data</span> with <span>R</span></em>. Second. <span>Boca Raton</span>: <span>Chapman and Hall/CRC</span>.
-</div>
-<div id="ref-livingstone_geographical_1992" class="csl-entry">
-Livingstone, David N. 1992. <em>The <span>Geographical Tradition</span>: <span>Episodes</span> in the <span>History</span> of a <span>Contested Enterprise</span></em>. <span>Oxford, UK ; Cambridge, USA</span>: <span>John Wiley &amp; Sons Ltd</span>.
-</div>
-<div id="ref-loecher_rgooglemaps_2015" class="csl-entry">
-Loecher, Markus, and Karl Ropkins. 2015. <span>“<span>RgoogleMaps</span> and Loa: <span>Unleashing R Graphics Power</span> on <span>Map Tiles</span>.”</span> <em>Journal of Statistical Software</em> 63 (February): 1–18. <a href="https://doi.org/gfgwng">https://doi.org/gfgwng</a>.
-</div>
-<div id="ref-longley_geographic_2015" class="csl-entry">
-Longley, Paul. 2015. <em>Geographic Information Science &amp; Systems</em>. Fourth edition. <span>Hoboken, NJ</span>: <span>Wiley</span>.
-</div>
-<div id="ref-longley_geocomputation_1998" class="csl-entry">
-Longley, Paul, Sue M. Brooks, Rachael McDonnell, and Bill MacMillan, eds. 1998. <em>Geocomputation: <span>A Primer</span></em>. <span>Chichester, Eng. ; New York</span>: <span>Wiley</span>.
-</div>
-<div id="ref-majure_sgeostat_2016" class="csl-entry">
-Majure, James J., and Albrecht Gebhardt. 2016. <em>Sgeostat: <span>An Object-Oriented Framework</span> for <span>Geostatistical Modeling</span> in <span>S</span>+</em>. <a href="https://CRAN.R-project.org/package=sgeostat">https://CRAN.R-project.org/package=sgeostat</a>.
-</div>
-<div id="ref-maling_coordinate_1992" class="csl-entry">
-Maling, D. H. 1992. <em>Coordinate Systems and Map Projections</em>. Second. <span>Oxford ; New York</span>: <span>Pergamon Press</span>.
-</div>
-<div id="ref-_map_1993" class="csl-entry">
-<span>“Map Projections.”</span> 1993. <span>US Geological Survey</span>. <a href="https://doi.org/10.3133/70047422">https://doi.org/10.3133/70047422</a>.
-</div>
-<div id="ref-morganwall_rayshader_2021" class="csl-entry">
-Morgan-Wall, Tyler. 2021. <em>Rayshader: <span>Create</span> Maps and Visualize Data in <span>2d</span> and <span>3d</span></em>. Manual. <a href="https://CRAN.R-project.org/package=rayshader">https://CRAN.R-project.org/package=rayshader</a>.
-</div>
-<div id="ref-muenchow_rqgis:_2017" class="csl-entry">
-Muenchow, Jannes, Patrick Schratz, and Alexander Brenning. 2017. <span>“<span>RQGIS</span>: <span>Integrating R</span> with <span>QGIS</span> for Statistical Geocomputing.”</span> <em>The R Journal</em> 9 (2): 409–28. <a href="https://doi.org/gf3d48">https://doi.org/gf3d48</a>.
-</div>
-<div id="ref-neteler_open_2008" class="csl-entry">
-Neteler, Markus, and Helena Mitasova. 2008. <em>Open Source <span>GIS</span>: A <span>GRASS GIS</span> Approach</em>. Third. <span>New York, NY</span>: <span>Springer</span>.
-</div>
-<div id="ref-openshaw_geocomputation_2000" class="csl-entry">
-Openshaw, Stan, and Robert J. Abrahart, eds. 2000. <em>Geocomputation</em>. <span>London ; New York</span>: <span>CRC Press</span>.
-</div>
-<div id="ref-pebesma_simple_2018" class="csl-entry">
-Pebesma, Edzer. 2018. <span>“Simple Features for <span>R</span>: <span>Standardized</span> Support for Spatial Vector Data.”</span> <em>The R Journal</em>. <a href="https://doi.org/gf2ztt">https://doi.org/gf2ztt</a>.
-</div>
-<div id="ref-pebesma_stars_2021" class="csl-entry">
-———. 2021. <em>Stars: <span>Spatiotemporal</span> Arrays, Raster and Vector Data Cubes</em>. Manual. <a href="https://CRAN.R-project.org/package=stars">https://CRAN.R-project.org/package=stars</a>.
-</div>
-<div id="ref-pebesma_classes_2005" class="csl-entry">
-Pebesma, Edzer, and Roger Bivand. 2005. <span>“Classes and Methods for Spatial Data in <span>R</span>.”</span> <em>R News</em> 5 (2): 9–13. <a href="https://cran.r-project.org/doc/Rnews/Rnews_2005-2.pdf">https://cran.r-project.org/doc/Rnews/Rnews_2005-2.pdf</a>.
-</div>
-<div id="ref-R-sp" class="csl-entry">
-———. 2018. <em>Sp: Classes and Methods for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=sp">https://CRAN.R-project.org/package=sp</a>.
-</div>
-<div id="ref-pebesma_spatial_2022" class="csl-entry">
-———. 2022. <em>Spatial <span>Data Science</span> with Applications in <span>R</span></em>. <a href="https://r-spatial.org/book">https://r-spatial.org/book</a>.
-</div>
-<div id="ref-R-gstat" class="csl-entry">
-Pebesma, Edzer, and Benedikt Graeler. 2018. <em>Gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation</em>. <a href="https://CRAN.R-project.org/package=gstat">https://CRAN.R-project.org/package=gstat</a>.
-</div>
-<div id="ref-pebesma_measurement_2016" class="csl-entry">
-Pebesma, Edzer, Thomas Mailund, and James Hiebert. 2016. <span>“Measurement <span>Units</span> in <span>R</span>.”</span> <em>The R Journal</em> 8 (2): 486–94. <a href="https://doi.org/gkb5pd">https://doi.org/gkb5pd</a>.
-</div>
-<div id="ref-pebesma_r_2012" class="csl-entry">
-Pebesma, Edzer, Daniel Nüst, and Roger Bivand. 2012. <span>“The <span>R</span> Software Environment in Reproducible Geoscientific Research.”</span> <em>Eos, Transactions American Geophysical Union</em> 93 (16): 163–63. <a href="https://doi.org/gd8djc">https://doi.org/gd8djc</a>.
-</div>
-<div id="ref-pedersen_gganimate_2020" class="csl-entry">
-Pedersen, Thomas Lin, and David Robinson. 2020. <em>Gganimate: <span>A</span> Grammar of Animated Graphics</em>. Manual. <a href="https://CRAN.R-project.org/package=gganimate">https://CRAN.R-project.org/package=gganimate</a>.
-</div>
-<div id="ref-rcoreteam_introduction_2021" class="csl-entry">
-R Core Team, D. M. Smith, and R Core Team. 2021. <em>An <span>Introduction</span> to <span>R</span></em>. <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html">https://cran.r-project.org/doc/manuals/r-release/R-intro.html</a>.
-</div>
-<div id="ref-ripley_spatial_2001" class="csl-entry">
-Ripley, Brian D. 2001. <span>“Spatial <span>Statistics</span> in <span>R</span>.”</span> <em>R News</em> 1 (2): 14–15.
-</div>
-<div id="ref-Roussel2020" class="csl-entry">
-Roussel, Jean-Romain, David Auty, Nicholas C. Coops, Piotr Tompalski, Tristan R. H. Goodbody, Andrew Sánchez Meador, Jean-François Bourdon, Florian de Boissieu, and Alexis Achim. 2020. <span>“<span class="nocase">lidR</span>: <span>An</span> r Package for Analysis of Airborne Laser Scanning (<span>ALS</span>) Data.”</span> <em>Remote Sensing of Environment</em> 251 (December): 112061. <a href="https://doi.org/ghddxb">https://doi.org/ghddxb</a>.
-</div>
-<div id="ref-rowlingson_splancs_1993" class="csl-entry">
-Rowlingson, B. S, and P. J Diggle. 1993. <span>“Splancs: <span>Spatial</span> Point Pattern Analysis Code in <span class="nocase">S-plus</span>.”</span> <em>Computers &amp; Geosciences</em> 19 (5): 627–55. <a href="https://doi.org/dvzffd">https://doi.org/dvzffd</a>.
-</div>
-<div id="ref-rowlingson_rasp:_2003" class="csl-entry">
-Rowlingson, Barry, Adrian Baddeley, Rolf Turner, and Peter Diggle. 2003. <span>“Rasp: <span>A Package</span> for <span>Spatial Statistics</span>.”</span> In <em>Proceedings of the 3rd <span>International Workshop</span> on <span>Distributed Statistical Computing</span></em>, edited by Kurt Hornik. <a href="https://www.r-project.org/conferences/DSC-2003/Proceedings/RowlingsonEtAl.pdf">https://www.r-project.org/conferences/DSC-2003/Proceedings/RowlingsonEtAl.pdf</a>.
-</div>
-<div id="ref-rowlingson_splancs_2017" class="csl-entry">
-Rowlingson, Barry, and Peter Diggle. 2017. <em>Splancs: <span>Spatial</span> and <span>Space-Time Point Pattern Analysis</span></em>. <a href="https://CRAN.R-project.org/package=splancs">https://CRAN.R-project.org/package=splancs</a>.
-</div>
-<div id="ref-sherman_desktop_2008" class="csl-entry">
-Sherman, Gary. 2008. <em>Desktop <span>GIS</span>: <span>Mapping</span> the <span>Planet</span> with <span>Open Source Tools</span></em>. <span>Pragmatic Bookshelf</span>.
-</div>
-<div id="ref-talbert_ancient_2014" class="csl-entry">
-Talbert, Richard J. A. 2014. <em>Ancient <span>Perspectives</span>: <span>Maps</span> and <span>Their Place</span> in <span>Mesopotamia</span>, <span>Egypt</span>, <span>Greece</span>, and <span>Rome</span></em>. <span>University of Chicago Press</span>. <a href="https://books.google.com?id=srTbAgAAQBAJ">https://books.google.com?id=srTbAgAAQBAJ</a>.
-</div>
-<div id="ref-tennekes_elegant_2022" class="csl-entry">
-Tennekes, Martijn, and Jakub Nowosad. 2022. <em>Elegant and Informative Maps with Tmap</em>.
-</div>
-<div id="ref-theeconomist_autonomous_2016" class="csl-entry">
-The Economist. 2016. <span>“The Autonomous Car’s Reality Check.”</span> <em>The Economist</em>, 2016. <a href="https://www.economist.com/news/science-and-technology/21696925-building-highly-detailed-maps-robotic-vehicles-autonomous-cars-reality">https://www.economist.com/news/science-and-technology/21696925-building-highly-detailed-maps-robotic-vehicles-autonomous-cars-reality</a>.
-</div>
-<div id="ref-venables_modern_2002" class="csl-entry">
-Venables, W. N., and B. D. Ripley. 2002. <em>Modern <span>Applied Statistics</span> with <span>S</span></em>. Fourth. <span>New York</span>: <span>Springer</span>. <a href="http://www.stats.ox.ac.uk/pub/MASS4">http://www.stats.ox.ac.uk/pub/MASS4</a>.
-</div>
-<div id="ref-wickham_advanced_2019" class="csl-entry">
-Wickham, Hadley. 2019. <em>Advanced <span>R</span>, <span>Second Edition</span></em>. <span>CRC Press</span>. <a href="https://adv-r.hadley.nz/">https://adv-r.hadley.nz/</a>.
-</div>
-<div id="ref-wulf_invention_2015" class="csl-entry">
-Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <span>Humboldt</span>’s New World</em>. <span>New York</span>: <span>Alfred A. Knopf</span>.
-</div>
-</div>
-</div>
-</div>
-<div class="footnotes footnotes-end-of-document">
-<hr>
-<ol>
-<li id="fn1"><p>
-The conference took place at the University of Leeds, where one of the authors (Robin) is currently based.
-The 21<sup>st</sup> GeoComputation conference was also hosted at the University of Leeds, during which Robin and Jakub presented, led a workshop on ‘tidy’ spatial data analysis and collaborated on the book (see www.geocomputation.org for more on the conference series, and papers/presentations spanning two decades).<a href="intro.html#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>
-A laptop with 4GB running a modern operating system such as Ubuntu 16.04 onward should also be able to reproduce the contents of this book.
-A laptop with this specification or above can be acquired second-hand for ~US$100 in many countries nowadays, reducing the financial/hardware barrier to geocomputation far below the levels in operation in the early 2000s, when high-performance computers were unaffordable for most people.<a href="intro.html#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>
-Python modules providing access to geoalgorithms include <code>grass.script</code> for GRASS,
-<code>saga-python</code> for SAGA-GIS,
-<code>processing</code> for QGIS and <code>arcpy</code> for ArcGIS.<a href="intro.html#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p>
-An overview of R’s spatial ecosystem can be found in the CRAN Task View on the Analysis of Spatial Data
-(see <a href="https://cran.r-project.org/web/views/Spatial.html" class="uri">https://cran.r-project.org/web/views/Spatial.html</a>).<a href="intro.html#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p>Note the difference between “r-spatial”, organization containing packages such as <strong>sf</strong>, and “rspatial”, organization responsible for <strong>terra</strong>.<a href="intro.html#fnref5" class="footnote-back">↩︎</a></p></li>
-<li id="fn6"><p>
-<strong>spDataLarge</strong> n’est pas sur le CRAN, ce qui signifie qu’il doit être installé via <em>r-universe</em> ou avec la commande suivante : <code>remotes::install_github("Nowosad/spDataLarge")</code>.<a href="spatial-class.html#fnref6" class="footnote-back">↩︎</a></p></li>
-<li id="fn7"><p>
-L’origine à laquelle nous faisons référence, représentée en bleu sur la figure <a href="spatial-class.html#fig:vectorplots">2.1</a>, est en fait la “fausse” origine.
-L’origine ” réelle “, c’est-à-dire l’endroit où les distorsions sont minimales, est située à 2° W et 49° N.
-Cette origine a été choisie par l’<em>Ordnance Survey of the United States</em> afin de se situer approximativement au centre de la masse continentale britannique dans le sens longitudinal.<a href="spatial-class.html#fnref7" class="footnote-back">↩︎</a></p></li>
-<li id="fn8"><p>
-Le format OGC complet comprend des types de géométrie plutôt exotiques, notamment les types de géométrie “surface” et “courbe”, qui ont actuellement une application limitée dans le monde réel.
-Les 18 types peuvent être manipulés avec le package <strong>sf</strong>, bien que (à partir de l’été 2018) leur représentation ne fonctionne plus que pour les “7 principaux”.<a href="spatial-class.html#fnref8" class="footnote-back">↩︎</a></p></li>
-<li id="fn9"><p>
-L’appel de la fonction <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> sur un objet <strong>sf</strong> va en réalité appeler <code>sf::::plot.sf()</code>.
-La fonction <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> est une méthode générique qui se comporte différemment selon la classe de l’objet en entrée.<a href="spatial-class.html#fnref9" class="footnote-back">↩︎</a></p></li>
-<li id="fn10"><p>
-Remarque : de nombreux arguments de <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> sont ignorés dans les cartes à facettes, lorsque plus d’une colonne <code>sf</code> est utilisée.<a href="spatial-class.html#fnref10" class="footnote-back">↩︎</a></p></li>
-<li id="fn11"><p>
-Par définition, un polygone a une limite extérieure (anneau extérieur) et peut avoir zéro ou plusieurs limites intérieures (anneaux intérieurs), également appelées “trous”.
-Un polygone avec un trou serait, par exemple, <code>POLYGON ((1 5, 2 2, 4 1, 4 4, 1 5), (2 4, 3 4, 3 3, 2 3, 2 4))</code>.<a href="spatial-class.html#fnref11" class="footnote-back">↩︎</a></p></li>
-<li id="fn12"><p>
-D’autres attributs pourraient être des types de villes (grandes, moyennes), ou une remarque indiquant si la mesure est produite par une station automatique.<a href="spatial-class.html#fnref12" class="footnote-back">↩︎</a></p></li>
-<li id="fn13"><p>
-Selon le format de fichier, l’en-tête fait partie du fichier de données d’image proprement dit, par exemple GeoTIFF, ou peut être stocké dans un fichier d’en-tête supplémentaire un <em>world file</em>, par exemple dans les formats de grille ASCII.
-Il existe également le format raster binaire sans en-tête (plat) qui devrait faciliter l’importation dans divers logiciels.<a href="spatial-class.html#fnref13" class="footnote-back">↩︎</a></p></li>
-<li id="fn14"><p>Il possède également une classe supplémentaire <code>SpatRasterDataset</code> pour stocker de nombreuses collections de jeux de données<a href="spatial-class.html#fnref14" class="footnote-back">↩︎</a></p></li>
-<li id="fn15"><p>Les opérateurs <code>[[</code> et <code>$</code> peuvent également être utilisés pour la sélection des couches<a href="spatial-class.html#fnref15" class="footnote-back">↩︎</a></p></li>
-<li id="fn16"><p>
-Le degré de compression est souvent appelé <em>aplatissement</em>, défini en fonction du rayon équatorial (<span class="math inline">\(a\)</span>) et du rayon polaire (<span class="math inline">\(b\)</span>) comme suit : <span class="math inline">\(f = (a - b) / a\)</span>. Les termes <em>ellipticité</em> et <em>compression</em> peuvent également être utilisés.
-Comme <span class="math inline">\(f\)</span> est une valeur plutôt faible, les modèles numériques d’ellipsoïdes utilisent l’“aplatissement inverse” (<span class="math inline">\(rf = 1/f\)</span>) pour définir la compression de la Terre.
-Les valeurs de <span class="math inline">\(a\)</span> et <span class="math inline">\(rf\)</span> dans divers modèles ellipsoïdaux peuvent être vues en exécutant <code>sf_proj_info(type = "ellps")</code>.<a href="spatial-class.html#fnref16" class="footnote-back">↩︎</a></p></li>
-<li id="fn17"><p>Veuillez noter que le géoïde de la figure exagère la surface bosselée du géoïde par un facteur de 10 000 afin de souligner la forme irrégulière de la planète<a href="spatial-class.html#fnref17" class="footnote-back">↩︎</a></p></li>
-<li id="fn18"><p>
-<strong>data.table</strong> est un paquet de traitement de données très performant.
-Son application aux données géographiques est couverte dans un billet de blog hébergé à r-spatial.org/r/2017/11/13/perp-performance.html.<a href="attr.html#fnref18" class="footnote-back">↩︎</a></p></li>
-<li id="fn19"><p>
-<code>st_geometry(world_st) = NULL</code> fonctionne également pour supprimer la géométrie de <code>world</code>, mais écrase l’objet original.<a href="attr.html#fnref19" class="footnote-back">↩︎</a></p></li>
-</ol>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></div>
-<div class="empty"></div>
+<div class="next"><a href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <h2>Note: La Seconde Edition est en construction 🏗</h2>
     <!--<p>C'est le moment idéal pour tester les paquets en cours de développement et fournir vos commentaires</p>
