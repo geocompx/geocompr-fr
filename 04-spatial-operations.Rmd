@@ -513,7 +513,7 @@ grid_sf$rooks = lengths(st_rook(grid, grid[5])) > 0
 plot(grid, col = grid_sf$rooks)
 ```
 
-```{r queens, fig.cap="Démonstration de prédicats spatiaux binaires personnalisés permettant de trouver les relations "reine" (à gauche) et "tour" (à droite) par rapport à la case centrale dans une grille à 9 géométries.", echo=FALSE, warning=FALSE}
+```{r queens, fig.cap="Démonstration de prédicats spatiaux binaires personnalisés permettant de trouver les relations 'reine' (à gauche) et 'tour' (à droite) par rapport à la case centrale dans une grille à 9 géométries.", echo=FALSE, warning=FALSE}
 tm_shape(grid_sf) +
   tm_fill(col = c("queens", "rooks"), palette = c("white", "black")) +
   tm_shape(grid_sf) +
