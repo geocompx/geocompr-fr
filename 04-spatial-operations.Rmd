@@ -35,7 +35,7 @@ Un autre aspect unique des objets spatiaux est la distance : tous les objets spa
 
 Les opérations spatiales sur les rasters comprennent la sélection --- traité dans la section \@ref(spatial-raster-subsetting) --- et la fusion de plusieurs " tuiles " raster en un seul objet, comme le montre la section \@ref(merging-rasters).
 *L'algèbre de raster* couvre une gamme d'opérations qui modifient les valeurs des cellules, avec ou sans référence aux valeurs des cellules environnantes, ce qui est vital pour de nombreuses applications.
-Le concept d'algèbre de raster est présenté dans la section \@ref(map-algebra) ; les opérations d'algèbre de raster locales, focales et zonales sont traitées respectivement dans les sections \@ref(local-operations), \@ref(focal-operations) et \\@ref(zonal-operations). Les opérations d'algèbre globales, qui génèrent des statistiques synthétiques représentant l'ensemble d'un jeu de données raster, et les calculs de distance sur les données raster, sont abordés dans la section \@ref(global-operations-and-distances).
+Le concept d'algèbre de raster est présenté dans la section \@ref(map-algebra) ; les opérations d'algèbre de raster locales, focales et zonales sont traitées respectivement dans les sections \@ref(local-operations), \@ref(focal-operations) et \@ref(zonal-operations). Les opérations d'algèbre globales, qui génèrent des statistiques synthétiques représentant l'ensemble d'un jeu de données raster, et les calculs de distance sur les données raster, sont abordés dans la section \@ref(global-operations-and-distances).
 Dans la dernière section avant les exercices (\@ref(merging-rasters)), le processus de fusion de deux ensembles de données raster est abordé et démontré à l'aide d'un exemple reproductible.
 
 ```{block2 04-spatial-operations-2, type='rmdnote'}
@@ -362,8 +362,8 @@ La figure \@ref(fig:de9imgg) illustre le modèle à 9 intersections (9IM).  Elle
 p1_2 = st_as_sf(c(p1, p3))
 ii = st_as_sf(st_intersection(p1, p3))
 ii$Object = "Intersection"
-ii$domain_a = "Interior"
-ii$domain_b = "Interior"
+ii$domain_a = "Intérieur"
+ii$domain_b = "Intérieur"
 
 bi = st_sf(x = st_intersection(
   st_cast(p1, "LINESTRING"),
@@ -371,13 +371,13 @@ bi = st_sf(x = st_intersection(
   ))
 bi = st_buffer(bi, dist = 0.01)
 bi$Object = "Intersection"
-bi$domain_a = "Boundary"
-bi$domain_b = "Interior"
+bi$domain_a = "Limite"
+bi$domain_b = "Intérieur"
 
 ei = st_sf(x = st_difference(p3, p1))
 ei$Object = "Intersection"
-ei$domain_a = "Exterior"
-ei$domain_b = "Interior"
+ei$domain_a = "Extérieur"
+ei$domain_b = "Intérieur"
 
 ib = st_sf(x = st_intersection(
   st_cast(p3, "LINESTRING"),
@@ -385,8 +385,8 @@ ib = st_sf(x = st_intersection(
   ))
 ib = st_buffer(ib, dist = 0.01)
 ib$Object = "Intersection"
-ib$domain_a = "Interior"
-ib$domain_b = "Boundary"
+ib$domain_a = "Intérieur"
+ib$domain_b = "Limite"
 
 bb = st_cast(ii, "POINT")
 bb_line = st_sf(x = st_sfc(st_linestring(matrix(c(1, 0.5, 1, 0.7), nrow = 2, byrow = TRUE))))
@@ -394,8 +394,8 @@ bb_line_buffer = st_buffer(bb_line, dist = 0.01)
 bb_buffer = st_buffer(bb, dist = 0.01)
 bb = st_union(bb_buffer, bb_line_buffer)
 bb$Object = "Intersection"
-bb$domain_a = "Boundary"
-bb$domain_b = "Boundary"
+bb$domain_a = "Limite"
+bb$domain_b = "Limite"
 
 eb = st_sf(x = st_difference(
   st_cast(p3, "LINESTRING"),
@@ -403,13 +403,13 @@ eb = st_sf(x = st_difference(
   ))
 eb = st_buffer(eb, dist = 0.01)
 eb$Object = "Intersection"
-eb$domain_a = "Exterior"
-eb$domain_b = "Boundary"
+eb$domain_a = "Extérieur"
+eb$domain_b = "Limite"
 
 ie = st_sf(x = st_difference(p1, p3))
 ie$Object = "Intersection"
-ie$domain_a = "Interior"
-ie$domain_b = "Exterior"
+ie$domain_a = "Intérieur"
+ie$domain_b = "Extérieur"
 
 be = st_sf(x = st_difference(
   st_cast(p1, "LINESTRING"),
@@ -417,26 +417,26 @@ be = st_sf(x = st_difference(
   ))
 be = st_buffer(be, dist = 0.01)
 be$Object = "Intersection"
-be$domain_a = "Boundary"
-be$domain_b = "Exterior"
+be$domain_a = "Limite"
+be$domain_b = "Extérieur"
 
 ee = st_sf(x = st_difference(
   st_buffer(st_union(p1, p3), 0.02),
   st_union(p1, p3)
   ))
 ee$Object = "Intersection"
-ee$domain_a = "Exterior"
-ee$domain_b = "Exterior"
+ee$domain_a = "Extérieur"
+ee$domain_b = "Extérieur"
 
 b9 = replicate(p1_2, n = 9, simplify = FALSE)
 b9sf = do.call(rbind, b9)
 b9sf$Object = rep(c("x", "y"), 9)
-domains = c("Interior", "Boundary", "Exterior")
+domains = c("Intérieur", "Limite", "Extérieur")
 b9sf$domain_a = rep(rep(domains, 3), each = 2)
 b9sf$domain_b = rep(rep(domains, each = 3), each = 2)
 b9sf = rbind(b9sf, ii, bi, ei, ib, bb, eb, ie, be, ee)
-b9sf$domain_a = ordered(b9sf$domain_a, levels = c("Interior", "Boundary", "Exterior"))
-b9sf$domain_b = ordered(b9sf$domain_b, levels = c("Interior", "Boundary", "Exterior"))
+b9sf$domain_a = ordered(b9sf$domain_a, levels = c("Intérieur", "Limite", "Extérieur"))
+b9sf$domain_b = ordered(b9sf$domain_b, levels = c("Interieur", "Limite", "Exterieur"))
 b9sf = b9sf %>% 
   mutate(alpha = case_when(
    Object == "x" ~ 0.1, 
