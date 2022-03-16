@@ -834,18 +834,18 @@ plot(st_geometry(co)[2])
 plot(st_geometry(nz_height)[2:3], add = TRUE)
 ```
 
-## Spatial operations on raster data {#spatial-ras}
+## Opérations spatiales sur les données raster {#spatial-ras}
 
-This section builds on Section \@ref(manipulating-raster-objects), which highlights various basic methods for manipulating raster datasets, to demonstrate more advanced and explicitly spatial raster operations, and uses the objects `elev` and `grain` manually created in Section \@ref(manipulating-raster-objects).
-For the reader's convenience, these datasets can be also found in the **spData** package.
+Cette section s'appuie sur la section \@ref(manipulating-raster-objects), qui met en évidence diverses méthodes de base pour manipuler des jeux de données raster. Elle illustre des opérations raster plus avancées et explicitement spatiales, et utilise les objets `elev` et `grain` créés manuellement dans la section \@ref(manipulating-raster-objects).
+Pour la commodité du lecteur, ces jeux de données se trouvent également dans le paquet **spData**.
 
-### Spatial subsetting {#spatial-raster-subsetting}
+### Sélection spatiale {#spatial-raster-subsetting}
 
-The previous chapter (Section \@ref(manipulating-raster-objects)) demonstrated how to retrieve values associated with specific cell IDs or row and column combinations.
-Raster objects can also be extracted by location (coordinates) and other spatial objects.
-To use coordinates for subsetting, one can 'translate' the coordinates into a cell ID with the **terra** function `cellFromXY()`.
-An alternative is to use `terra::extract()` (be careful, there is also a function called `extract()` in the **tidyverse**\index{tidyverse (package)}) to extract values.
-Both methods are demonstrated below to find the value of the cell that covers a point located at coordinates of 0.1, 0.1.
+Le chapitre précédent (Section \@ref(manipulating-raster-objects)) a montré comment extraire les valeurs associées à des ID de cellules spécifiques ou à des combinaisons de lignes et de colonnes.
+Les objets raster peuvent également être extraits par leur emplacement (coordonnées) et via d'autres objets spatiaux.
+Pour utiliser les coordonnées pour la sélection, on peut "traduire" les coordonnées en un ID de cellule avec la fonction **terra** `cellFromXY()`.
+Une alternative est d'utiliser `terra::extract()` (attention, il existe aussi une fonction appelée `extract()` dans le **tidyverse**\index{tidyverse (package)}) pour extraire des valeurs.
+Les deux méthodes sont démontrées ci-dessous pour trouver la valeur de la cellule qui couvre un point situé aux coordonnées 0,1, 0,1.
 \index{raster!subsetting}
 \index{spatial!subsetting}
 
@@ -859,103 +859,103 @@ terra::extract(elev, matrix(c(0.1, 0.1), ncol = 2))
 <!--jn:toDo-->
 <!-- to update? -->
 <!-- It is convenient that both functions also accept objects of class `Spatial* Objects`. -->
-Raster objects can also be subset with another raster object, as demonstrated in the code chunk below:
+Les objets raster peuvent également être sélectionnés avec un autre objet raster, comme le montre le code ci-dessous :
 
 ```{r 04-spatial-operations-35, eval=FALSE}
 clip = rast(xmin = 0.9, xmax = 1.8, ymin = -0.45, ymax = 0.45,
             resolution = 0.3, vals = rep(1, 9))
 elev[clip]
-# we can also use extract
+# on peut aussi utiliser extract
 # terra::extract(elev, ext(clip))
 ```
 
-This amounts to retrieving the values of the first raster object (in this case `elev`) that fall within the extent of a second raster (here: `clip`), as illustrated in Figure \@ref(fig:raster-subset).
+Cela revient à récupérer les valeurs du premier objet raster (dans ce cas, `elev`) qui se trouvent dans l'étendue d'un second objet raster (ici : `clip`), comme illustré dans la figure \@ref(fig:raster-subset).
 
-```{r raster-subset, echo = FALSE, fig.cap = "Original raster (left). Raster mask (middle). Output of masking a raster (right).", fig.scap="Subsetting raster values."}
+```{r raster-subset, echo = FALSE, fig.cap = "Raster originale (à gauche). Masque raster (au milieu). Résultat du clip (à droite).", fig.scap="Sélection de raster."}
 knitr::include_graphics("figures/04_raster_subset.png")
 ```
 
-The example above returned the values of specific cells, but in many cases spatial outputs from subsetting operations on raster datasets are needed.
-This can be done using the `[` operator, with `drop = FALSE`, as outlined in Section \@ref(manipulating-raster-objects), which also shows how raster objects can be subsetted by various objects.
-This is demonstrated in the code below, which returns the first two cells of `elev` as a raster object the first two cells on the top row (only the first 2 lines of the output is shown):
+L'exemple ci-dessus a retourné les valeurs de cellules spécifiques, mais dans de nombreux cas, ce sont des sorties spatiales qui sont nécessaires.
+Cela peut être fait en utilisant l'opérateur `[`, avec `drop = FALSE`, comme indiqué dans la section \@ref(manipulating-raster-objects), qui montre également comment les objets raster peuvent être sélectionnés par divers objets.
+Le code ci-dessous en est un exemple  en retournant les deux premières cellules (de la ligne supérieure) de `elev` en tant qu'objet raster  (seules les 2 premières lignes de la sortie sont montrées) :
 
 ```{r 04-spatial-operations-36, eval=FALSE}
-elev[1:2, drop = FALSE]    # spatial subsetting with cell IDs
+elev[1:2, drop = FALSE]    # sélection spatiale par ID
 #> class       : SpatRaster 
 #> dimensions  : 1, 2, 1  (nrow, ncol, nlyr)
 #> ...
 ```
 
 ```{r 04-spatial-operations-37, echo=FALSE, eval=FALSE}
-# aim: illustrate the result of previous spatial subsetting example
+# objectif: montrer le résultats de la sélection précédente
 x = elev[1, 1:2, drop = FALSE]
 plot(x)
 ```
 
-Another common use case of spatial subsetting is when a raster with `logical` (or `NA`) values is used to mask another raster with the same extent and resolution, as illustrated in Figure \@ref(fig:raster-subset).
-In this case, the `[` and `mask()` functions can be used (results not shown):
+Un autre cas d'utilisation courante de sélection spatiale est celle où une image raster avec des valeurs `logiques` (ou `NA`) est utilisée pour masquer une autre image raster avec la même étendue et la même résolution, comme illustré dans la Figure \@ref(fig:raster-subset).
+Dans ce cas, les fonctions `[` et `mask()` peuvent être utilisées (résultats non montrés) :
 
 ```{r 04-spatial-operations-38, eval=FALSE}
-# create raster mask
+# créer un masque raster
 rmask = elev
 values(rmask) = sample(c(NA, TRUE), 36, replace = TRUE)
 ```
 
-In the code chunk above, we have created a mask object called `rmask` with values randomly assigned to `NA` and `TRUE`.
-Next, we want to keep those values of `elev` which are `TRUE` in `rmask`.
-In other words, we want to mask `elev` with `rmask`.
+Dans le morceau de code ci-dessus, nous avons créé un objet masque appelé `rmask` avec des valeurs assignées aléatoirement à `NA` et `TRUE`.
+Ensuite, nous voulons garder les valeurs de `elev` qui sont `TRUE` dans `rmask`.
+En d'autres termes, nous voulons masquer `elev` avec `rmask`.
 
 ```{r 04-spatial-operations-38b, eval=FALSE}
-# spatial subsetting
-elev[rmask, drop = FALSE]           # with [ operator
-mask(elev, rmask)                   # with mask()
+# sélection spatiale
+elev[rmask, drop = FALSE]           # avec l'opérateur [ 
+mask(elev, rmask)                   # avec mask()
 ```
 
-The above approach can be also used to replace some values (e.g., expected to be wrong) with NA. 
+L'approche ci-dessus peut également être utilisée pour remplacer certaines valeurs (par exemple, celles qui seraient fausses) par NA.  
 
 ```{r 04-spatial-operations-38c, eval=FALSE}
 elev[elev < 20] = NA
 ```
 
-These operations are in fact Boolean local operations since we compare cell-wise two rasters.
-The next subsection explores these and related operations in more detail.
+Ces opérations sont en fait des opérations booléennes locales puisque nous comparons deux rasters par cellule.
+La sous-section suivante explore ces opérations et d'autres opérations connexes plus en détail.
 
-### Map algebra
+### Algèbre raster
 
 \index{map algebra}
-The term 'map algebra' was coined in the late 1970s to describe a "set of conventions, capabilities, and techniques" for the analysis of geographic raster *and* (although less prominently) vector data [@tomlin_map_1994].
+Le terme "algèbre raster" a été inventé à la fin des années 1970 pour décrire un "ensemble de conventions, de capacités et de techniques" pour l'analyse des données géographiques raster *et* (bien que moins marquées) vectorielles [@tomlin_map_1994].
 <!-- Although the concept never became widely adopted, the term usefully encapsulates and helps classify the range operations that can be undertaken on raster datasets. -->
-In this context, we define map algebra more narrowly, as operations that modify or summarise raster cell values, with reference to surrounding cells, zones, or statistical functions that apply to every cell.
+Dans ce contexte, nous définissons l'algèbre raster plus strictement, comme des opérations qui modifient ou résument les valeurs des cellules raster, en référence aux cellules environnantes, aux zones ou aux fonctions statistiques s'appliquant à chaque cellule.
 
-Map algebra operations tend to be fast, because raster datasets only implicitly store coordinates, hence the [old adage](https://geozoneblog.wordpress.com/2013/04/19/raster-vs-vector/) "raster is faster but vector is corrector".
-The location of cells in raster datasets can be calculated it using its matrix position and the resolution and origin of the dataset (stored in the header).
-For the processing, however, the geographic position of a cell is barely relevant as long as we make sure that the cell position is still the same after the processing.
-Additionally, if two or more raster datasets share the same extent, projection and resolution, one could treat them as matrices for the processing.
+Les opérations d'algèbre raster ont tendance à être rapides, car les jeux de données raster ne stockent qu'implicitement les coordonnées, d'où le [vieil adage](https://geozoneblog.wordpress.com/2013/04/19/raster-vs-vector/) "raster is faster but vector is corrector".
+La position des cellules dans les jeux de données raster peut être calculée à l'aide de leur position matricielle, de la résolution et de l'origine du jeu de données (stockées dans l'en-tête).
+Pour le traitement, cependant, la position géographique d'une cellule n'est guère pertinente tant que nous nous assurons que la position de la cellule est toujours la même après le traitement.
+De plus, si deux ou plusieurs jeux de données raster partagent la même étendue, projection et résolution, on peut les traiter comme des matrices pour le traitement.
 
-This is the way that map algebra works with the **terra** package.
-First, the headers of the raster datasets are queried and (in cases where map algebra operations work on more than one dataset) checked to ensure the datasets are compatible.
-Second, map algebra retains the so-called one-to-one locational correspondence, meaning that cells cannot move.
-This differs from matrix algebra, in which values change position, for example when multiplying or dividing matrices.
+C'est de cette manière que l'algèbre raster fonctionne avec le paquet **terra**.
+Premièrement, les en-têtes des jeux de données raster sont interrogés et (dans les cas où les opérations d'algèbre raster fonctionnent sur plus d'un ensemble de données) vérifiés pour s'assurer que les jeux de données sont compatibles.
+Deuxièmement, l'algèbre raster conserve ce que l'on appelle la correspondance de localisation une à une, ce qui signifie que les cellules ne peuvent pas se déplacer.
+Cela diffère de l'algèbre matricielle, dans laquelle les valeurs changent de position, par exemple lors de la multiplication ou de la division de matrices.
 
-Map algebra (or cartographic modeling with raster data) divides raster operations into four subclasses [@tomlin_geographic_1990], with each working on one or several grids simultaneously:
+L'algèbre raster (ou modélisation cartographique avec des données raster) divise les opérations sur des rasters en quatre sous-classes [@tomlin_geographic_1990], chacune travaillant sur une ou plusieurs grilles simultanément :
 
-1. *Local* or per-cell operations
-2. *Focal* or neighborhood operations.
-Most often the output cell value is the result of a 3 x 3 input cell block
-3. *Zonal* operations are similar to focal operations, but the surrounding pixel grid on which new values are computed can have irregular sizes and shapes
-4. *Global* or per-raster operations; that means the output cell derives its value potentially from one or several entire rasters
+1. Opérations *locales* ou par cellule
+2. Les opérations *Focales* ou de voisinage.
+Le plus souvent la valeur de la cellule de sortie est le résultat d'un bloc de cellules d'entrée de 3 x 3 cellules
+3. Les opérations *Zonales* sont similaires aux opérations focales, mais la grille de pixels environnante sur laquelle les nouvelles valeurs sont calculées peut avoir des tailles et des formes irrégulières.
+4. Les opérations *Globales* ou par-raster ; cela signifie que la cellule de sortie dérive potentiellement sa valeur d'un ou de plusieurs rasters entiers.
 
-This typology classifies map algebra operations by the number of cells used for each pixel processing step and the type of the output.
-For the sake of completeness, we should mention that raster operations can also be classified by discipline such as terrain, hydrological analysis, or image classification.
-The following sections explain how each type of map algebra operations can be used, with reference to worked examples.
+Cette typologie classe les opérations d'algèbre raster en fonction du nombre de cellules utilisées pour chaque étape de traitement des pixels et du type de sortie.
+Par souci d'exhaustivité, nous devons mentionner que les opérations sur des rasters peuvent également être classées par discipline, comme le terrain, l'analyse hydrologique ou la classification des images.
+Les sections suivantes expliquent comment chaque type d'opérations d'algèbre raster peut être utilisé, en se référant à des exemples documentés.
 
-### Local operations
+### Opérations locales
 
 \index{map algebra!local operations}
-**Local** operations comprise all cell-by-cell operations in one or several layers.
-Raster algebra is a classical use case of local operations -- this includes adding or subtracting values from a raster, squaring and multipling rasters.
-Raster algebra also allows logical operations such as finding all raster cells that are greater than a specific value (5 in our example below).
-The **terra** package supports all these operations and more, as demonstrated below (Figure \@ref(fig:04-local-operations)):
+Les opérations **locales** comprennent toutes les opérations cellule par cellule dans une ou plusieurs couches.
+Elles ont un cas typique d'algèbre raster et comprennent l'ajout ou la soustraction de valeurs d'une image raster, l'élévation au carré et la multiplication d'images raster.
+L'algèbre raster permet également des opérations logiques telles que la recherche de toutes les cellules qui sont supérieures à une valeur spécifique (5 dans notre exemple ci-dessous).
+Le paquet **terra** prend en charge toutes ces opérations et bien plus encore, comme le montre la figure ci-dessous (\@ref(fig:04-local-operations)):
 
 ```{r 04-spatial-operations-41, eval = FALSE}
 elev + elev
@@ -964,39 +964,39 @@ log(elev)
 elev > 5
 ```
 
-```{r 04-local-operations, echo=FALSE, fig.cap="Examples of different local operations of the elev raster object: adding two rasters, squaring, applying logarithmic transformation, and performing a logical operation."}
+```{r 04-local-operations, echo=FALSE, fig.cap="Exemples de différentes opérations locales de l'objet raster elev : additionner deux rasters, élever au carré, appliquer une transformation logarithmique et effectuer une opération logique."}
 knitr::include_graphics("figures/04-local-operations.png")
 ```
 
-Another good example of local operations is the classification of intervals of numeric values into groups such as grouping a digital elevation model into low (class 1), middle (class 2) and high elevations (class 3).
-Using the `classify()` command, we need first to construct a reclassification matrix, where the first column corresponds to the lower and the second column to the upper end of the class.
-The third column represents the new value for the specified ranges in column one and two.
+Un autre bon exemple d'opérations locales est la classification d'intervalles de valeurs numériques en groupes, comme le regroupement d'un modèle numérique d'élévation en altitudes basses (classe 1), moyennes (classe 2) et hautes (classe 3).
+En utilisant la commande `classify()`, nous devons d'abord construire une matrice de classification, où la première colonne correspond à l'extrémité inférieure et la deuxième colonne à l'extrémité supérieure de la classe.
+La troisième colonne représente la nouvelle valeur pour les plages spécifiées dans les colonnes un et deux.
 
 ```{r 04-spatial-operations-40}
 rcl = matrix(c(0, 12, 1, 12, 24, 2, 24, 36, 3), ncol = 3, byrow = TRUE)
 rcl
 ```
 
-Here, we assign the raster values in the ranges 0--12, 12--24 and 24--36 are *reclassified* to take values 1, 2 and 3, respectively.
+Ici, nous affectons les valeurs du raster dans les plages 0--12, 12--24 et 24--36 et les *reclassons* pour prendre les valeurs 1, 2 et 3, respectivement.
 
 ```{r 04-spatial-operations-40b, eval = FALSE}
 recl = classify(elev, rcl = rcl)
 ```
 
-The `classify()` function can be also used when we want to reduce the number of classes in our categorical rasters.
-We will perform several additional reclassifications in Chapter \@ref(location).
+La fonction `classify()` peut également être utilisée lorsque nous voulons réduire le nombre de classes dans nos rasters catégorisés.
+Nous effectuerons plusieurs reclassements supplémentaires dans le chapitre \@ref(location)'.
 
-Apart of arithmetic operators, one can also use the `app()`, `tapp()` and `lapp()` functions.
-They are more efficient, hence, they are preferable in the presence of large raster datasets. 
-Additionally, they allow you to save an output file directly.
-The `app()` function applies a function to each cell of a raster and is used to summarize (e.g., calculating the sum) the values of multiple layers into one layer.
-`tapp()` is an extension of `app()`, allowing us to select a subset of layers (see the `index` argument) for which we want to perform a certain operation.
-Finally, the `lapp()` function allows to apply a function to each cell using layers as arguments -- an application of `lapp()` is presented below.
+En dehors des opérateurs arithmétiques, on peut aussi utiliser les fonctions `app()`, `tapp()` et `lapp()`.
+Elles sont plus efficaces, et donc préférables pour les grands jeux de données raster. 
+De plus, elles vous permettent d'enregistrer directement un fichier de sortie.
+La fonction `app()` applique une fonction à chaque cellule d'une couche matricielle et est utilisée pour résumer (par exemple, en calculant la somme) les valeurs de plusieurs couches en une seule couche.
+`tapp()` est une extension de `app()`, nous permettant de sélectionner un sous-ensemble de couches (voir l'argument `index`) pour lesquelles nous voulons effectuer une certaine opération.
+Enfin, la fonction `lapp()` permet d'appliquer une fonction à chaque cellule en utilisant les couches comme arguments -- une application de `lapp()` est présentée ci-dessous.
 
-The calculation of the normalized difference vegetation index (NDVI) is a well-known local (pixel-by-pixel) raster operation.
-It returns a raster with values between -1 and 1; positive values indicate the presence of living plants (mostly > 0.2).
-NDVI is calculated from red and near-infrared (NIR) bands of remotely sensed imagery, typically from satellite systems such as Landsat or Sentinel.
-Vegetation absorbs light heavily in the visible light spectrum, and especially in the red channel, while reflecting NIR light, explaining the NVDI formula:
+Le calcul du *normalized difference vegetation index* (NDVI) est une opération raster locale (pixel par pixel) bien connue.
+Elle produit un raster dont les valeurs sont comprises entre -1 et 1 ; les valeurs positives indiquent la présence de plantes vivantes (le plus souvent > 0,2).
+Le NDVI est calculé à partir des bandes rouge et proche infrarouge (NIR) d'images de télédétection, généralement issues de systèmes satellitaires tels que Landsat ou Sentinel.
+La végétation absorbe fortement la lumière dans le spectre de la lumière visible, et surtout dans le canal rouge, tout en réfléchissant la lumière NIR, ce qui explique la formule du NDVI :
 
 $$
 \begin{split}
@@ -1004,15 +1004,15 @@ NDVI&= \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}\\
 \end{split}
 $$
 
-Let's calculate NDVI for the multispectral satellite file of the Zion National Park.
+Calculons le NDVI pour l'image satellite multispectrale du parc National de Zion.
 
 ```{r}
 multi_raster_file = system.file("raster/landsat.tif", package = "spDataLarge")
 multi_rast = rast(multi_raster_file)
 ```
 
-The raster object has four satellite bands - blue, green, red, and near-infrared (NIR).
-Our next step should be to implement the NDVI formula into an R function:
+L'objet raster comporte quatre bandes de satellite - bleu, vert, rouge et proche infrarouge (NIR).
+Notre prochaine étape va être d'implémenter la formule NDVI dans une fonction R :
 
 ```{r}
 ndvi_fun = function(nir, red){
@@ -1020,126 +1020,126 @@ ndvi_fun = function(nir, red){
 }
 ```
 
-This function accepts two numerical arguments, `nir` and `red`, and returns a numerical vector with NDVI values.
-It can be used as the `fun` argument of `lapp()`.
-We just need to remember that our function just needs two bands (not four from the original raster), and they need to be in the NIR, red order.
-That is why we subset the input raster with `multi_rast[[c(4, 3)]]` before doing any calculations.
+Cette fonction accepte deux arguments numériques, `nir` et `red`, et retourne un vecteur numérique avec les valeurs NDVI.
+Elle peut être utilisée comme argument `fun` de `lapp()`.
+Nous devons juste nous rappeler que notre fonction n'a besoin que de deux bandes (et non de quatre comme dans le raster original), et qu'elles doivent être dans l'ordre NIR puis `red`.
+C'est pourquoi nous sélection la grille d'entrée avec `multi_rast[[c(4, 3)]]` avant d'effectuer tout calcul.
 
 ```{r}
 ndvi_rast = lapp(multi_rast[[c(4, 3)]], fun = ndvi_fun)
 ```
 
-The result, shown on the right panel in Figure \@ref(fig:04-ndvi), can be compared to the RGB image of the same area (left panel of the same Figure).
-It allows us to see that the largest NDVI values are connected to areas of dense forest in the northern parts of the area, while the lowest values are related to the lake in the north and snowy mountain ridges.
+Le résultat, présenté sur le panneau de droite de la figure \@ref(fig:04-ndvi), peut être comparé à l'image RVB de la même zone (panneau de gauche de la même figure).
+Il nous permet de constater que les plus grandes valeurs de NDVI sont liées aux zones de forêt dense dans les parties nord de la zone, tandis que les valeurs les plus faibles sont liées au lac au nord et aux crêtes montagneuses enneigées.
 
-```{r 04-ndvi, echo=FALSE, fig.cap="RGB image (left) and NDVI values (right) calculated for the example satellite file of the Zion National Park"}
+```{r 04-ndvi, echo=FALSE, fig.cap="Image RVB (à gauche) et valeurs NDVI (à droite) calculées pour l'exemple de l'image satellite du parc National de Zion."}
 knitr::include_graphics("figures/04-ndvi.png")
 ```
 
-Predictive mapping is another interesting application of local raster operations.
-The response variable corresponds to measured or observed points in space, for example, species richness, the presence of landslides, tree disease or crop yield.
-Consequently, we can easily retrieve space- or airborne predictor variables from various rasters (elevation, pH, precipitation, temperature, landcover, soil class, etc.).
-Subsequently, we model our response as a function of our predictors using `lm()`, `glm()`, `gam()` or a machine-learning technique. 
-Spatial predictions on raster objects can therefore be made by applying estimated coefficients to the predictor raster values, and summing the output raster values (see Chapter \@ref(eco)).
+La cartographie prédictive est une autre application intéressante des opérations raster locales.
+La variable de réponse correspond à des points mesurés ou observés dans l'espace, par exemple, la richesse des espèces, la présence de glissements de terrain, les maladies des arbres ou le rendement des cultures.
+Par conséquent, nous pouvons facilement récupérer des variables prédictives spatiales ou aériennes à partir de divers rasters (élévation, pH, précipitations, température, couverture végétale, classe de sol, etc.)
+Ensuite, nous modélisons notre réponse en fonction de nos prédicteurs en utilisant `lm()`, `glm()`, `gam()` ou une technique d'apprentissage automatique. 
+Les prédictions spatiales sur les objets raster peuvent donc être réalisées en appliquant des coefficients estimés aux valeurs de chaque cellule, et en additionnant les valeurs raster de sortie (voir chapitre \@ref(eco)).
 
-### Focal operations
+### Operations focales
 
 \index{map algebra!focal operations}
-While local functions operate on one cell, though possibly from multiple layers, **focal** operations take into account a central (focal) cell and its neighbors.
-The neighborhood (also named kernel, filter or moving window) under consideration is typically of size 3-by-3 cells (that is the central cell and its eight surrounding neighbors), but can take on any other (not necessarily rectangular) shape as defined by the user.
-A focal operation applies an aggregation function to all cells within the specified neighborhood, uses the corresponding output as the new value for the the central cell, and moves on to the next central cell (Figure \@ref(fig:focal-example)).
-Other names for this operation are spatial filtering and convolution [@burrough_principles_2015].
+Alors que les fonctions locales opèrent sur une cellule, bien que pouvant provenir de plusieurs couches, les opérations **focales** prennent en compte une cellule centrale (focale) et ses voisines.
+Le voisinage (également appelé noyau, filtre ou fenêtre mobile) utilisé est généralement de le taille 3 par 3 cellules (c'est-à-dire la cellule centrale et ses huit voisines), mais peut prendre toute autre forme (pas nécessairement rectangulaire) définie par l'utilisateur.
+Une opération focale applique une fonction d'agrégation à toutes les cellules du voisinage spécifié, utilise la sortie correspondante comme nouvelle valeur pour la cellule centrale, puis passe à la cellule centrale suivante (figure \@ref(fig:focal-example)).
+Cette opération est également appelée filtrage spatial et convolution [@burrough_principles_2015].
 
-In R, we can use the `focal()` function to perform spatial filtering. 
-We define the shape of the moving window with a `matrix` whose values correspond to weights (see `w` parameter in the code chunk below).
-Secondly, the `fun` parameter lets us specify the function we wish to apply to this neighborhood.
-Here, we choose the minimum, but any other summary function, including `sum()`, `mean()`, or `var()` can be used.
+Dans R, nous pouvons utiliser la fonction `focal()` pour effectuer un filtrage spatial. 
+Nous définissons la forme de la fenêtre mobile avec une `matrice` dont les valeurs correspondent aux poids (voir le paramètre `w` dans le code ci-dessous).
+Ensuite, le paramètre `fun` nous permet de spécifier la fonction que nous souhaitons appliquer à ce voisinage.
+Ici, nous choisissons le minimum, mais toute autre fonction de résumé, y compris `sum()`, `mean()`, ou `var()` peut être utilisée.
 
 ```{r 04-spatial-operations-42, eval = FALSE}
 r_focal = focal(elev, w = matrix(1, nrow = 3, ncol = 3), fun = min)
 ```
 
-This function also accepts additional arguments, for example, should it remove NAs in the process (`na.rm = TRUE`) or not (`na.rm = FALSE`).
+Cette fonction accepte également des arguments supplémentaires, par exemple, si elle doit supprimer les NAs dans le processus (`na.rm = TRUE`) ou non (`na.rm = FALSE`).
 
-```{r focal-example, echo = FALSE, fig.cap = "Input raster (left) and resulting output raster (right) due to a focal operation - finding the minimum value in 3-by-3 moving windows.", fig.scap="Illustration of a focal operation."}
+```{r focal-example, echo = FALSE, fig.cap = "Raster d'entrée (gauche) et raster de sortie (droite) suite à une opération focale - trouver la valeur minimale dans des fenêtres mobiles 3 par 3.", fig.scap="Exemple d'une opération focale."}
 knitr::include_graphics("figures/04_focal_example.png")
 ```
 
-We can quickly check if the output meets our expectations.
-In our example, the minimum value has to be always the upper left corner of the moving window (remember we have created the input raster by row-wise incrementing the cell values by one starting at the upper left corner).
-In this example, the weighting matrix consists only of 1s, meaning each cell has the same weight on the output, but this can be changed.
+Nous pouvons rapidement vérifier si le résultat correspond à nos attentes.
+En effet, dans notre exemple, la valeur minimale doit toujours se situer dans le coin supérieur gauche de la fenêtre mobile (rappelez-vous que nous avons créé le raster d'entrée en incrémentant les valeurs des cellules d'une unité par ligne, en commençant par le coin supérieur gauche).
+Dans cet exemple, la matrice de pondération est composée uniquement de 1, ce qui signifie que chaque cellule a le même poids sur la sortie, mais cela peut être modifié.
 
-Focal functions or filters play a dominant role in image processing.
-Low-pass or smoothing filters use the mean function to remove extremes.
-In the case of categorical data, we can replace the mean with the mode, which is the most common value.
-By contrast, high-pass filters accentuate features.
-The line detection Laplace and Sobel filters might serve as an example here.
-Check the `focal()` help page for how to use them in R (this will also be used in the exercises at the end of this chapter).
+Les fonctions ou filtres focaux jouent un rôle dominant dans le traitement des images.
+Les filtres "passe-bas" (*low-pass*) ou de lissage utilisent la fonction moyenne pour éliminer les valeurs extrêmes.
+Dans le cas de données catégorielles, on peut remplacer la moyenne par le mode, qui est la valeur la plus courante.
+En revanche, les filtres "passe-haut" accentuent les entités.
+Les filtres Laplace et Sobel de détection de lignes peuvent servir d'exemple ici.
+Consultez la page d'aide `focal()` pour savoir comment les utiliser dans R (ils seront également utilisés dans les exercices à la fin de ce chapitre).
 
-Terrain processing, the calculation of topographic characteristics such as slope, aspect and flow directions, relies on focal functions.
-`terrain()` can be used to calculate these metrics, although some terrain algorithms, including the Zevenbergen and Thorne method to compute slope, are not implemented in this **terra** function.
-Many other algorithms --- including curvatures, contributing areas and wetness indices --- are implemented in open source desktop geographic information system (GIS) software.
-Chapter \@ref(gis) shows how to access such GIS functionality from within R.
+Le traitement des données numériques de terrain, le calcul des caractéristiques topographiques telles que la pente, l'aspect et les directions d'écoulement, repose sur des fonctions focales.
+La fonction de **terra** `terrain()` peut être utilisé pour calculer ces métriques, bien que certains algorithmes de traitement des données numériques de terrain, y compris la méthode de Zevenbergen et Thorne pour calculer la pente, n'y soient pas implémentés.
+De nombreux autres algorithmes --- notamment les courbures, les zones contributives et les indices d'humidité --- sont mis en œuvre dans des logiciels libres de systèmes d'information géographique (SIG) de bureau.
+Le chapitre \@ref(gis) montre comment accéder à ces fonctionnalités SIG à partir de R.
 
-### Zonal operations
+### Opérations Zonales
 
 \index{map algebra!zonal operations}
-Just like focal operations, *zonal* operations apply an aggregation function to multiple raster cells.
-However, a second raster, usually with categorical values, defines the *zonal filters* (or 'zones') in the case of zonal operations, as opposed to a predefined neighborhood window in the case of focal operation presented in the previous section.
-Consequently, raster cells defining the zonal filter do not necessarily have to be neighbors.
-Our grain size raster is a good example, as illustrated in the right panel of Figure \@ref(fig:cont-raster)): different grain sizes are spread irregularly throughout the raster.
-Finally, the result of a zonal operation is a summary table grouped by zone which is why this operation is also known as *zonal statistics* in the GIS world\index{GIS}. 
-This is in contrast to focal operations which return a raster object.
+Tout comme les opérations focales, les opérations *zonales* appliquent une fonction d'agrégation à plusieurs cellules.
+Cependant, un deuxième raster, généralement avec des valeurs catégorielles, définit les *filtres zonaux* (ou 'zones') dans le cas des opérations zonales, en opposition à une fenêtre de voisinage prédéfinie dans le cas de l'opération focale.
+Par conséquent, les cellules  définissant le filtre zonal ne doivent pas nécessairement être voisines.
+Notre raster `grain` en est un bon exemple, comme l'illustre le panneau de droite de la figure : différentes tailles de granulométrie sont réparties de manière irrégulière dans le raster.
+Enfin, le résultat d'une opération zonale est un tableau récapitulatif groupé par zone, c'est pourquoi cette opération est également connue sous le nom de *statistiques zonales* dans le monde des SIG\index{GIS}. 
+Ceci est à l'opposé des opérations focales qui retournent un objet matriciel.
 
-The following code chunk uses the `zonal()` function to calculate the mean elevation associated with each grain size class, for example.
-The output is shown in Figure \@ref(fig:cont-raster)).
+Le  code suivant utilise la fonction `zonal()` pour calculer l'altitude moyenne associée à chaque classe de taille de grain.
+La sortie est montrée dans la Figure \@ref(fig:cont-raster)).
 
 ```{r 04-spatial-operations-43}
 z = zonal(elev, grain, fun = "mean")
 z
 ```
 
-This returns the statistics\index{statistics} for each category, here the mean altitude for each grain size class.
-Note: it is also possible to get a raster with calculated statistics for each zone by setting the `as.raster` argument to `TRUE`.
+ceci renvoie les statistiques\index{statistics} pour chaque catégorie, ici l'altitude moyenne pour chaque classe de granulométrie.
+Remarque : il est aussi possible d'obtenir un raster avec les statistiques calculées pour chaque zone en mettant l'argument `as.raster` à `TRUE`.
 
-### Global operations and distances
+### Opérations globales et distances
 
-*Global* operations are a special case of zonal operations with the entire raster dataset representing a single zone.
-The most common global operations are descriptive statistics\index{statistics} for the entire raster dataset such as the minimum or maximum -- we already discussed those in Section \@ref(summarizing-raster-objects).
+Les opérations *globales* sont un cas particulier des opérations zonales, l'ensemble des données raster représentant une seule zone.
+Les opérations globales les plus courantes sont des statistiques descriptives pour l'ensemble des données raster, telles que le minimum ou le maximum, que nous avons déjà abordées dans la section \@ref(summarizing-raster-objects).
 
-Aside from that, global operations are also useful for the computation of distance and weight rasters.
-In the first case, one can calculate the distance from each cell to a specific target cell.
-For example, one might want to compute the distance to the nearest coast (see also `terra::distance()`).
-We might also want to consider topography, that means, we are not only interested in the pure distance but would like also to avoid the crossing of mountain ranges when going to the coast.
-To do so, we can weight the distance with elevation so that each additional altitudinal meter 'prolongs' the Euclidean distance.
-Visibility and viewshed computations also belong to the family of global operations (in the exercises of Chapter \@ref(gis), you will compute a viewshed raster).
+En dehors de cela, les opérations globales sont également utiles pour le calcul des rasters de distance et de poids.
+Dans le premier cas, on peut calculer la distance entre chaque cellule et une cellule cible spécifique.
+Par exemple, on peut vouloir calculer la distance à la côte la plus proche (voir aussi `terra::distance()`).
+On peut aussi vouloir prendre en compte la topographie, c'est-à-dire qu'on n'est pas seulement intéressé par la distance pure mais qu'on voudrait aussi éviter de traverser des chaînes de montagnes en allant vers la côte.
+Pour ce faire, nous pouvons pondérer la distance par l'altitude de sorte que chaque mètre d'altitude supplémentaire "prolonge" la distance euclidienne.
+Les calculs de visibilité et de bassin visuel appartiennent également à la famille des opérations globales (dans les exercices du chapitre \@ref(gis), vous calculerez un raster de bassin visuel).
 
-### Map algebra counterparts in vector processing
+### Les contreparties de l'algèbre raster dans le traitement vectoriel
 
-Many map algebra operations have a counterpart in vector processing [@liu_essential_2009].
-Computing a distance raster (global operation) while only considering a maximum distance (logical focal operation) is the equivalent to a vector buffer operation (Section \@ref(clipping)).
-Reclassifying raster data (either local or zonal function depending on the input) is equivalent to dissolving vector data (Section \@ref(spatial-joining)). 
-Overlaying two rasters (local operation), where one contains `NULL` or `NA` values representing a mask, is similar to vector clipping (Section \@ref(clipping)).
-Quite similar to spatial clipping is intersecting two layers (Section \@ref(spatial-subsetting)). 
-The difference is that these two layers (vector or raster) simply share an overlapping area (see Figure \@ref(fig:venn-clip) for an example).
-However, be careful with the wording.
-Sometimes the same words have slightly different meanings for raster and vector data models.
-Aggregating in the case of vector data refers to dissolving polygons, while it means increasing the resolution in the case of raster data.
-In fact, one could see dissolving or aggregating polygons as decreasing the resolution. 
-However, zonal operations might be the better raster equivalent compared to changing the cell resolution. 
-Zonal operations can dissolve the cells of one raster in accordance with the zones (categories) of another raster using an aggregation function (see above).
+De nombreuses opérations d'algèbre raster ont une contrepartie dans le traitement vectoriel [@liu_essential_2009].
+Le calcul d'une distance raster (opération globale) en ne considérant qu'une distance maximale (opération focale logique) est l'équivalent d'une opération de mise en mémoire tampon vectorielle (section \@ref(clipping)).
+Le reclassement de données raster (fonction locale ou zonale selon l'entrée) est équivalent à la dissolution de données vectorielles (section \@ref(spatial-joining)). 
+La superposition de deux données matricielles (opération locale), dont l'une contient des valeurs `NULL` ou `NA` représentant un masque, est similaire au découpage vectoriel (Section `@ref(clipping)).
+L'intersection de deux couches est tout à fait similaire au détourage spatial (section \@ref(spatial-subsetting)). 
+La différence est que ces deux couches (vectorielles ou matricielles) partagent simplement une zone de chevauchement (voir la figure \@ref(fig:venn-clip) pour un exemple).
+Cependant, faites attention à la formulation.
+Parfois, les mêmes mots ont des significations légèrement différentes pour les modèles de données rasters et vectorielles.
+Dans le cas des données vectorielles, l'agrégation consiste à dissoudre les polygones, tandis que dans le cas des données rasters, elle consiste à augmenter la résolution.
+En fait, on pourrait considérer que dissoudre ou agréger des polygones revient à diminuer la résolution. 
+Cependant, les opérations zonales semble être le meilleur équivalent raster par rapport à la modification de la résolution des cellules. 
+Les opérations zonales peuvent dissoudre les cellules d'un raster en fonction des zones (catégories) d'un autre raster en utilisant une fonction d'agrégation (voir ci-dessus).
 
-### Merging rasters
+### Fusionner des rasters
 
 \index{raster!merge}
-Suppose we would like to compute the NDVI (see Section \@ref(local-operations)), and additionally want to compute terrain attributes from elevation data for observations within a study area.
-Such computations rely on remotely sensed information. 
-The corresponding imagery is often divided into scenes covering a specific spatial extent, and frequently, a study area covers more than one scene.
-Then, we would need to merge the scenes covered by our study area. 
-In the easiest case, we can just merge these scenes, that is put them side by side.
-This is possible, for example, with digital elevation data (SRTM, ASTER).
-In the following code chunk we first download the SRTM elevation data for Austria and Switzerland (for the country codes, see the **geodata** function `country_codes()`).
-In a second step, we merge the two rasters into one.
+Supposons que nous voulions calculer le NDVI (voir la section \@ref(local-operations)), et que nous voulions en plus calculer les attributs du terrain à partir des données d'altitude pour des observations dans une zone d'étude.
+Ces calculs reposent sur des informations de télédétection. 
+L'imagerie correspondante est souvent divisée en tuiles couvrant une étendue spatiale spécifique, et fréquemment, une zone d'étude couvre plus d'une tuile.
+Dans ce cas, nous devons fusionner les tuiles couvertes par notre zone d'étude. 
+Le plus simple est alors de fusionner ces scènes, c'est-à-dire les mettre côte à côte.
+Cela est possible, par exemple, avec les données numériques d'altitude (SRTM, ASTER).
+Dans l'extrait de code suivant, nous téléchargeons d'abord les données d'élévation SRTM pour l'Autriche et la Suisse (pour les codes pays, voir la fonction **geodata** `country_codes()`).
+Dans une seconde étape, nous fusionnons les deux rasters en un seul.
 
 ```{r 04-spatial-operations-44, eval = FALSE}
 aut = geodata::elevation_30s(country = "AUT", path = tempdir())
@@ -1147,7 +1147,7 @@ ch = geodata::elevation_30s(country = "CHE", path = tempdir())
 aut_ch = merge(aut, ch)
 ```
 
-**terra**'s `merge()` command combines two images, and in case they overlap, it uses the value of the first raster.
+La commande `merge()` de **terra** combine deux images, et dans le cas où elles se chevauchent, elle utilise la valeur du premier raster.
 <!--jn:toDo-->
 <!-- gdalUtils is slower (for this files): -->
 <!-- two_rast = c(terra::sources(aut)$source, terra::sources(ch)$source) -->
@@ -1155,17 +1155,17 @@ aut_ch = merge(aut, ch)
 <!-- bench::mark({gdalUtils::mosaic_rasters(two_rast, tf)}) -->
 <!-- You can do exactly the same with `gdalUtils::mosaic_rasters()` which is faster, and therefore recommended if you have to merge a multitude of large rasters stored on disk. -->
 
-The merging approach is of little use when the overlapping values do not correspond to each other.
-This is frequently the case when you want to combine spectral imagery from scenes that were taken on different dates.
-The `merge()` command will still work but you will see a clear border in the resulting image.
-On the other hand, the `mosaic()` command lets you define a function for the overlapping area. 
-For instance, we could compute the mean value -- this might smooth the clear border in the merged result but it will most likely not make it disappear.
+cette approche de fusion est peu utile lorsque les valeurs qui se chevauchent ne correspondent pas les unes aux autres.
+C'est souvent le cas lorsque vous voulez combiner des images spectrales provenant de scènes qui ont été prises à des dates différentes.
+La commande `merge()` fonctionnera toujours mais vous verrez une frontière nette dans l'image résultante.
+D'autre part, la commande `mosaic()` vous permet de définir une fonction pour la zone de recouvrement. 
+Par exemple, nous pourrions calculer la valeur moyenne -- cela pourrait lisser la bordure claire dans le résultat fusionné, mais ne la fera probablement pas disparaître.
 <!-- The following sentences have been commented out and can be removed because the packages, and info, is now out of date -->
 <!-- See https://github.com/Robinlovelace/geocompr/pull/424 for discussion -->
 <!-- To do so, we need a more advanced approach.  -->
 <!-- Remote sensing scientists frequently apply histogram matching or use regression techniques to align the values of the first image with those of the second image. -->
 <!-- The packages **landsat** (`histmatch()`, `relnorm()`, `PIF()`), **satellite** (`calcHistMatch()`) and **RStoolbox** (`histMatch()`, `pifMatch()`) provide the corresponding functions for the **raster**'s package objects. -->
-For a more detailed introduction to remote sensing with R, see @wegmann_remote_2016.
+Pour une introduction plus détaillée à la télédétection avec R, il est possible de consulter @wegmann_remote_2016.
 <!--jn:toDo-->
 <!--update the above reference to the 2nd edition-->
 
