@@ -7,7 +7,7 @@
 <title>Chapter 4 Géotraitements | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="Prérequis Ce chapitre nécessité les mêmes paquets que ceux utilisés dans le chapitre 3: library(sf) library(terra) library(dplyr) library(spData) Vous devrez également charger deux jeux de données...">
-<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta name="generator" content="bookdown 0.25 with bs4_book()">
 <meta property="og:title" content="Chapter 4 Géotraitements | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://geocompr.github.io/fr/spatial-operations.html">
@@ -17,16 +17,16 @@
 <meta name="twitter:title" content="Chapter 4 Géotraitements | Geocomputation avec R">
 <meta name="twitter:description" content="Prérequis Ce chapitre nécessité les mêmes paquets que ceux utilisés dans le chapitre 3: library(sf) library(terra) library(dplyr) library(spData) Vous devrez également charger deux jeux de données...">
 <meta name="twitter:image" content="https://geocompr.github.io/es/images/cover.png">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.12/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Lato-0.4.0/font.css" rel="stylesheet">
-<link href="libs/_Roboto%20Mono-0.4.0/font.css" rel="stylesheet">
-<link href="libs/_Montserrat-0.4.0/font.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Lato-0.4.1/font.css" rel="stylesheet">
+<link href="libs/_Roboto%20Mono-0.4.1/font.css" rel="stylesheet">
+<link href="libs/_Montserrat-0.4.1/font.css" rel="stylesheet">
 <script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-<script src="libs/leaflet-binding-2.1.0/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
 <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -900,24 +900,33 @@ Pour une introduction plus détaillée à la télédétection avec R, il est pos
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nz_height</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span></code></pre></div>
 <p>E1. Il a été établi dans la section <a href="spatial-operations.html#spatial-vec">4.2</a> que Canterbury était la région de Nouvelle-Zélande contenant la plupart des 100 points les plus élevés du pays.
 Combien de ces points culminants en contient-elle ?</p>
+<p><strong>Bonus:</strong> Représentez le résultat en utilisant la fonction <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> en montrant toute la Nouvelle-Zélande, la région <code>canterbury</code> surlignée en jaune, les points hauts de Canterbury représentés par des points noirs</p>
 <p>E2. Dans quelle région se trouve le deuxième plus grand nombre de points <code>nz_height</code>, et combien en compte-t-elle ?</p>
 <p>E3. En généralisant la question à toutes les régions : combien les 16 régions de la Nouvelle-Zélande contiennent des points qui font partie des 100 plus hauts points du pays ? Quelles régions ?</p>
 <ul>
 <li>Bonus: créer un tableau listant ces régions dans l’ordre du nombre de points et de leurs noms.</li>
 </ul>
-<p>E4. Utilisez le <code>dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))</code>, et reclassifiez l’altitude en trois classes : basse (&lt;300), moyenne et haute (&gt;500).
+<p>E4. Testez vos connaissances des prédicats spatiaux en découvrant et en représentant graphiquement les relations entre les États américains et d’autres objets spatiaux.</p>
+<p>Le point de départ de cet exercice est de créer un objet représentant l’état du Colorado aux USA. Faites-le avec la commande
+<code>colorado = us_states[us_states$NAME == "Colorado",]</code> (base R) ou avec la fonction <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> (tidyverse) et affichez l’objet résultant dans le contexte des états américains.</p>
+<ul>
+<li>Créez un nouvel objet représentant tous les états qui ont une intersection géographique avec le Colorado et tracez le résultat (astuce : la façon la plus concise de le faire est d’utiliser la méthode de sous-ensemble <code>[</code>).</li>
+<li>Créez un autre objet représentant tous les objets qui touchent (ont une frontière commune avec) le Colorado et tracez le résultat (conseil : n’oubliez pas que vous pouvez utiliser l’argument <code>op = st_intersects</code> et d’autres relations spatiales pendant les opérations de sous-ensembles spatiaux dans R de base).</li>
+<li>Bonus : créez une ligne droite du centroïde du District de Columbia, près de la côte Est, au centroïde de la Californie, près de la côte Ouest des Etats-Unis (astuce : les fonctions <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid()</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union()</a></code> et <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> décrites au Chapitre 5 peuvent vous aider) et identifiez les états que cette longue ligne Est-Ouest traverse.</li>
+</ul>
+<p>E5. Utilisez le <code>dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))</code>, et reclassifiez l’altitude en trois classes : basse (&lt;300), moyenne et haute (&gt;500).
 Ensuite, Chargez le raster NDVI (<code>ndvi = rast(system.file("raster/ndvi.tif", package = "spDataLarge"))</code>) et calculez le NDVI moyen et l’altitude moyenne pour chaque classe altitudinale.</p>
-<p>E5. Appliquez un filtre de détection de ligne à <code>rast(system.file("ex/logo.tif", package = "terra"))</code>.
+<p>E6. Appliquez un filtre de détection de ligne à <code>rast(system.file("ex/logo.tif", package = "terra"))</code>.
 Affichez le résultat.
 Astuce : lisez <code>?terra::focal()</code>.</p>
-<p>E6. Calculez l’indice <em>Normalized Difference Water Index</em> (NDWI ; <code>(green - nir)/(green + nir)</code>) d’une image Landsat.
+<p>E7. Calculez l’indice <em>Normalized Difference Water Index</em> (NDWI ; <code>(green - nir)/(green + nir)</code>) d’une image Landsat.
 Utilisez l’image Landsat fournie par le paquet <strong>spDataLarge</strong> (<code>system.file("raster/landsat.tif", package = "spDataLarge")</code>).
 Calculez également une corrélation entre le NDVI et le NDWI pour cette zone.</p>
-<p>E7. Un billet de <a href="https://stackoverflow.com/questions/35555709/global-raster-of-geographic-distances">StackOverflow</a> montre comment calculer les distances à la côte la plus proche en utilisant <code><a href="https://rdrr.io/pkg/raster/man/distance.html">raster::distance()</a></code>.
+<p>E8. Un billet de <a href="https://stackoverflow.com/questions/35555709/global-raster-of-geographic-distances">StackOverflow</a> montre comment calculer les distances à la côte la plus proche en utilisant <code><a href="https://rdrr.io/pkg/raster/man/distance.html">raster::distance()</a></code>.
 Essayez de faire quelque chose de similaire mais avec <code><a href="https://rdrr.io/pkg/terra/man/distance.html">terra::distance()</a></code> : récupérez le modèle numérique de terrain espagnole, et obtenez un raster qui représente les distances à la côte à travers le pays (astuce : utilisez <code><a href="https://rdrr.io/pkg/geodata/man/elevation.html">geodata::elevation_30s()</a></code>).
 Convertissez les distances résultantes de mètres en kilomètres.
 Remarque : il peut être judicieux d’augmenter la taille des cellules de l’image matricielle d’entrée pour réduire le temps de calcul pendant cette opération.</p>
-<p>E8. Essayez de modifier l’approche utilisée dans l’exercice ci-dessus en pondérant le raster de distance avec le raster d’altitude ; chaque 100 mètres d’altitude devrait augmenter la distance à la côte de 10 km.
+<p>E9. Essayez de modifier l’approche utilisée dans l’exercice ci-dessus en pondérant le raster de distance avec le raster d’altitude ; chaque 100 mètres d’altitude devrait augmenter la distance à la côte de 10 km.
 Ensuite, calculez et visualisez la différence entre le raster créé en utilisant la distance euclidienne (E7) et le raster pondéré par l’altitude.</p>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
@@ -1167,59 +1176,59 @@ Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <spa
 </div>
 </div>
 </div>
-<div class="footnotes footnotes-end-of-document">
-<hr>
-<ol>
-<li id="fn1"><p>
-The conference took place at the University of Leeds, where one of the authors (Robin) is currently based.
-The 21<sup>st</sup> GeoComputation conference was also hosted at the University of Leeds, during which Robin and Jakub presented, led a workshop on ‘tidy’ spatial data analysis and collaborated on the book (see www.geocomputation.org for more on the conference series, and papers/presentations spanning two decades).<a href="intro.html#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>
-A laptop with 4GB running a modern operating system such as Ubuntu 16.04 onward should also be able to reproduce the contents of this book.
-A laptop with this specification or above can be acquired second-hand for ~US$100 in many countries nowadays, reducing the financial/hardware barrier to geocomputation far below the levels in operation in the early 2000s, when high-performance computers were unaffordable for most people.<a href="intro.html#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>
-Python modules providing access to geoalgorithms include <code>grass.script</code> for GRASS,
-<code>saga-python</code> for SAGA-GIS,
-<code>processing</code> for QGIS and <code>arcpy</code> for ArcGIS.<a href="intro.html#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p>
-An overview of R’s spatial ecosystem can be found in the CRAN Task View on the Analysis of Spatial Data
-(see <a href="https://cran.r-project.org/web/views/Spatial.html" class="uri">https://cran.r-project.org/web/views/Spatial.html</a>).<a href="intro.html#fnref4" class="footnote-back">↩︎</a></p></li>
-<li id="fn5"><p>Note the difference between “r-spatial”, organization containing packages such as <strong>sf</strong>, and “rspatial”, organization responsible for <strong>terra</strong>.<a href="intro.html#fnref5" class="footnote-back">↩︎</a></p></li>
-<li id="fn6"><p>
-<strong>spDataLarge</strong> n’est pas sur le CRAN, ce qui signifie qu’il doit être installé via <em>r-universe</em> ou avec la commande suivante : <code>remotes::install_github("Nowosad/spDataLarge")</code>.<a href="spatial-class.html#fnref6" class="footnote-back">↩︎</a></p></li>
-<li id="fn7"><p>
-L’origine à laquelle nous faisons référence, représentée en bleu sur la figure <a href="spatial-class.html#fig:vectorplots">2.1</a>, est en fait la “fausse” origine.
-L’origine ” réelle “, c’est-à-dire l’endroit où les distorsions sont minimales, est située à 2° W et 49° N.
-Cette origine a été choisie par l’<em>Ordnance Survey of the United States</em> afin de se situer approximativement au centre de la masse continentale britannique dans le sens longitudinal.<a href="spatial-class.html#fnref7" class="footnote-back">↩︎</a></p></li>
-<li id="fn8"><p>
-Le format OGC complet comprend des types de géométrie plutôt exotiques, notamment les types de géométrie “surface” et “courbe”, qui ont actuellement une application limitée dans le monde réel.
-Les 18 types peuvent être manipulés avec le package <strong>sf</strong>, bien que (à partir de l’été 2018) leur représentation ne fonctionne plus que pour les “7 principaux”.<a href="spatial-class.html#fnref8" class="footnote-back">↩︎</a></p></li>
-<li id="fn9"><p>
-L’appel de la fonction <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> sur un objet <strong>sf</strong> va en réalité appeler <code>sf::::plot.sf()</code>.
-La fonction <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> est une méthode générique qui se comporte différemment selon la classe de l’objet en entrée.<a href="spatial-class.html#fnref9" class="footnote-back">↩︎</a></p></li>
-<li id="fn10"><p>
-Remarque : de nombreux arguments de <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> sont ignorés dans les cartes à facettes, lorsque plus d’une colonne <code>sf</code> est utilisée.<a href="spatial-class.html#fnref10" class="footnote-back">↩︎</a></p></li>
-<li id="fn11"><p>
-Par définition, un polygone a une limite extérieure (anneau extérieur) et peut avoir zéro ou plusieurs limites intérieures (anneaux intérieurs), également appelées “trous”.
-Un polygone avec un trou serait, par exemple, <code>POLYGON ((1 5, 2 2, 4 1, 4 4, 1 5), (2 4, 3 4, 3 3, 2 3, 2 4))</code>.<a href="spatial-class.html#fnref11" class="footnote-back">↩︎</a></p></li>
-<li id="fn12"><p>
-D’autres attributs pourraient être des types de villes (grandes, moyennes), ou une remarque indiquant si la mesure est produite par une station automatique.<a href="spatial-class.html#fnref12" class="footnote-back">↩︎</a></p></li>
-<li id="fn13"><p>
-Selon le format de fichier, l’en-tête fait partie du fichier de données d’image proprement dit, par exemple GeoTIFF, ou peut être stocké dans un fichier d’en-tête supplémentaire un <em>world file</em>, par exemple dans les formats de grille ASCII.
-Il existe également le format raster binaire sans en-tête (plat) qui devrait faciliter l’importation dans divers logiciels.<a href="spatial-class.html#fnref13" class="footnote-back">↩︎</a></p></li>
-<li id="fn14"><p>Il possède également une classe supplémentaire <code>SpatRasterDataset</code> pour stocker de nombreuses collections de jeux de données<a href="spatial-class.html#fnref14" class="footnote-back">↩︎</a></p></li>
-<li id="fn15"><p>Les opérateurs <code>[[</code> et <code>$</code> peuvent également être utilisés pour la sélection des couches<a href="spatial-class.html#fnref15" class="footnote-back">↩︎</a></p></li>
-<li id="fn16"><p>
-Le degré de compression est souvent appelé <em>aplatissement</em>, défini en fonction du rayon équatorial (<span class="math inline">\(a\)</span>) et du rayon polaire (<span class="math inline">\(b\)</span>) comme suit : <span class="math inline">\(f = (a - b) / a\)</span>. Les termes <em>ellipticité</em> et <em>compression</em> peuvent également être utilisés.
-Comme <span class="math inline">\(f\)</span> est une valeur plutôt faible, les modèles numériques d’ellipsoïdes utilisent l’“aplatissement inverse” (<span class="math inline">\(rf = 1/f\)</span>) pour définir la compression de la Terre.
-Les valeurs de <span class="math inline">\(a\)</span> et <span class="math inline">\(rf\)</span> dans divers modèles ellipsoïdaux peuvent être vues en exécutant <code>sf_proj_info(type = "ellps")</code>.<a href="spatial-class.html#fnref16" class="footnote-back">↩︎</a></p></li>
-<li id="fn17"><p>Veuillez noter que le géoïde de la figure exagère la surface bosselée du géoïde par un facteur de 10 000 afin de souligner la forme irrégulière de la planète<a href="spatial-class.html#fnref17" class="footnote-back">↩︎</a></p></li>
-<li id="fn18"><p>
-<strong>data.table</strong> est un paquet de traitement de données très performant.
-Son application aux données géographiques est couverte dans un billet de blog hébergé à r-spatial.org/r/2017/11/13/perp-performance.html.<a href="attr.html#fnref18" class="footnote-back">↩︎</a></p></li>
-<li id="fn19"><p>
-<code>st_geometry(world_st) = NULL</code> fonctionne également pour supprimer la géométrie de <code>world</code>, mais écrase l’objet original.<a href="attr.html#fnref19" class="footnote-back">↩︎</a></p></li>
-</ol>
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <div class="chapter-nav">
 <div class="prev"><a href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></div>
 <div class="empty"></div>
@@ -1282,7 +1291,7 @@ Son application aux données géographiques est couverte dans un billet de blog 
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-03-17.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-03-25.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

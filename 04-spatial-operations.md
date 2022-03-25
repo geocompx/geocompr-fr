@@ -983,6 +983,9 @@ data(nz_height, package = "spData")
 E1. Il a été établi dans la section \@ref(spatial-vec) que Canterbury était la région de Nouvelle-Zélande contenant la plupart des 100 points les plus élevés du pays.
 Combien de ces points culminants en contient-elle ?
 
+**Bonus:** Représentez le résultat en utilisant la fonction `plot()` en montrant toute la Nouvelle-Zélande, la région `canterbury` surlignée en jaune, les points hauts de Canterbury représentés par des points noirs
+
+
 
 
 E2. Dans quelle région se trouve le deuxième plus grand nombre de points `nz_height`, et combien en compte-t-elle ?
@@ -994,30 +997,49 @@ E3. En généralisant la question à toutes les régions : combien les 16 régio
 - Bonus: créer un tableau listant ces régions dans l'ordre du nombre de points et de leurs noms.
 
 
+E4. Testez vos connaissances des prédicats spatiaux en découvrant et en représentant graphiquement les relations entre les États américains et d'autres objets spatiaux.
 
-E4. Utilisez le `dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))`, et reclassifiez l'altitude en trois classes : basse (<300), moyenne et haute (>500).
+Le point de départ de cet exercice est de créer un objet représentant l'état du Colorado aux USA. Faites-le avec la commande 
+`colorado = us_states[us_states$NAME == "Colorado",]` (base R) ou avec la fonction `filter()` (tidyverse) et affichez l'objet résultant dans le contexte des états américains. 
+
+- Créez un nouvel objet représentant tous les états qui ont une intersection géographique avec le Colorado et tracez le résultat (astuce : la façon la plus concise de le faire est d'utiliser la méthode de sous-ensemble `[`).
+- Créez un autre objet représentant tous les objets qui touchent (ont une frontière commune avec) le Colorado et tracez le résultat (conseil : n'oubliez pas que vous pouvez utiliser l'argument `op = st_intersects` et d'autres relations spatiales pendant les opérations de sous-ensembles spatiaux dans R de base).
+- Bonus : créez une ligne droite du centroïde du District de Columbia, près de la côte Est, au centroïde de la Californie, près de la côte Ouest des Etats-Unis (astuce : les fonctions `st_centroid()`, `st_union()` et `st_cast()` décrites au Chapitre 5 peuvent vous aider) et identifiez les états que cette longue ligne Est-Ouest traverse.
+
+
+
+
+
+
+
+
+
+
+
+
+E5. Utilisez le `dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))`, et reclassifiez l'altitude en trois classes : basse (<300), moyenne et haute (>500).
 Ensuite, Chargez le raster NDVI (`ndvi = rast(system.file("raster/ndvi.tif", package = "spDataLarge"))`) et calculez le NDVI moyen et l'altitude moyenne pour chaque classe altitudinale.
 
 
 
-E5. Appliquez un filtre de détection de ligne à `rast(system.file("ex/logo.tif", package = "terra"))`.
+E6. Appliquez un filtre de détection de ligne à `rast(system.file("ex/logo.tif", package = "terra"))`.
 Affichez le résultat.
 Astuce : lisez `?terra::focal()`.
 
 
 
-E6. Calculez l'indice  *Normalized Difference Water Index* (NDWI ; `(green - nir)/(green + nir)`) d'une image Landsat. 
+E7. Calculez l'indice  *Normalized Difference Water Index* (NDWI ; `(green - nir)/(green + nir)`) d'une image Landsat. 
 Utilisez l'image Landsat fournie par le paquet **spDataLarge** (`system.file("raster/landsat.tif", package = "spDataLarge")`).
 Calculez également une corrélation entre le NDVI et le NDWI pour cette zone.
 
 
 
-E7. Un billet de [StackOverflow](https://stackoverflow.com/questions/35555709/global-raster-of-geographic-distances) montre comment calculer les distances à la côte la plus proche en utilisant `raster::distance()`.
+E8. Un billet de [StackOverflow](https://stackoverflow.com/questions/35555709/global-raster-of-geographic-distances) montre comment calculer les distances à la côte la plus proche en utilisant `raster::distance()`.
 Essayez de faire quelque chose de similaire mais avec `terra::distance()` : récupérez le modèle numérique de terrain espagnole, et obtenez un raster qui représente les distances à la côte à travers le pays (astuce : utilisez `geodata::elevation_30s()`).
 Convertissez les distances résultantes de mètres en kilomètres.
 Remarque : il peut être judicieux d'augmenter la taille des cellules de l'image matricielle d'entrée pour réduire le temps de calcul pendant cette opération.
 
 
 
-E8. Essayez de modifier l'approche utilisée dans l'exercice ci-dessus en pondérant le raster de distance avec le raster d'altitude ; chaque 100 mètres d'altitude devrait augmenter la distance à la côte de 10 km.
+E9. Essayez de modifier l'approche utilisée dans l'exercice ci-dessus en pondérant le raster de distance avec le raster d'altitude ; chaque 100 mètres d'altitude devrait augmenter la distance à la côte de 10 km.
 Ensuite, calculez et visualisez la différence entre le raster créé en utilisant la distance euclidienne (E7) et le raster pondéré par l'altitude.
