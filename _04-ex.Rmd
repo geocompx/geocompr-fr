@@ -8,13 +8,22 @@ data(nz_height, package = "spData")
 E1. Il a été établi dans la section \@ref(spatial-vec) que Canterbury était la région de Nouvelle-Zélande contenant la plupart des 100 points les plus élevés du pays.
 Combien de ces points culminants en contient-elle ?
 
+**Bonus:** Représentez le résultat en utilisant la fonction `plot()` en montrant toute la Nouvelle-Zélande, la région `canterbury` surlignée en jaune, les points hauts de Canterbury représentés par des points noirs
+
+
 ```{r 04-ex-e1}
 library(tmap)
 # tmap_mode("view")
 qtm(nz) + qtm(nz_height)
 canterbury = nz %>% filter(Name == "Canterbury")
 canterbury_height = nz_height[canterbury, ]
+nz_not_canterbury_height = nz_height[canterbury, , op = st_disjoint]
 nrow(canterbury_height) # réponse: 70
+
+plot(nz$geom)
+plot(canterbury$geom, col = "yellow", add = TRUE)
+plot(nz_not_canterbury_height$geometry, pch = 4, col = "blue", add = TRUE)
+plot(canterbury_height$geometry, pch = 3, col = "red", add = TRUE)
 ```
 
 E2. Dans quelle région se trouve le deuxième plus grand nombre de points `nz_height`, et combien en compte-t-elle ?
@@ -34,19 +43,91 @@ E3. En généralisant la question à toutes les régions : combien les 16 régio
 - Bonus: créer un tableau listant ces régions dans l'ordre du nombre de points et de leurs noms.
 
 ```{r 04-ex-e3}
+# Solution avec les fonctions de base de R: 
 nz_height_count = aggregate(nz_height, nz, length)
 nz_height_combined = cbind(nz, count = nz_height_count$elevation)
+plot(nz_height_combined)
+
+# Une version Tidyverse:
+nz_height_joined = st_join(nz_height, nz %>% select(Name))
+# calculer n points contenus dans chaque région
+nz_height_counts = nz_height_joined %>% 
+  group_by(Name) %>% 
+  summarise(count = n())
+
+# Optionnel jointure avec les géométries nz 
+nz_height_combined = left_join(nz, nz_height_counts %>% sf::st_drop_geometry())
+# plot(nz_height_combined) # vérifications de résultats identique à avec R base
+
+# Tableau de synthèse
 nz_height_combined %>% 
   st_drop_geometry() %>% 
   dplyr::select(Name, count) %>% 
   arrange(desc(count)) %>% 
   na.omit()
 ```
+E4. Testez vos connaissances des prédicats spatiaux en découvrant et en représentant graphiquement les relations entre les États américains et d'autres objets spatiaux.
 
-E4. Utilisez le `dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))`, et reclassifiez l'altitude en trois classes : basse (<300), moyenne et haute (>500).
+Le point de départ de cet exercice est de créer un objet représentant l'état du Colorado aux USA. Faites-le avec la commande 
+`colorado = us_states[us_states$NAME == "Colorado",]` (base R) ou avec la fonction `filter()` (tidyverse) et affichez l'objet résultant dans le contexte des états américains. 
+
+- Créez un nouvel objet représentant tous les états qui ont une intersection géographique avec le Colorado et tracez le résultat (astuce : la façon la plus concise de le faire est d'utiliser la méthode de sous-ensemble `[`).
+- Créez un autre objet représentant tous les objets qui touchent (ont une frontière commune avec) le Colorado et tracez le résultat (conseil : n'oubliez pas que vous pouvez utiliser l'argument `op = st_intersects` et d'autres relations spatiales pendant les opérations de sous-ensembles spatiaux dans R de base).
+- Bonus : créez une ligne droite du centroïde du District de Columbia, près de la côte Est, au centroïde de la Californie, près de la côte Ouest des Etats-Unis (astuce : les fonctions `st_centroid()`, `st_union()` et `st_cast()` décrites au Chapitre 5 peuvent vous aider) et identifiez les états que cette longue ligne Est-Ouest traverse.
+
+
+```{r 04-ex-4-1}
+colorado = us_states[us_states$NAME == "Colorado", ]
+plot(us_states$geometry)
+plot(colorado$geometry, col = "grey", add = TRUE)
+```
+
+```{r 04-ex-4-2}
+intersects_with_colorado = us_states[colorado, , op = st_intersects]
+plot(us_states$geometry, main = "États intersectants le Colorado")
+plot(intersects_with_colorado$geometry, col = "grey", add = TRUE)
+```
+
+```{r 04-ex-4-3}
+# Autres solutions plus verbeuses
+# 2: avec un objet intermédiaire, une liste pour chaque état
+sel_intersects_colorado = st_intersects(us_states, colorado)
+sel_intersects_colorado_list = lengths(sel_intersects_colorado) > 0
+intersects_with_colorado = us_states[sel_intersects_colorado_list, ]
+
+# 3: avec un objet intermédiaire, un index pour chaque état
+sel_intersects_colorado2 = st_intersects(colorado, us_states)
+sel_intersects_colorado2
+us_states$NAME[unlist(sel_intersects_colorado2)]
+
+# 4: avec le tidyverse
+us_states %>% 
+  st_filter(y = colorado, .predicate = st_intersects)
+```
+
+```{r 04-ex-4-4}
+touches_colorado = us_states[colorado, , op = st_touches]
+plot(us_states$geometry, main = "États touchants le Colorado")
+plot(touches_colorado$geometry, col = "grey", add = TRUE)
+```
+
+```{r 04-ex-4-5}
+washington_to_cali = us_states %>% 
+  filter(grepl(pattern = "Columbia|Cali", x = NAME)) %>% 
+  st_centroid() %>% 
+  st_union() %>% 
+  st_cast("LINESTRING")
+states_crossed = us_states[washington_to_cali, , op = st_crosses]
+states_crossed$NAME
+plot(us_states$geometry, main = "États traversés par une ligne droite allant du district de Columbia au centre de la Californie.")
+plot(states_crossed$geometry, col = "grey", add = TRUE)
+plot(washington_to_cali, add = TRUE)
+```
+
+E5. Utilisez le `dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))`, et reclassifiez l'altitude en trois classes : basse (<300), moyenne et haute (>500).
 Ensuite, Chargez le raster NDVI (`ndvi = rast(system.file("raster/ndvi.tif", package = "spDataLarge"))`) et calculez le NDVI moyen et l'altitude moyenne pour chaque classe altitudinale.
 
-```{r 04-ex-e4}
+```{r 04-ex-e5}
 library(terra)
 dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))
 ndvi = rast(system.file("raster/ndvi.tif", package = "spDataLarge"))
@@ -61,11 +142,11 @@ plot(dem_reclass)
 zonal(c(dem, ndvi), dem_reclass, fun = "mean")
 ```
 
-E5. Appliquez un filtre de détection de ligne à `rast(system.file("ex/logo.tif", package = "terra"))`.
+E6. Appliquez un filtre de détection de ligne à `rast(system.file("ex/logo.tif", package = "terra"))`.
 Affichez le résultat.
 Astuce : lisez `?terra::focal()`.
 
-```{r 04-ex-e5}
+```{r 04-ex-e6}
 # de la page d'aide (?terra::focal()):
 # Laplacian filter: filter=matrix(c(0,1,0,1,-4,1,0,1,0), nrow=3)
 # Sobel filters (for edge detection): 
@@ -84,11 +165,11 @@ sobel_y = focal(r, w = filter_y)
 plot(sobel_y, col = c("black", "white"))
 ```
 
-E6. Calculez l'indice  *Normalized Difference Water Index* (NDWI ; `(green - nir)/(green + nir)`) d'une image Landsat. 
+E7. Calculez l'indice  *Normalized Difference Water Index* (NDWI ; `(green - nir)/(green + nir)`) d'une image Landsat. 
 Utilisez l'image Landsat fournie par le paquet **spDataLarge** (`system.file("raster/landsat.tif", package = "spDataLarge")`).
 Calculez également une corrélation entre le NDVI et le NDWI pour cette zone.
 
-```{r 04-ex-e6}
+```{r 04-ex-e7}
 file = system.file("raster/landsat.tif", package = "spDataLarge")
 multi_rast = rast(file)
 
@@ -111,12 +192,12 @@ two_rasts_df = as.data.frame(two_rasts)
 cor(two_rasts_df$ndvi, two_rasts_df$ndwi)
 ```
 
-E7. Un billet de [StackOverflow](https://stackoverflow.com/questions/35555709/global-raster-of-geographic-distances) montre comment calculer les distances à la côte la plus proche en utilisant `raster::distance()`.
+E8. Un billet de [StackOverflow](https://stackoverflow.com/questions/35555709/global-raster-of-geographic-distances) montre comment calculer les distances à la côte la plus proche en utilisant `raster::distance()`.
 Essayez de faire quelque chose de similaire mais avec `terra::distance()` : récupérez le modèle numérique de terrain espagnole, et obtenez un raster qui représente les distances à la côte à travers le pays (astuce : utilisez `geodata::elevation_30s()`).
 Convertissez les distances résultantes de mètres en kilomètres.
 Remarque : il peut être judicieux d'augmenter la taille des cellules de l'image matricielle d'entrée pour réduire le temps de calcul pendant cette opération.
 
-```{r 04-ex-e7}
+```{r 04-ex-e8}
 # Récupérer le MNT pour l'espagne
 spain_dem = geodata::elevation_30s(country = "Spain", path = ".", mask = FALSE)
 
@@ -139,10 +220,10 @@ distance_to_coast_km = distance_to_coast / 1000
 plot(distance_to_coast_km, main = "Distance to the coast (km)")
 ```
 
-E8. Essayez de modifier l'approche utilisée dans l'exercice ci-dessus en pondérant le raster de distance avec le raster d'altitude ; chaque 100 mètres d'altitude devrait augmenter la distance à la côte de 10 km.
+E9. Essayez de modifier l'approche utilisée dans l'exercice ci-dessus en pondérant le raster de distance avec le raster d'altitude ; chaque 100 mètres d'altitude devrait augmenter la distance à la côte de 10 km.
 Ensuite, calculez et visualisez la différence entre le raster créé en utilisant la distance euclidienne (E7) et le raster pondéré par l'altitude.
 
-```{r 04-ex-e8}
+```{r 04-ex-e9}
 # maintenant, pondérons chaque 100 mètres altitudinaux par une distance supplémentaire de 10 km
 distance_to_coast_km2 = distance_to_coast_km + ((spain_dem / 100) * 10)
 # affichez le résultat
