@@ -6,16 +6,18 @@
 
 C'est le premier chapitre pratique du livre. Il faut donc installer certains logiciels et les avoir un peu pratiqué. 
 Vous devez avoir accès à un ordinateur sur lequel est installé R (version [4.2.0](https://stat.ethz.ch/pipermail/r-announce/2022/000683.html sortie en avril 2022 ou supérieure).
-Nous vous recommandons vivement de ne pas vous contenter de lire le texte, mais également *d'exécuter le code* de chaque chapitre afin de renforcer vos compétences en géocomputation.
-Pour ce faire, créez un nouveau dossier sur votre ordinateur pour enregistrer vos notes dans des scripts R au fur et à mesure.
-Vous pouvez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) le code source du livre en anglais à partir de [github.com/robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr) pour vous aider dans votre apprentissage.
-Après avoir défini un endroit où enregistrer votre travail, commencez à exécuter/éditer/tester le code à l'aide d'un environnement de développement intégré (IDE) tel que [RStudio](https://www.rstudio.com/products/rstudio/download/#download) (recommandé pour la plupart des gens, en particulier les débutants) ou [VS Code](https://github.com/REditorSupport/vscode-R)).
+Nous vous recommandons vivement de ne pas vous contenter de lire le texte, mais également *d'exécuter le code* afin de renforcer vos compétences en géocomputation.
 
-Si vous ne connaissez pas R, nous vous recommandons de suivre les ressources d'introduction à R telles que [Hands on Programming with R](https://rstudio-education.github.io/hopr/starting.html) qui couvre son l'installation et son fonctionnement.
+Pour garder une trace de votre progression, il est utile de créer un nouveau dossier sur votre ordinateur pour enregistrer au fur et à mesure vos notes dans des scripts R, vos sorties graphiques ou autres.
+Vous pouvez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) le code source du livre en anglais à partir de [github.com/robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr) pour vous aider dans votre apprentissage.
+Nous vous recommandons vivement d'installer un environnement de développement intégré (IDE) tel que [RStudio](https://www.rstudio.com/products/rstudio/download/#download) (recommandé pour la plupart des gens) ou [VS Code](https://github.com/REditorSupport/vscode-R)) et d'utiliser des projets et des espaces de travail lorsque vous écrivez/exécutez/testerez le code R.
+
+Si vous ne connaissez pas R, nous vous recommandons de suivre les ressources d'introduction à R telles que [Hands on Programming with R](https://rstudio-education.github.io/hopr/starting.html) de Garrett Grolemund ou  [Introduction to R](https://cengel.github.io/R-intro/) de Claudia Engel avant de vous lancer dans ce livre.
 Organisez votre travail (par exemple, avec des projets RStudio) et donnez à vos scripts des noms judicieux tels que `02-chapter.R` pour documenter le code que vous écrivez au fur et à mesure de votre apprentissage.
 \index{R!pre-requisites}
 
-Les paquets utilisés dans ce chapitre peuvent être installés à l'aide des commandes suivantes :^[
+Une fois confortable il est temps de tester un peu de code !
+À moins que ces paquets ne soient déjà installés, la première chose à faire est d'installer les paquets R fondamentaux utilisés dans ce chapitre, à l'aide des commandes suivantes :^[
 **spDataLarge** n'est pas sur le CRAN\index{CRAN}, ce qui signifie qu'il doit être installé via *r-universe* ou avec la commande suivante : `remotes::install_github("Nowosad/spDataLarge")`.
 ]
 
@@ -112,9 +114,9 @@ knitr::include_graphics(c("figures/vector_lonlat.png", "figures/vector_projected
 
 **sf** fournit des classes informatiques pour les données géographiques vectorielles ainsi qu'une interface en ligne de commande pour des bibliothèques de géocomputation de bas niveau : 
 
-- GDAL\index{GDAL}, pour la lecture, l'écriture et la manipulation d'une large gamme de formats de données géographiques, couverte dans le chapitre \@ref(read-write)
-- PROJ, une puissante bibliothèque pour les transformations de systèmes de coordonnées, qui sous-tend le chapitre \@ref(reproj-geo-data)
-- GEOS\index{GEOS}, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre \@ref(geometric-operations)
+- [GDAL](https://gdal.org/)\index{GDAL}, pour la lecture, l'écriture et la manipulation d'une large gamme de formats de données géographiques, couverte dans le chapitre \@ref(read-write)
+- [PROJ](https://proj.org/), une puissante bibliothèque pour les transformations de systèmes de coordonnées, qui sous-tend le chapitre \@ref(reproj-geo-data)
+- [GEOS](https://libgeos.org/)\index{GEOS}, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre \@ref(geometric-operations)
 - [S2](https://s2geometry.io/), un moteur de géométrie sphérique écrit en C++ développé par Google, via le paquet [**s2**](https://r-spatial.github.io/s2/), couvert dans la section \@ref(s2) ci-dessous et dans le chapitre \@ref(reproj-geo-data).
 <!-- - [liblwgeom](https://github.com/postgis/postgis/tree/master/liblwgeom), a geometry engine used by PostGIS, via the [**lwgeom**](https://r-spatial.github.io/lwgeom/) package -->
 
