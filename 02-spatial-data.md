@@ -5,12 +5,14 @@
 ## Prérequis {-}
 
 C'est le premier chapitre pratique du livre. Il faut donc installer certains logiciels et les avoir un peu pratiqué. 
-Nous supposons que vous avez installé une version à jour de R et que vous êtes à l'aise avec les logiciels dotés d'une interface de ligne de commande, comme l'environnement de développement intégré (IDE) RStudio.
-<!--or VSCode?-->
+Vous devez avoir accès à un ordinateur sur lequel est installé R (version [4.2.0](https://stat.ethz.ch/pipermail/r-announce/2022/000683.html sortie en avril 2022 ou supérieure).
+Nous vous recommandons vivement de ne pas vous contenter de lire le texte, mais également *d'exécuter le code* de chaque chapitre afin de renforcer vos compétences en géocomputation.
+Pour ce faire, créez un nouveau dossier sur votre ordinateur pour enregistrer vos notes dans des scripts R au fur et à mesure.
+Vous pouvez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) le code source du livre en anglais à partir de [github.com/robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr) pour vous aider dans votre apprentissage.
+Après avoir défini un endroit où enregistrer votre travail, commencez à exécuter/éditer/tester le code à l'aide d'un environnement de développement intégré (IDE) tel que [RStudio](https://www.rstudio.com/products/rstudio/download/#download) (recommandé pour la plupart des gens, en particulier les débutants) ou [VS Code](https://github.com/REditorSupport/vscode-R)).
 
-<!-- Should we update these references to more up-to-date resources? -->
-Si vous débutez avec R, nous vous recommandons de lire le chapitre 2 du livre en ligne *Efficient R Programming* de @gillespie_efficient_2016 et d'apprendre les bases du langage en vous référant à des ressources telles que @grolemund_r_2016.
-Organisez votre travail (par exemple, avec des projets RStudio) et donnez aux scripts des noms judicieux tels que `02-chapter.R` pour documenter le code que vous écrivez au fur et à mesure de votre apprentissage.
+Si vous ne connaissez pas R, nous vous recommandons de suivre les ressources d'introduction à R telles que [Hands on Programming with R](https://rstudio-education.github.io/hopr/starting.html) qui couvre son l'installation et son fonctionnement.
+Organisez votre travail (par exemple, avec des projets RStudio) et donnez à vos scripts des noms judicieux tels que `02-chapter.R` pour documenter le code que vous écrivez au fur et à mesure de votre apprentissage.
 \index{R!pre-requisites}
 
 Les paquets utilisés dans ce chapitre peuvent être installés à l'aide des commandes suivantes :^[
@@ -119,7 +121,7 @@ Les CRS sont plus complexes, et seront abordées plus en détail dans les sectio
 Les informations concernant ces interfaces sont indiquées par *sf* lorsque que celui ci est chargé pour la première fois: via le message `Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE` apparue en dessous de la commande `library(sf)` au tout début de ce chapitre. Ce message indique les versions des bibliothèques liées GEOS, GDAL et PROJ (chiffre pouvant varier au cours du temps et entre les ordinateurs) et si oui ou non l'interface avec S2 est activée. 
 Aujourd'hui, nous considérons que c'est un acquis, cependant, c'est grâce à l’intégration étroite entre les différentes bibliothèques géographiques qu'un travail de géocomputation reproductible est possible.
 
-Une fonctionnalité intéressante de **sf** est que vous pouvez changer le moteur de géométrie par défaut utilisé sur les données non projetées : "Désactiver" S2 peut être fait avec la commande `sf::sf_use_s2("FALSE")`, ce qui signifie que le moteur de géométrie euclidienne GEOS sera utilisé par défaut pour toutes les opérations de géométrie, y compris celles sur les données non projetées.
+Une fonctionnalité intéressante de **sf** est que vous pouvez changer le moteur de géométrie par défaut utilisé sur les données non projetées : "Désactiver" S2 peut être fait avec la commande `sf::sf_use_s2(FALSE)`, ce qui signifie que le moteur de géométrie euclidienne GEOS sera utilisé par défaut pour toutes les opérations de géométrie, y compris celles sur les données non projetées.
 Comme nous le verrons dans la Section \@ref(s2), la géométrie euclidienne, ou plane, est basée sur un espace à 2 dimensions.
 Les moteurs de géométrie euclidienne tels que GEOS supposent des coordonnées "plates" (projetées), tandis que les moteurs de géométrie sphérique tels que S2 supposent des coordonnées non projetées (lon/lat).
 
@@ -133,7 +135,7 @@ Cette section présente les classes **sf** en préparation des chapitres suivant
 Sur les 18 types géométriques pris en charge par la spécification, seuls 7 sont utilisés dans la grande majorité des recherches géographiques (voir Figure \@ref(fig:sf-ogc)) ;
 ces types géométriques de base sont entièrement pris en charge par le paquet R **sf** [@pebesma_simple_2018].^[
 Le format OGC complet comprend des types de géométrie plutôt exotiques, notamment les types de géométrie "surface" et "courbe", qui ont actuellement une application limitée dans le monde réel.
-Les 18 types peuvent être manipulés avec le package **sf**, bien que (à partir de l'été 2018) leur représentation ne fonctionne plus que pour les "7 principaux".
+Les 18 types peuvent être manipulés avec le package **sf**, bien qu'actuellement (2022) leur représentation ne fonctionne plus que pour les "7 principaux".
 ]  
 
 <div class="figure" style="text-align: center">
@@ -985,7 +987,7 @@ my_rast
 #> max value   : 2892
 ```
 
-Des fonctions dédiées renseignent sur chaque composant : `dim(my_rast)` renvoie le nombre de lignes, de colonnes et de couches ; `ncell()` le nombre de cellules (pixels) ; `res()` la résolution spatiale ; `ext()` son étendue spatiale ; et `crs()` son système de coordonnées de référence (la reprojection matricielle est traitée dans la section \@ref(reproj-ras)).
+Des fonctions dédiées renseignent sur chaque composant : `dim()` renvoie le nombre de lignes, de colonnes et de couches ; `ncell()` le nombre de cellules (pixels) ; `res()` la résolution spatiale ; `ext()` son étendue spatiale ; et `crs()` son système de coordonnées de référence (la reprojection matricielle est traitée dans la section \@ref(reproj-ras)).
 `inMemory()` indique si le raster est stocké en mémoire vive ou sur disque.
 
 `help("terra-package")` renvoie une liste complète de toutes les fonctions **terra** disponibles.

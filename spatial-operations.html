@@ -7,7 +7,7 @@
 <title>Chapter 4 Géotraitements | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="Prérequis Ce chapitre nécessité les mêmes paquets que ceux utilisés dans le chapitre 3: library(sf) library(terra) library(dplyr) library(spData) Vous devrez également charger deux jeux de données...">
-<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
 <meta property="og:title" content="Chapter 4 Géotraitements | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://geocompr.github.io/fr/spatial-operations.html">
@@ -88,7 +88,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Vous devrez également charger deux jeux de données pour cette section <a href="spatial-operations.html#spatial-ras">4.3</a>
 </li>
@@ -109,7 +109,7 @@ La jointure spatiale (section <a href="#spatial-joining"><strong>??</strong></a>
 <p>Les opérations spatiales diffèrent toutefois des opérations non spatiales à plusieurs égards :
 Les jointures spatiales, par exemple, peuvent être effectuées de plusieurs manières — y compris la mise en correspondance d’entités qui se croisent ou se trouvent à une certaine distance de l’ensemble de données cible — alors que les jointures de table attributaire abordées dans la section <a href="#vector-attribute-joining"><strong>??</strong></a> du chapitre précédent ne peuvent être effectuées que d’une seule manière (sauf lorsqu’on utilise des jointures floues, comme décrit dans la documentation du paquet <a href="https://cran.r-project.org/package=fuzzyjoin"><strong>fuzzyjoin</strong></a>).
 Le <em>type</em> de relation spatiale entre les objets doit être pris en compte lors de l’exécution des opérations spatiales, comme décrit dans la section <a href="#topological-relations"><strong>??</strong></a>, sur les relations topologiques entre les caractéristiques vectorielles.
-.
+
 Un autre aspect unique des objets spatiaux est la distance : tous les objets spatiaux sont liés par l’espace et les calculs de distance peuvent être utilisés pour explorer la force de cette relation, comme décrit dans le contexte des données vectorielles à la section <a href="#relations-distance"><strong>??</strong></a>.</p>
 <p>Les opérations spatiales sur les rasters comprennent la sélection — traité dans la section <a href="spatial-operations.html#spatial-raster-subsetting">4.3.1</a> — et la fusion de plusieurs ” tuiles ” raster en un seul objet, comme le montre la section <a href="#merging-rasters"><strong>??</strong></a>.
 <em>L’algèbre de raster</em> couvre une gamme d’opérations qui modifient les valeurs des cellules, avec ou sans référence aux valeurs des cellules environnantes, ce qui est vital pour de nombreuses applications.
@@ -805,11 +805,10 @@ Le chapitre <a href="#gis"><strong>??</strong></a> montre comment accéder à ce
 Tout comme les opérations focales, les opérations <em>zonales</em> appliquent une fonction d’agrégation à plusieurs cellules.
 Cependant, un deuxième raster, généralement avec des valeurs catégorielles, définit les <em>filtres zonaux</em> (ou ‘zones’) dans le cas des opérations zonales, en opposition à une fenêtre de voisinage prédéfinie dans le cas de l’opération focale.
 Par conséquent, les cellules définissant le filtre zonal ne doivent pas nécessairement être voisines.
-Notre raster <code>grain</code> en est un bon exemple, comme l’illustre le panneau de droite de la figure : différentes tailles de granulométrie sont réparties de manière irrégulière dans le raster.
+Notre raster <code>grain</code> en est un bon exemple, comme l’illustre le panneau de droite de la figure <a href="attr.html#fig:cont-raster">3.2</a> : différentes tailles de granulométrie sont réparties de manière irrégulière dans le raster.
 Enfin, le résultat d’une opération zonale est un tableau récapitulatif groupé par zone, c’est pourquoi cette opération est également connue sous le nom de <em>statistiques zonales</em> dans le monde des SIG.
 Ceci est à l’opposé des opérations focales qui retournent un objet matriciel.</p>
-<p>Le code suivant utilise la fonction <code><a href="https://rdrr.io/pkg/terra/man/zonal.html">zonal()</a></code> pour calculer l’altitude moyenne associée à chaque classe de taille de grain.
-La sortie est montrée dans la Figure <a href="attr.html#fig:cont-raster">3.2</a>).</p>
+<p>Le code suivant utilise la fonction <code><a href="https://rdrr.io/pkg/terra/man/zonal.html">zonal()</a></code> pour calculer l’altitude moyenne associée à chaque classe de taille de grain.</p>
 <div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">z</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/zonal.html">zonal</a></span><span class="op">(</span><span class="va">elev</span>, <span class="va">grain</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span>
 <span class="va">z</span>
@@ -1291,7 +1290,7 @@ Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <spa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-03-25.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-07.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

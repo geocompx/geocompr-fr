@@ -32,7 +32,7 @@ La jointure spatiale (section \@ref(spatial-joining)) et l'agrégation (section 
 Les opérations spatiales diffèrent toutefois des opérations non spatiales à plusieurs égards :
 Les jointures spatiales, par exemple, peuvent être effectuées de plusieurs manières --- y compris la mise en correspondance d'entités qui se croisent ou se trouvent à une certaine distance de l'ensemble de données cible --- alors que les jointures de table attributaire abordées dans la section \@ref(vector-attribute-joining) du chapitre précédent ne peuvent être effectuées que d'une seule manière (sauf lorsqu'on utilise des jointures floues, comme décrit dans la documentation du paquet [**fuzzyjoin**](https://cran.r-project.org/package=fuzzyjoin)).
 Le *type* de relation spatiale entre les objets doit être pris en compte lors de l'exécution des opérations spatiales, comme décrit dans la section \@ref(topological-relations), sur les relations topologiques entre les caractéristiques vectorielles.
-\index{spatial operations}.
+\index{spatial operations}
 Un autre aspect unique des objets spatiaux est la distance : tous les objets spatiaux sont liés par l'espace et les calculs de distance peuvent être utilisés pour explorer la force de cette relation, comme décrit dans le contexte des données vectorielles à la section \@ref(relations-distance).
 
 Les opérations spatiales sur les rasters comprennent la sélection --- traité dans la section \@ref(spatial-raster-subsetting) --- et la fusion de plusieurs " tuiles " raster en un seul objet, comme le montre la section \@ref(merging-rasters).
@@ -881,12 +881,11 @@ Le chapitre \@ref(gis) montre comment accéder à ces fonctionnalités SIG à pa
 Tout comme les opérations focales, les opérations *zonales* appliquent une fonction d'agrégation à plusieurs cellules.
 Cependant, un deuxième raster, généralement avec des valeurs catégorielles, définit les *filtres zonaux* (ou 'zones') dans le cas des opérations zonales, en opposition à une fenêtre de voisinage prédéfinie dans le cas de l'opération focale.
 Par conséquent, les cellules  définissant le filtre zonal ne doivent pas nécessairement être voisines.
-Notre raster `grain` en est un bon exemple, comme l'illustre le panneau de droite de la figure : différentes tailles de granulométrie sont réparties de manière irrégulière dans le raster.
+Notre raster `grain` en est un bon exemple, comme l'illustre le panneau de droite de la figure \@ref(fig:cont-raster) : différentes tailles de granulométrie sont réparties de manière irrégulière dans le raster.
 Enfin, le résultat d'une opération zonale est un tableau récapitulatif groupé par zone, c'est pourquoi cette opération est également connue sous le nom de *statistiques zonales* dans le monde des SIG\index{GIS}. 
 Ceci est à l'opposé des opérations focales qui retournent un objet matriciel.
 
 Le  code suivant utilise la fonction `zonal()` pour calculer l'altitude moyenne associée à chaque classe de taille de grain.
-La sortie est montrée dans la Figure \@ref(fig:cont-raster)).
 
 
 ```r
