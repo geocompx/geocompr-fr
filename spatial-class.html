@@ -83,14 +83,15 @@
 </h2>
 <p>C’est le premier chapitre pratique du livre. Il faut donc installer certains logiciels et les avoir un peu pratiqué.
 Vous devez avoir accès à un ordinateur sur lequel est installé R (version <a href="https://stat.ethz.ch/pipermail/r-announce/2022/000683.html%20sortie%20en%20avril%202022%20ou%20sup%C3%A9rieure">4.2.0</a>.
-Nous vous recommandons vivement de ne pas vous contenter de lire le texte, mais également <em>d’exécuter le code</em> de chaque chapitre afin de renforcer vos compétences en géocomputation.
-Pour ce faire, créez un nouveau dossier sur votre ordinateur pour enregistrer vos notes dans des scripts R au fur et à mesure.
+Nous vous recommandons vivement de ne pas vous contenter de lire le texte, mais également <em>d’exécuter le code</em> afin de renforcer vos compétences en géocomputation.</p>
+<p>Pour garder une trace de votre progression, il est utile de créer un nouveau dossier sur votre ordinateur pour enregistrer au fur et à mesure vos notes dans des scripts R, vos sorties graphiques ou autres.
 Vous pouvez <a href="https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip">télécharger</a> ou <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">cloner</a> le code source du livre en anglais à partir de <a href="https://github.com/Robinlovelace/geocompr">github.com/robinlovelace/geocompr</a> pour vous aider dans votre apprentissage.
-Après avoir défini un endroit où enregistrer votre travail, commencez à exécuter/éditer/tester le code à l’aide d’un environnement de développement intégré (IDE) tel que <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio</a> (recommandé pour la plupart des gens, en particulier les débutants) ou <a href="https://github.com/REditorSupport/vscode-R">VS Code</a>).</p>
-<p>Si vous ne connaissez pas R, nous vous recommandons de suivre les ressources d’introduction à R telles que <a href="https://rstudio-education.github.io/hopr/starting.html">Hands on Programming with R</a> qui couvre son l’installation et son fonctionnement.
+Nous vous recommandons vivement d’installer un environnement de développement intégré (IDE) tel que <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio</a> (recommandé pour la plupart des gens) ou <a href="https://github.com/REditorSupport/vscode-R">VS Code</a>) et d’utiliser des projets et des espaces de travail lorsque vous écrivez/exécutez/testerez le code R.</p>
+<p>Si vous ne connaissez pas R, nous vous recommandons de suivre les ressources d’introduction à R telles que <a href="https://rstudio-education.github.io/hopr/starting.html">Hands on Programming with R</a> de Garrett Grolemund ou <a href="https://cengel.github.io/R-intro/">Introduction to R</a> de Claudia Engel avant de vous lancer dans ce livre.
 Organisez votre travail (par exemple, avec des projets RStudio) et donnez à vos scripts des noms judicieux tels que <code>02-chapter.R</code> pour documenter le code que vous écrivez au fur et à mesure de votre apprentissage.
 </p>
-<p>Les paquets utilisés dans ce chapitre peuvent être installés à l’aide des commandes suivantes :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
+<p>Une fois confortable il est temps de tester un peu de code !
+À moins que ces paquets ne soient déjà installés, la première chose à faire est d’installer les paquets R fondamentaux utilisés dans ce chapitre, à l’aide des commandes suivantes :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
 &lt;strong&gt;spDataLarge&lt;/strong&gt; n’est pas sur le CRAN, ce qui signifie qu’il doit être installé via &lt;em&gt;r-universe&lt;/em&gt; ou avec la commande suivante : &lt;code&gt;remotes::install_github("Nowosad/spDataLarge")&lt;/code&gt;.&lt;/p&gt;'><sup>6</sup></a></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"sf"</span><span class="op">)</span>
@@ -172,11 +173,14 @@ FIGURE 2.1: Représentation de données vectorielles (ponctuelles) dans laquelle
 </div>
 <p><strong>sf</strong> fournit des classes informatiques pour les données géographiques vectorielles ainsi qu’une interface en ligne de commande pour des bibliothèques de géocomputation de bas niveau :</p>
 <ul>
-<li>GDAL, pour la lecture, l’écriture et la manipulation d’une large gamme de formats de données géographiques, couverte dans le chapitre <a href="#read-write"><strong>??</strong></a>
+<li>
+<a href="https://gdal.org/">GDAL</a>, pour la lecture, l’écriture et la manipulation d’une large gamme de formats de données géographiques, couverte dans le chapitre <a href="#read-write"><strong>??</strong></a>
 </li>
-<li>PROJ, une puissante bibliothèque pour les transformations de systèmes de coordonnées, qui sous-tend le chapitre <a href="#reproj-geo-data"><strong>??</strong></a>
+<li>
+<a href="https://proj.org/">PROJ</a>, une puissante bibliothèque pour les transformations de systèmes de coordonnées, qui sous-tend le chapitre <a href="#reproj-geo-data"><strong>??</strong></a>
 </li>
-<li>GEOS, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre <a href="#geometric-operations"><strong>??</strong></a>
+<li>
+<a href="https://libgeos.org/">GEOS</a>, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre <a href="#geometric-operations"><strong>??</strong></a>
 </li>
 <li>
 <a href="https://s2geometry.io/">S2</a>, un moteur de géométrie sphérique écrit en C++ développé par Google, via le paquet <a href="https://r-spatial.github.io/s2/"><strong>s2</strong></a>, couvert dans la section <a href="spatial-class.html#s2">2.2.9</a> ci-dessous et dans le chapitre <a href="#reproj-geo-data"><strong>??</strong></a>.
