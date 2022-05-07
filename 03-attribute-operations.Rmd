@@ -700,7 +700,7 @@ elev[1]
 ```
 
 Les sélections d'objets raster à couches multiples renverront la ou les valeurs des cellules pour chaque couche.
-Par exemple, `c(elev, grain)[1]` renvoie un tableau de données avec une ligne et deux colonnes --- une pour chaque couche.
+Par exemple, `two_layers = c(grain, elev); two_layers[1]` renvoie un tableau de données avec une ligne et deux colonnes --- une pour chaque couche.
 Pour extraire toutes les valeurs ou des lignes complètes, vous pouvez également utiliser `values()`.
 
 Les valeurs des cellules peuvent être modifiées en écrasant les valeurs existantes en conjonction avec une opération de sélection.
@@ -722,7 +722,7 @@ Le remplacement des valeurs des rasters multicouches peut se faire avec une matr
 
 ```{r 03-attribute-operations-61b, eval=FALSE}
 two_layers = c(grain, elev) 
-two_layers[1] = cbind(c(0), c(4))
+two_layers[1] = cbind(c(1), c(4))
 two_layers[]
 ```
 
