@@ -402,7 +402,7 @@ world_agg5 = world %>%
 options(scipen = 999)
 knitr::kable(
   world_agg5,
-  caption = "Les 3 continents les plus peuplés classés par densité de population (personnes par km carré).",
+  caption = "Les 3 continents les plus peuplés classés par densité de population ordonnés par nombre de pays.",
   caption.short = "Les 3 continents les plus peuplés.",
   booktabs = TRUE
 )
