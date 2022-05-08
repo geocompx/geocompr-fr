@@ -376,7 +376,7 @@ world_agg5 = world %>%
 ```
 
 
-Table: (\#tab:continents)Les 3 continents les plus peuplés classés par densité de population (personnes par km carré).
+Table: (\#tab:continents)Les 3 continents les plus peuplés classés par densité de population ordonnés par nombre de pays.
 
 |continent |        Pop| Superficie|  N| Densité|
 |:---------|----------:|----------:|--:|-------:|

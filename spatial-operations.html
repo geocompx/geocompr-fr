@@ -513,8 +513,10 @@ FIGURE 4.8: Hauteur moyenne des 101 points culminants par régions de la Nouvell
 <code class="sourceCode R"><span class="va">nz_agg2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">nz</span>, y <span class="op">=</span> <span class="va">nz_height</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>elevation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean</a></span><span class="op">(</span><span class="va">elevation</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Les entités <code>nz_agg</code> résultants ont la même géométrie que l’objet d’agrégation <code>nz</code> mais avec une nouvelle colonne résumant les valeurs de <code>x</code> dans chaque région en utilisant la fonction <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean()</a></code> (qui peut, bien sûr, être remplacée par <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">median()</a></code>, <code><a href="https://rdrr.io/r/stats/sd.html">sd()</a></code> et d’autres fonctions qui retournent une seule valeur).
-Remarque : une différence entre les approches <code><a href="https://r-spatial.github.io/sf/reference/aggregate.sf.html">aggregate()</a></code> et <code>group_by() %&gt;% summarize()</code> est que la première donne des valeurs <code>NA</code> pour les noms de régions non correspondantes, tandis que la seconde préserve les noms de régions et est plus flexible en termes de fonctions d’agrégation et de noms de colonnes des résultats.
+<p>Les entités <code>nz_agg</code> résultants ont la même géométrie que l’objet d’agrégation <code>nz</code> mais avec une nouvelle colonne résumant les valeurs de <code>x</code> dans chaque région en utilisant la fonction <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean()</a></code>.
+D’autres fonctions peuvent, bien sûr, remplacer <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean()</a></code> comme la <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">median()</a></code>, <code><a href="https://rdrr.io/r/stats/sd.html">sd()</a></code> et d’autres fonctions qui retournent une seule valeur par groupe.
+Remarque : une différence entre les approches <code><a href="https://r-spatial.github.io/sf/reference/aggregate.sf.html">aggregate()</a></code> et <code>group_by() %&gt;% summarize()</code> est que la première donne des valeurs <code>NA</code> pour les noms de régions non correspondantes, tandis que la seconde préserve les noms de régions.
+L’approche “tidy” est plus flexible en termes de fonctions d’agrégation et de noms de colonnes des résultats.
 Les opérations d’agrégation créant de nouvelles géométries sont décrites dans la section <a href="#geometry-unions"><strong>??</strong></a>.</p>
 </div>
 <div id="incongruent" class="section level3" number="4.2.7">
@@ -1290,7 +1292,7 @@ Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <spa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-07.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-08.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

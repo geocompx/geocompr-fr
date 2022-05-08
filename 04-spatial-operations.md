@@ -525,8 +525,10 @@ nz_agg2 = st_join(x = nz, y = nz_height) %>%
 
 
 
-Les entités `nz_agg` résultants ont la même géométrie que l'objet d'agrégation `nz` mais avec une nouvelle colonne résumant les valeurs de `x` dans chaque région en utilisant la fonction `mean()` (qui peut, bien sûr, être remplacée par `median()`, `sd()` et d'autres fonctions qui retournent une seule valeur).
-Remarque : une différence entre les approches `aggregate()` et `group_by() %>% summarize()` est que la première donne des valeurs `NA` pour les noms de régions non correspondantes, tandis que la seconde préserve les noms de régions et est plus flexible en termes de fonctions d'agrégation et de noms de colonnes des résultats.
+Les entités `nz_agg` résultants ont la même géométrie que l'objet d'agrégation `nz` mais avec une nouvelle colonne résumant les valeurs de `x` dans chaque région en utilisant la fonction `mean()`.
+D'autres fonctions peuvent, bien sûr, remplacer `mean()` comme la `median()`, `sd()` et d'autres fonctions qui retournent une seule valeur par groupe.
+Remarque : une différence entre les approches `aggregate()` et `group_by() %>% summarize()` est que la première donne des valeurs `NA` pour les noms de régions non correspondantes, tandis que la seconde préserve les noms de régions.
+L'approche "tidy" est plus flexible en termes de fonctions d'agrégation et de noms de colonnes des résultats.
 Les opérations d'agrégation créant  de nouvelles géométries sont décrites dans la section \@ref(geometry-unions). 
 
 ### Jointure de couches sans superposition parfaite  {#incongruent}
