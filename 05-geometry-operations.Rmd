@@ -104,7 +104,6 @@ La simplification des objets multi-polygones peut supprimer les petits polygones
 
 ```{r 05-geometry-operations-6, warning=FALSE, message=FALSE}
 # proportion des points à garder (0-1; par defaut 0.05)
-us_states2163$AREA = as.numeric(us_states2163$AREA)
 us_states_simp2 = rmapshaper::ms_simplify(us_states2163, keep = 0.01,
                                           keep_shapes = TRUE)
 ```
@@ -119,28 +118,28 @@ p_ussimp3 = tm_shape(us_states_simp2) + tm_polygons() + tm_layout(main.title = "
 tmap_arrange(p_ussimp1, p_ussimp2, p_ussimp3, ncol = 3)
 ```
 
-### Centroids
+### Centroïdes
 
 \index{vector!centroids} 
-Centroid operations identify the center of geographic objects.
-Like statistical measures of central tendency (including mean and median definitions of 'average'), there are many ways to define the geographic center of an object.
-All of them create single point representations of more complex vector objects.
+Les opérations de centroïdes identifient le centre des objets géographiques.
+Comme pour les mesures statistiques de tendance centrale (y compris les définitions de la moyenne et de la médiane), il existe de nombreuses façons de définir le centre géographique d'un objet.
+Toutes créent des représentations par un point unique d'objets vectoriels plus complexes.
 
-The most commonly used centroid operation is the *geographic centroid*.
-This type of centroid operation (often referred to as 'the centroid') represents the center of mass in a spatial object (think of balancing a plate on your finger).
-Geographic centroids have many uses, for example to create a simple point representation of complex geometries, or to estimate distances between polygons.
-They can be calculated with the **sf** function `st_centroid()` as demonstrated in the code below, which generates the geographic centroids of regions in New Zealand and tributaries to the River Seine, illustrated with black points in Figure \@ref(fig:centr).
+Le *centroïde géographique* est sans doute l'opération la plus couramment utilisée.
+Ce type d'opération (souvent jute appelé "centroïde") représente le centre de masse d'un objet spatial (pensez à une assiette en équilibre sur votre doigt).
+Les centroïdes géographiques ont de nombreuses utilisations, par exemple pour créer une représentation ponctuelle simple de géométries complexes, ou pour estimer les distances entre polygones.
+Ils peuvent être calculés à l'aide de la fonction **sf** `st_centroid()`, comme le montre le code ci-dessous, qui génère les centroïdes géographiques de régions de Nouvelle-Zélande et d'affluents de la Seine, illustrés par des points noirs sur la figure \@ref(fig:centr).
 
 ```{r 05-geometry-operations-7, warning=FALSE}
 nz_centroid = st_centroid(nz)
 seine_centroid = st_centroid(seine)
 ```
 
-Sometimes the geographic centroid falls outside the boundaries of their parent objects (think of a doughnut).
-In such cases *point on surface* operations can be used to guarantee the point will be in the parent object (e.g., for labeling irregular multipolygon objects such as island states), as illustrated by the red points in Figure \@ref(fig:centr).
-Notice that these red points always lie on their parent objects.
-They were created with `st_point_on_surface()` as follows:^[
-A description of how `st_point_on_surface()` works is provided at https://gis.stackexchange.com/q/76498.
+Parfois, le centroïde géographique se trouve en dehors des limites de l'objet parent (pensez à un beignet).
+Dans ce cas, les opérations dites de *point sur la surface* peuvent être utilisées pour garantir que le point se trouvera dans l'objet parent (par exemple, pour étiqueter des objets de type multipolygones irréguliers tels que des îles), comme l'illustrent les points rouges de la figure \@ref(fig:centr).
+Remarquez que ces points rouges se trouvent toujours sur leurs objets parents.
+Ils ont été créés avec `st_point_on_surface()` comme suit :^[
+Une description du fonctionnement de `st_point_on_surface()` est fournie sur https://gis.stackexchange.com/q/76498.
 ]
 
 ```{r 05-geometry-operations-8, warning=FALSE}
@@ -148,7 +147,7 @@ nz_pos = st_point_on_surface(nz)
 seine_pos = st_point_on_surface(seine)
 ```
 
-```{r centr, warning=FALSE, echo=FALSE, fig.cap="Centroids (black points) and 'points on surface' (red points) of New Zealand's regions (left) and the Seine (right) datasets.", fig.scap="Centroid vs point on surface operations."}
+```{r centr, warning=FALSE, echo=FALSE, fig.cap="Centroïdes (points noirs) et "points sur la surface" (points rouges) des ensembles de données des régions de Nouvelle-Zélande (à gauche) et de la Seine (à droite).", fig.scap="Centroïde et point sur la surface."}
 p_centr1 = tm_shape(nz) + tm_borders() +
   tm_shape(nz_centroid) + tm_symbols(shape = 1, col = "black", size = 0.5) +
   tm_shape(nz_pos) + tm_symbols(shape = 1, col = "red", size = 0.5)  
@@ -158,47 +157,47 @@ p_centr2 = tm_shape(seine) + tm_lines() +
 tmap_arrange(p_centr1, p_centr2, ncol = 2)
 ```
 
-Other types of centroids exist, including the *Chebyshev center* and the *visual center*.
-We will not explore these here but it is possible to calculate them using R, as we'll see in Chapter \@ref(algorithms).
+Il existe d'autres types de centroïdes, notamment le *centre de Chebyshev* et le *centre visuel*.
+Nous ne les explorerons pas ici, mais il est possible de les calculer à l'aide de R, comme nous le verrons dans le chapitre \@ref(algorithms).
 
-### Buffers
+### Buffers/tampons
 
 \index{vector!buffers} 
-Buffers are polygons representing the area within a given distance of a geometric feature:
-regardless of whether the input is a point, line or polygon, the output is a polygon.
-Unlike simplification (which is often used for visualization and reducing file size) buffering tends to be used for geographic data analysis.
-How many points are within a given distance of this line?
-Which demographic groups are within travel distance of this new shop?
-These kinds of questions can be answered and visualized by creating buffers around the geographic entities of interest.
+Les buffers ou tampons sont des polygones représentant la zone située à une distance donnée d'une caractéristique géométrique :
+Que le type d'origine soit un point, une ligne ou un polygone, la sortie est toujours un polygone.
+Contrairement à la simplification (qui est souvent utilisée pour la visualisation et la réduction de la taille des fichiers), la mise en mémoire tampon est généralement utilisée pour l'analyse des données géographiques.
+Combien de points se trouvent à une distance donnée de cette ligne ?
+Quels groupes démographiques se trouvent à une distance de déplacement de ce nouveau magasin ?
+Il est possible de répondre à ce genre de questions et de les visualiser en créant des tampons autour des entités géographiques d'intérêt.
 
-Figure \@ref(fig:buffs) illustrates buffers of different sizes (5 and 50 km) surrounding the river Seine and tributaries.
-These buffers were created with commands below, which show that the command `st_buffer()` requires at least two arguments: an input geometry and a distance, provided in the units of the CRS (in this case meters):
+La figure \@ref(fig:buffs) illustre des buffers de différentes tailles (5 et 50 km) entourant la Seine et ses affluents.
+Les commandes ci-dessous, utilisées pour créer ces buffers,  montrent que la commande `st_buffer()` nécessite au moins deux arguments : une géométrie d'entrée et une distance, fournie dans les unités du SRC (dans ce cas, les mètres) :
 
 ```{r 05-geometry-operations-9}
 seine_buff_5km = st_buffer(seine, dist = 5000)
 seine_buff_50km = st_buffer(seine, dist = 50000)
 ```
 
-```{r buffs, echo=FALSE, fig.cap="Buffers around the Seine dataset of 5 km (left) and 50 km (right). Note the colors, which reflect the fact that one buffer is created per geometry feature.", fig.show='hold', out.width="75%", fig.scap="Buffers around the seine dataset."}
+```{r buffs, echo=FALSE, fig.cap="Tampons de 5 km autour du jeu de données de la Seine  (à gauche) et de 50 km (à droite). Notez les couleurs, qui reflètent le fait qu'un tampon est créé par élément géométrique.", fig.show='hold', out.width="75%", fig.scap="Tampons autour du jeu de données de la Seine."}
 p_buffs1 = tm_shape(seine_buff_5km) + tm_polygons(col = "name") +
   tm_shape(seine) + tm_lines() +
-  tm_layout(main.title = "5 km buffer", legend.show = FALSE)
+  tm_layout(main.title = "Tampons de 5 km", legend.show = FALSE)
 p_buffs2 = tm_shape(seine_buff_50km) + tm_polygons(col = "name") +
   tm_shape(seine) + tm_lines() +
-  tm_layout(main.title = "50 km buffer", legend.show = FALSE)
+  tm_layout(main.title = "Tampons de 50 km", legend.show = FALSE)
 tmap_arrange(p_buffs1, p_buffs2, ncol = 2)
 ```
 
 ```{block2 05-geometry-operations-10, type = "rmdnote"}
-The third and final argument of `st_buffer()` is `nQuadSegs`, which means 'number of segments per quadrant' and is set by default to 30 (meaning circles created by buffers are composed of $4 \times 30 = 120$ lines).
-This argument rarely needs to be set.
-Unusual cases where it may be useful include when the memory consumed by the output of a buffer operation is a major concern (in which case it should be reduced) or when very high precision is needed (in which case it should be increased).
+Le troisième et dernier argument de `st_buffer()` est `nQuadSegs`, qui signifie 'nombre de segments par quadrant' et qui est fixé par défaut à 30 (ce qui signifie que les cercles créés par les buffers sont composés de $4 \times 30 = 120$ lignes).
+Cet argument a rarement besoin d´être défini.
+Les cas inhabituels où il peut être utile incluent lorsque la mémoire consommée par la sortie d´une opération de tampon est une préoccupation majeure (dans ce cas, il devrait être réduit) ou lorsque la très haute précision est nécessaire (dans ce cas, il devrait être augmenté).
 ```
 
 ```{r nQuadSegs, eval=FALSE, echo=FALSE}
 # Demonstrate nQuadSegs
 seine_buff_simple = st_buffer(seine, dist = 50000, nQuadSegs = 3)
-plot(seine_buff_simple, key.pos = NULL, main = "50 km buffer")
+plot(seine_buff_simple, key.pos = NULL, main = "Buffer de 50 km")
 plot(seine, key.pos = NULL, lwd = 3, pal = rainbow, add = TRUE)
 seine_points = st_cast(seine[1, ], "POINT")
 buff_single = st_buffer(seine_points[1, ], 50000, 2)
