@@ -205,50 +205,50 @@ buff_points = st_cast(buff_single, "POINT")
 plot(st_geometry(buff_single), add = TRUE)
 ```
 
-### Affine transformations
+### Application affine
 
 \index{vector!affine transformation} 
-Affine transformation is any transformation that preserves lines and parallelism.
-However, angles or length are not necessarily preserved.
-Affine transformations include, among others, shifting (translation), scaling and rotation.
-Additionally, it is possible to use any combination of these.
-Affine transformations are an essential part of geocomputation.
-For example, shifting is needed for labels placement, scaling is used in non-contiguous area cartograms (see Section \@ref(other-mapping-packages)), and many affine transformations are applied when reprojecting or improving the geometry that was created based on a distorted or wrongly projected map.
-The **sf** package implements affine transformation for objects of classes `sfg` and `sfc`.
+Une application affine est une transformation qui préserve les lignes et le parallélisme.
+Cependant, les angles ou la longueur ne sont pas nécessairement préservés.
+Les transformations affines comprennent, entre autres, le déplacement (translation), la mise à l'échelle et la rotation.
+En outre, il est possible d'utiliser n'importe quelle combinaison de celles-ci.
+Les applications affines sont une partie essentielle de la géocomputation.
+Par exemple, le décalage est nécessaire pour le placement d'étiquettes, la mise à l'échelle est utilisée dans les cartogrammes de zones non contiguës (voir la section \@ref(other-mapping-packages)), et de nombreuses transformations affines sont appliquées lors de la reprojection ou de l'amélioration de la géométrie créée à partir d'une carte déformée ou mal projetée.
+Le paquet **sf** implémente la transformation affine pour les objets des classes `sfg` et `sfc`.
 
 ```{r 05-geometry-operations-11}
 nz_sfc = st_geometry(nz)
 ```
 
-Shifting moves every point by the same distance in map units.
-It could be done by adding a numerical vector to a vector object.
-For example, the code below shifts all y-coordinates by 100,000 meters to the north, but leaves the x-coordinates untouched (left panel of Figure \@ref(fig:affine-trans)). 
+Le décalage déplace chaque point de la même distance en unités cartographiques.
+Cela peut être fait en ajoutant un vecteur numérique à un objet vectoriel.
+Par exemple, le code ci-dessous déplace toutes les coordonnées y de 100 000 mètres vers le nord, mais laisse les coordonnées x intactes (panneau gauche de la figure \@ref(fig:affine-trans)).  
 
 ```{r 05-geometry-operations-12}
 nz_shift = nz_sfc + c(0, 100000)
 ```
 
-Scaling enlarges or shrinks objects by a factor.
-It can be applied either globally or locally.
-Global scaling increases or decreases all coordinates values in relation to the origin coordinates, while keeping all geometries topological relations intact.
-It can be done by subtraction or multiplication of a`sfg` or `sfc` object.
+La mise à l'échelle agrandit ou rétrécit les objets par un facteur.
+Elle peut être appliquée de manière globale ou locale.
+La mise à l'échelle globale augmente ou diminue toutes les valeurs des coordonnées par rapport aux coordonnées d'origine, tout en gardant intactes les relations topologiques de toutes les géométries.
+Elle peut être effectuée par soustraction ou multiplication d'un objet `sfg` ou `sfc`.
 
 ```{r 05-geometry-operations-13, echo=FALSE,eval=FALSE}
 nz_scale0 = nz_sfc * 0.5
 ```
 
-Local scaling treats geometries independently and requires points around which geometries are going to be scaled, e.g., centroids.
-In the example below, each geometry is shrunk by a factor of two around the centroids (middle panel in Figure \@ref(fig:affine-trans)).
-To achieve that, each object is firstly shifted in a way that its center has coordinates of `0, 0` (`(nz_sfc - nz_centroid_sfc)`). 
-Next, the sizes of the geometries are reduced by half (`* 0.5`).
-Finally, each object's centroid is moved back to the input data coordinates (`+ nz_centroid_sfc`). 
+Le changement à l'échelle locale traite les géométries indépendamment et nécessite des points autour desquels les géométries vont être mises à l'échelle, par exemple des centroïdes.
+Dans l'exemple ci-dessous, chaque géométrie est réduite d'un facteur deux autour des centroïdes (panneau central de la figure \@ref(fig:affine-trans)).
+Pour cela, chaque objet est d'abord décalé de manière à ce que son centre ait les coordonnées `0, 0` (`(nz_sfc - nz_centroid_sfc)`). 
+Ensuite, les tailles des géométries sont réduites de moitié (`* 0.5`).
+Enfin, le centroïde de chaque objet est ramené aux coordonnées des données d'entrée (`+ nz_centroid_sfc`). 
 
 ```{r 05-geometry-operations-14}
 nz_centroid_sfc = st_centroid(nz_sfc)
 nz_scale = (nz_sfc - nz_centroid_sfc) * 0.5 + nz_centroid_sfc
 ```
 
-Rotation of two-dimensional coordinates requires a rotation matrix:
+La rotation de coordonnées bidimensionnelles nécessite une matrice de rotation :
 
 $$
 R =
@@ -258,37 +258,37 @@ R =
 \end{bmatrix}
 $$
 
-It rotates points in a clockwise direction.
-The rotation matrix can be implemented in R as:
+Elle fait tourner les points dans le sens des aiguilles d'une montre.
+La matrice de rotation peut être implémentée dans R comme suit :
 
 ```{r 05-geometry-operations-15}
 rotation = function(a){
-  r = a * pi / 180 #degrees to radians
+  r = a * pi / 180 #degrées en radians
   matrix(c(cos(r), sin(r), -sin(r), cos(r)), nrow = 2, ncol = 2)
 } 
 ```
 
-The `rotation` function accepts one argument `a` - a rotation angle in degrees.
-Rotation could be done around selected points, such as centroids (right panel of Figure \@ref(fig:affine-trans)).
-See `vignette("sf3")` for more examples.
+La fonction `rotation` accepte un argument `a` - un angle de rotation en degrés.
+La rotation peut être effectuée autour de points sélectionnés, comme les centroïdes (panneau de droite de la figure \@ref(fig:affine-trans)).
+Voir `vignette("sf3")` pour plus d'exemples.
 
 ```{r 05-geometry-operations-16}
 nz_rotate = (nz_sfc - nz_centroid_sfc) * rotation(30) + nz_centroid_sfc
 ```
 
-```{r affine-trans, echo=FALSE, fig.cap="Illustrations of affine transformations: shift, scale and rotate.", warning=FALSE, eval=TRUE, fig.scap="Illustrations of affine transformations."}
+```{r affine-trans, echo=FALSE, fig.cap="Illustrations des transformations affines : décalage, échelle et rotation.", warning=FALSE, eval=TRUE, fig.scap="Illustrations des transformations affines."}
 st_crs(nz_shift) = st_crs(nz_sfc)
 st_crs(nz_scale) = st_crs(nz_sfc)
 st_crs(nz_rotate) = st_crs(nz_sfc)
 p_at1 = tm_shape(nz_sfc) + tm_polygons() +
   tm_shape(nz_shift) + tm_polygons(col = "red") +
-  tm_layout(main.title = "Shift")
+  tm_layout(main.title = "Décalage")
 p_at2 = tm_shape(nz_sfc) + tm_polygons() +
   tm_shape(nz_scale) + tm_polygons(col = "red") +
-  tm_layout(main.title = "Scale")
+  tm_layout(main.title = "Chgt d'échelle")
 p_at3 = tm_shape(nz_sfc) + tm_polygons() +
   tm_shape(nz_rotate) + tm_polygons(col = "red") +
-  tm_layout(main.title = "Rotate")
+  tm_layout(main.title = "Rotation")
 tmap_arrange(p_at1, p_at2, p_at3, ncol = 3)
 ```
 
@@ -306,17 +306,17 @@ plot(nz_sfc)
 plot(nz_shear, add = TRUE, col = "red")
 ```
 
-Finally, the newly created geometries can replace the old ones with the `st_set_geometry()` function: 
+Enfin, les géométries nouvellement créées peuvent remplacer les anciennes avec la fonction `st_set_geometry()` : 
 
 ```{r 05-geometry-operations-20}
 nz_scale_sf = st_set_geometry(nz, nz_scale)
 ```
 
-### Clipping {#clipping}
+### Découper {#clipping}
 
 \index{vector!clipping} 
 \index{spatial!subsetting} 
-Spatial clipping is a form of spatial subsetting that involves changes to the `geometry` columns of at least some of the affected features.
+Le découpage spatial est une forme de sélection spatiale qui implique des changements dans les colonnes `géométriques` d'au moins certaines des entités affectées.
 
 Clipping can only apply to features more complex than points: 
 lines, polygons and their 'multi' equivalents.
