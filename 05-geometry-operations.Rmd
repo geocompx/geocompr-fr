@@ -318,44 +318,44 @@ nz_scale_sf = st_set_geometry(nz, nz_scale)
 \index{spatial!subsetting} 
 Le découpage spatial est une forme de sélection spatiale qui implique des changements dans les colonnes `géométriques` d'au moins certaines des entités affectées.
 
-Clipping can only apply to features more complex than points: 
-lines, polygons and their 'multi' equivalents.
-To illustrate the concept we will start with a simple example:
-two overlapping circles with a center point one unit away from each other and a radius of one (Figure \@ref(fig:points)).
+Le découpage ne peut s'appliquer qu'à des éléments plus complexes que des points : 
+les lignes, les polygones et leurs équivalents "multi".
+Pour illustrer le concept, nous allons commencer par un exemple simple :
+deux cercles superposés dont le point central est distant d'une unité et dont le rayon est de un (Figure \@ref(fig:points)).
 
-```{r points, fig.cap="Overlapping circles.", fig.asp=0.4, crop = TRUE}
-b = st_sfc(st_point(c(0, 1)), st_point(c(1, 1))) # create 2 points
-b = st_buffer(b, dist = 1) # convert points to circles
+```{r points, fig.cap="cercles superposés.", fig.asp=0.4, crop = TRUE}
+b = st_sfc(st_point(c(0, 1)), st_point(c(1, 1))) # créer 2 points
+b = st_buffer(b, dist = 1) # convertir les points en cercles
 plot(b, border = "grey")
-text(x = c(-0.5, 1.5), y = 1, labels = c("x", "y"), cex = 3) # add text
+text(x = c(-0.5, 1.5), y = 1, labels = c("x", "y"), cex = 3) # ajout du texte
 ```
 
-Imagine you want to select not one circle or the other, but the space covered by both `x` *and* `y`.
-This can be done using the function `st_intersection()`\index{vector!intersection}, illustrated using objects named `x` and `y` which represent the left- and right-hand circles (Figure \@ref(fig:circle-intersection)).
+Imaginez que vous voulez sélectionner non pas un cercle ou l'autre, mais l'espace couvert par les deux `x` *et* `y`.
+Cela peut être fait en utilisant la fonction `st_intersection()`\index{vecteur!intersection}, illustrée en utilisant des objets nommés `x` et `y` qui représentent les cercles de gauche et de droite (Figure \@ref(fig:circle-intersection)).
 
-```{r circle-intersection, fig.cap="Overlapping circles with a gray color indicating intersection between them.", fig.asp=0.4, fig.scap="Overlapping circles showing intersection types.", crop = TRUE}
+```{r circle-intersection, fig.cap="Cercles superposés avec une couleur grise pour indiquer l'intersection entre eux", fig.asp=0.4, fig.scap="Cercles superposés montrant les types d'intersection.", crop = TRUE}
 x = b[1]
 y = b[2]
 x_and_y = st_intersection(x, y)
 plot(b, border = "grey")
-plot(x_and_y, col = "lightgrey", border = "grey", add = TRUE) # intersecting area
+plot(x_and_y, col = "lightgrey", border = "grey", add = TRUE) # surface intersectée
 ```
 
-The subsequent code chunk demonstrates how this works for all combinations of the 'Venn' diagram representing `x` and `y`, inspired by [Figure 5.1](http://r4ds.had.co.nz/transform.html#logical-operators) of the book *R for Data Science* [@grolemund_r_2016].
+Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant `x` et `y`, inspiré de la [Figure 5.1](http://r4ds.had.co.nz/transform.html#logical-operators) du livre *R for Data Science* [@grolemund_r_2016].
 
-```{r venn-clip, echo=FALSE, fig.cap="Spatial equivalents of logical operators.", warning=FALSE}
+```{r venn-clip, echo=FALSE, fig.cap="Équivalents spatiaux des opérateurs logiques.", warning=FALSE}
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-venn-clip.R")
 # source("code/05-venn-clip.R") # for testing local version, todo: remove or change
 ```
 
-### Subsetting and clipping
+### Sélection et découpage
 
-Clipping objects can change their geometry but it can also subset objects, returning only features that intersect (or partly intersect) with a clipping/subsetting object.
-To illustrate this point, we will subset points that cover the bounding box of the circles `x` and `y` in Figure \@ref(fig:venn-clip).
-Some points will be inside just one circle, some will be inside both and some will be inside neither.
-`st_sample()` is used below to generate a *simple random* distribution of points within the extent of circles `x` and `y`, resulting in output illustrated in Figure \@ref(fig:venn-subset), raising the question: how to subset the points to only return the point that intersects with *both* `x` and `y`?
+Le découpage d'objets peut modifier leur géométrie, mais il peut également sélectionner des objets, en ne renvoyant que les entités qui intersectent (ou intersectent partiellement) un objet de découpage/sélection.
+Pour illustrer ce point, nous allons sélectionner les points qui incluent dans le cadre englobant (*bounding box*) des cercles `x` et `y` de la figure \@ref(fig:venn-clip).
+Certains points seront à l'intérieur d'un seul cercle, d'autres à l'intérieur des deux et d'autres encore à l'intérieur d'aucun.
+`st_sample()` est utilisé ci-dessous pour générer une distribution *simple et aléatoire* de points à l'intérieur de l'étendue des cercles `x` et `y`, ce qui donne le résultat illustré dans la Figure \@ref(fig:venn-subset), ce qui soulève la question suivante : comment sous-ensembler les points pour ne renvoyer que le point qui intersecte *à la fois* `x` et `y` ?
 
-```{r venn-subset, fig.cap="Randomly distributed points within the bounding box enclosing circles x and y. The point that intersects with both objects x and y is highlighted.", fig.height=6, fig.width=9, fig.asp=0.4, fig.scap="Randomly distributed points within the bounding box. Note that only one point intersects with both x and y, highlighted with a red circle.", echo=FALSE}
+```{r venn-subset, fig.cap="Points distribués de manière aléatoire dans le cadre englobant les cercles x et y. Les points qui croisent les deux objets x et y sont mis en évidence.", fig.height=6, fig.width=9, fig.asp=0.4, fig.scap="Points distribués aléatoirement dans le cadre englobant. Notez qu'un seul point intersecte à la fois x et y, mis en évidence par un cercle rouge.", echo=FALSE}
 bb = st_bbox(st_union(x, y))
 box = st_as_sfc(bb)
 set.seed(2017)
@@ -378,12 +378,12 @@ p = st_sample(x = box, size = 10)
 x_and_y = st_intersection(x, y)
 ```
 
-The code chunk below demonstrates three ways to achieve the same result.
-We can use the intersection\index{vector!intersection} of `x` and `y` (represented by `x_and_y` in the previous code chunk) as a subsetting object directly, as shown in the first line in the code chunk below.
-We can also find the *intersection* between the input points represented by `p` and the subsetting/clipping object `x_and_y`, as demonstrated in the second line in the code chunk below.
-This second approach will return features that partly intersect with `x_and_y` but with modified geometries for spatially extensive features that cross the border of the subsetting object.
-The third approach is to create a subsetting object using the binary spatial predicate `st_intersects()`, introduced in the previous chapter.
-The results are identical (except superficial differences in attribute names), but the implementation differs substantially:
+Le code ci-dessous montre trois façons d'obtenir le même résultat.
+Nous pouvons utiliser directement l'intersection `index{vecteur!intersection} de `x` et `y` (représentée par `x_et_y` dans l'extrait de code précédent) comme objet de sélection, comme le montre la première ligne du morceau de code ci-dessous.
+Nous pouvons également trouver l'intersection entre les points d'entrée représentés par `p` et l'objet de sélection et de découpage `x_et_y`, comme le montre la deuxième ligne du code ci-dessous.
+Cette deuxième approche renvoie les entités qui ont une intersection partielle avec `x_and_y` mais avec des géométries modifiées pour les entités dont les surfaces recoupent celle de l'objet de sélection.
+La troisième approche consiste à créer un objet de sélection en utilisant le prédicat spatial binaire `st_intersects()`, introduit dans le chapitre précédent.
+Les résultats sont identiques (à l'exception de différences superficielles dans les noms d'attributs), mais l'implémentation diffère substantiellement :
 
 ```{r 05-geometry-operations-21}
 p_xy1 = p[x_and_y]
@@ -394,23 +394,23 @@ p_xy3 = p[sel_p_xy]
 ```
 
 ```{r 05-geometry-operations-22, echo=FALSE, eval=FALSE}
-# test if objects are identical:
+# testons si les objets sont identiques :
 identical(p_xy1, p_xy2)
 identical(p_xy2, p_xy3)
 identical(p_xy1, p_xy3)
-waldo::compare(p_xy1, p_xy2) # the same except attribute names
-waldo::compare(p_xy2, p_xy3) # the same except attribute names
+waldo::compare(p_xy1, p_xy2) # identiques, à l'exception des noms d'attributs
+waldo::compare(p_xy2, p_xy3) # identiques, à l'exception des noms d'attributs
 
 
-# An alternative way to sample from the bb
+#  Une autre façon d'échantillonner la bb
 bb = st_bbox(st_union(x, y))
 pmulti = st_multipoint(pmat)
 box = st_convex_hull(pmulti)
 ```
 
-Although the example above is rather contrived and provided for educational rather than applied purposes, and we encourage the reader to reproduce the results to deepen your understanding for handling geographic vector objects in R, it raises an important question: which implementation to use?
-Generally, more concise implementations should be favored, meaning the first approach above.
-We will return to the question of choosing between different implementations of the same technique or algorithm in Chapter \@ref(algorithms).
+Bien que l'exemple ci-dessus soit plutôt trivial et fourni à des fins éducatives plutôt qu'appliquées, et que nous encouragions le lecteur à reproduire les résultats pour approfondir sa compréhension de la manipulation des objets vectoriels géographiques dans R, il soulève une question importante : quelle implémentation utiliser ?
+En général, les implémentations les plus concises doivent être privilégiées, ce qui signifie la première approche ci-dessus.
+Nous reviendrons sur la question du choix entre différentes implémentations d'une même technique ou d'un même algorithme au chapitre \@ref(algorithmes).
 
 ### Geometry unions
 
