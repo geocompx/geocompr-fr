@@ -147,7 +147,7 @@ nz_pos = st_point_on_surface(nz)
 seine_pos = st_point_on_surface(seine)
 ```
 
-```{r centr, warning=FALSE, echo=FALSE, fig.cap="Centroïdes (points noirs) et "points sur la surface" (points rouges) des ensembles de données des régions de Nouvelle-Zélande (à gauche) et de la Seine (à droite).", fig.scap="Centroïde et point sur la surface."}
+```{r centr, warning=FALSE, echo=FALSE, fig.cap="Centroïdes (points noirs) et points sur la surface (points rouges) des ensembles de données des régions de Nouvelle-Zélande (à gauche) et de la Seine (à droite).", fig.scap="Centroïde et point sur la surface."}
 p_centr1 = tm_shape(nz) + tm_borders() +
   tm_shape(nz_centroid) + tm_symbols(shape = 1, col = "black", size = 0.5) +
   tm_shape(nz_pos) + tm_symbols(shape = 1, col = "red", size = 0.5)  
@@ -412,12 +412,12 @@ Bien que l'exemple ci-dessus soit plutôt trivial et fourni à des fins éducati
 En général, les implémentations les plus concises doivent être privilégiées, ce qui signifie la première approche ci-dessus.
 Nous reviendrons sur la question du choix entre différentes implémentations d'une même technique ou d'un même algorithme au chapitre \@ref(algorithmes).
 
-### Geometry unions
+### GUnions de géométries
 
 \index{vector!union} 
 \index{aggregation!spatial} 
-As we saw in Section \@ref(vector-attribute-aggregation), spatial aggregation can silently dissolve the geometries of touching polygons in the same group.
-This is demonstrated in the code chunk below in which 49 `us_states` are aggregated into 4 regions using base and **tidyverse**\index{tidyverse (package)} functions (see results in Figure \@ref(fig:us-regions)):
+Comme nous l'avons vu dans la section \@ref(vector-attribute-aggregation), l'agrégation spatiale peut dissoudre silencieusement les géométries des polygones se touchant dans le même groupe.
+Cela est démontré dans le code ci-dessous dans lequel 49 `us_states` sont agrégés en 4 régions à l'aide des fonctions de R base et du **tidyverse**\index{tidyverse (package)} (voir les résultats dans la figure \@ref(fig:us-regions)) :
 
 ```{r 05-geometry-operations-23}
 regions = aggregate(x = us_states[, "total_pop_15"], by = list(us_states$REGION),
@@ -432,20 +432,20 @@ regions2 = us_states %>% group_by(REGION) %>%
 # summarize(africa[buff, "pop"], pop = sum(pop, na.rm = TRUE))
 ```
 
-```{r us-regions, fig.cap="Spatial aggregation on contiguous polygons, illustrated by aggregating the population of US states into regions, with population represented by color. Note the operation automatically dissolves boundaries between states.", echo=FALSE, warning=FALSE, fig.asp=0.2, out.width="100%", fig.scap="Spatial aggregation on contiguous polygons."}
+```{r us-regions, fig.cap="Agrégation spatiale sur des polygones contigus, illustrée par l'agrégation de la population des États américains en régions, la population étant représentée par une couleur. Notez que l'opération dissout automatiquement les frontières entre les états.", echo=FALSE, warning=FALSE, fig.asp=0.2, out.width="100%", fig.scap="Agrégation spatiale sur des polygones contigus."}
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-us-regions.R", print.eval = TRUE)
 ```
 
-What is going on in terms of the geometries?
-Behind the scenes, both `aggregate()` and `summarize()` combine the geometries and dissolve the boundaries between them using `st_union()`.
-This is demonstrated in the code chunk below which creates a united western US: 
+Que se passe-t-il au niveau des géométries ?
+En coulisses, `aggregate()` et `summarize()` combinent les géométries et dissolvent les frontières entre elles en utilisant `st_union()`.
+Ceci est démontré par le code ci-dessous qui crée une union des Etats-Unis de l'Ouest :  
 
 ```{r 05-geometry-operations-25}
 us_west = us_states[us_states$REGION == "West", ]
 us_west_union = st_union(us_west)
 ```
 
-The function can take two geometries and unite them, as demonstrated in the code chunk below which creates a united western block incorporating Texas (challenge: reproduce and plot the result):
+La fonction peut prendre deux géométries et les unir, comme le montre ll code ci-dessous qui crée un bloc occidental uni incorporant le Texas (défi : reproduire et représenter le résultat) :
 
 ```{r 05-geometry-operations-26, message=FALSE}
 texas = us_states[us_states$NAME == "Texas", ]
@@ -454,56 +454,57 @@ texas_union = st_union(us_west_union, texas)
 
 ```{r 05-geometry-operations-27, echo=FALSE, eval=FALSE}
 plot(texas_union)
-# aim: experiment with st_union
+# objectif: expérimenter avec st_union
 us_south2 = st_union(us_west[1, ], us_west[6, ])
 plot(us_southhwest)
 ```
 
-### Type transformations {#type-trans}
+### Transformations de type {#type-trans}
 
 \index{vector!geometry casting} 
-Geometry casting is a powerful operation that enables transformation of the geometry type.
-It is implemented in the `st_cast` function from the **sf** package.
-Importantly, `st_cast` behaves differently on single simple feature geometry (`sfg`) objects, simple feature geometry column (`sfc`) and simple features objects.
+La transformation d'un type de géométrie en un autre (*casting*)  est une opération puissante.
+Elle est implémentée dans la fonction `st_cast` du package **sf**.
+Il est important de noter que la fonction `st_cast` se comporte différemment selon qu'il s'agit d'un objet géométrique simple (`sfg`), d'une colonne géométrique simple (`sfc`) ou d'un objet simple.
 
-Let's create a multipoint to illustrate how geometry casting works on simple feature geometry (`sfg`) objects:
+Créons un multipoint pour illustrer le fonctionnement des transformations de type géométrique sur des objets de géométrie simple (`sfg`) :
 
 ```{r 05-geometry-operations-28}
 multipoint = st_multipoint(matrix(c(1, 3, 5, 1, 3, 1), ncol = 2))
 ```
 
-In this case, `st_cast` can be useful to transform the new object into linestring or polygon (Figure \@ref(fig:single-cast)):
+Dans ce cas, `st_cast` peut être utile pour transformer le nouvel objet en *linestring* (ligne) ou en polygone (Figure \@ref(fig:single-cast)) :
 
 ```{r 05-geometry-operations-29}
 linestring = st_cast(multipoint, "LINESTRING")
 polyg = st_cast(multipoint, "POLYGON")
 ```
 
-```{r single-cast, echo = FALSE, fig.cap="Examples of linestring and polygon casted from a multipoint geometry.", warning=FALSE, fig.asp=0.3, fig.scap="Examples of casting operations."}
+```{r single-cast, echo = FALSE, fig.cap="Exemples de lignes et de polygones créés à partir d'une géométrie multipoint", warning=FALSE, fig.asp=0.3, fig.scap="Exemples d'opérations de transformations de type de géométrie."}
 p_sc1 = tm_shape(st_sfc(multipoint)) + tm_symbols(shape = 1, col = "black", size = 0.5) +
   tm_layout(main.title = "MULTIPOINT", inner.margins = c(0.05, 0.05, 0.05, 0.05))
 p_sc2 = tm_shape(st_sfc(linestring)) + tm_lines() +
-  tm_layout(main.title = "LINESTRING")
+  tm_layout(main.title = "LIGNE")
 p_sc3 = tm_shape(st_sfc(polyg)) + tm_polygons(border.col = "black") +
-  tm_layout(main.title = "POLYGON")
+  tm_layout(main.title = "POLYGONE")
 tmap_arrange(p_sc1, p_sc2, p_sc3, ncol = 3)
 ```
 
-Conversion from multipoint to linestring is a common operation that creates a line object from ordered point observations, such as GPS measurements or geotagged media.
-This allows spatial operations such as the length of the path traveled.
-Conversion from multipoint or linestring to polygon is often used to calculate an area, for example from the set of GPS measurements taken around a lake or from the corners of a building lot.
+La conversion de multipoint en ligne est une opération courante qui crée un objet ligne à partir d'observations ponctuelles ordonnées, telles que des mesures GPS ou des sources géolocalisés.
+Cela permet d'effectuer des opérations spatiales telles que la longueur du chemin parcouru.
+La conversion de multipoint ou de *linestring* en polygone est souvent utilisée pour calculer une surface, par exemple à partir de l'ensemble des mesures GPS prises autour d'un lac ou des coins d'un terrain à bâtir.
 
-The transformation process can be also reversed using `st_cast`:
+Le processus de transformation peut également être inversé en utilisant `st_cast` :
 
 ```{r 05-geometry-operations-30}
 multipoint_2 = st_cast(linestring, "MULTIPOINT")
 multipoint_3 = st_cast(polyg, "MULTIPOINT")
-all.equal(multipoint, multipoint_2, multipoint_3)
+all.equal(multipoint, multipoint_2)
+all.equal(multipoint, multipoint_3)
 ```
 
 ```{block2 05-geometry-operations-31, type='rmdnote'}
-For single simple feature geometries (`sfg`), `st_cast` also provides geometry casting from non-multi-types to multi-types (e.g., `POINT` to `MULTIPOINT`) and from multi-types to non-multi-types.
-However, only the first element of the old object would remain in the second group of cases.
+Pour les géométries d´entités simples (`sfg`), `st_cast` permet également de transformer des géométries de non-multi-types vers des multi-types (par exemple, `POINT` vers `MULTIPOINT`) et de multi-types vers des non-multi-types.
+Toutefois, dans le deuxième groupe de cas, seul le premier élément de l´ancien objet est conservé.
 ```
 
 ```{r 05-geometry-operations-32, include=FALSE}
@@ -515,15 +516,15 @@ t = cast_all(multipoint)
 t2 = cast_all(polyg)
 ```
 
-Geometry casting of simple features geometry column (`sfc`) and simple features objects works the same as for single geometries in most of the cases. 
-One important difference is the conversion between multi-types to non-multi-types.
-As a result of this process, multi-objects are split into many non-multi-objects.
+La transformation en différent types géométrique des colonnes géométriques d'entités simples (`sfc`) et des objets d'entités simples fonctionnent de la même manière que pour les géométries simples dans la plupart des cas. 
+Une différence importante est la conversion des multi-types en non-multi-types.
+À la suite de ce processus, les multi-objets sont divisés en plusieurs non-multi-objets.
 
-Table \@ref(tab:sfs-st-cast) shows possible geometry type transformations on simple feature objects.
+Le tableau \@ref(tab:sfs-st-cast) montre les transformations de type géométrique possibles sur les objets d'entités simples.
 Each input simple feature object with only one element (first column) is transformed directly into another geometry type.
-Several of the transformations are not possible, for example, you cannot convert a single point into a multilinestring or a polygon (so the cells `[1, 4:5]` in the table are NA).
-On the other hand, some of the transformations are splitting the single element input object into a multi-element object.
-You can see that, for example, when you cast a multipoint consisting of five pairs of coordinates into a point.
+Plusieurs des transformations ne sont pas possibles, par exemple, vous ne pouvez pas convertir un point unique en un multilinestring ou un polygone (ainsi les cellules `[1, 4:5]` dans le tableau sont NA).
+D'autre part, certaines transformations divisent l'objet d'entrée: on passe d'un élément unique en un objet à éléments multiples.
+Vous pouvez le constater, par exemple, lorsque vous transformez un multipoint composé de cinq paires de coordonnées en un point.
 
 ```{r sfs-st-cast, echo=FALSE}
 sfs_st_cast = read.csv("extdata/sfs-st-cast.csv")
@@ -539,15 +540,15 @@ sfs_st_cast$input_geom = abbreviate_geomtypes(sfs_st_cast$input_geom)
 names(sfs_st_cast) = abbreviate_geomtypes(names(sfs_st_cast))
 names(sfs_st_cast)[1] = ""
 knitr::kable(sfs_st_cast, 
-             caption = paste("Geometry casting on simple feature geometries", 
-                             "(see Section 2.1) with input type by row and", 
-                             "output type by column"),
-             caption.short = "Geometry casting on simple feature geometries.",
+             caption = paste("Transformation de type de géométrie sur des entités simples", 
+                             "(voir section 2.1) avec un type d'entrée par ligne et", 
+                             "type de sortie par colonne"),
+             caption.short = "Transformation de type de géométrique sur des entités simples.",
              booktabs = TRUE) %>% 
-  kableExtra::add_footnote("Note: Values like (1) represent the number of features; NA means the operation is not possible. Abbreviations: POI, LIN, POL and GC refer to POINT, LINESTRING, POLYGON and GEOMETRYCOLLECTION. The MULTI version of these geometry types is indicated by a preceding M, e.g., MPOI is the acronym for MULTIPOINT.", notation = "none")
+  kableExtra::add_footnote("Note : Les valeurs comme (1) représentent le nombre d'entités ; NA signifie que l'opération n'est pas possible. Abréviations : POI, LIN, POL et GC font référence à POINT, LINESTRING, POLYGON et GEOMETRYCOLLECTION. La version MULTI de ces types de géométrie est indiquée par un M précédent, par exemple, MPOI est l'acronyme de MULTIPOINT.", notation = "none")
 ```
 
-Let's try to apply geometry type transformations on a new object, `multilinestring_sf`, as an example (on the left in Figure \@ref(fig:line-cast)):
+Essayons d'appliquer des transformations de type géométrique sur un nouvel objet, `multilinestring_sf`, à titre d'exemple (à gauche sur la Figure \@ref(fig:line-cast)) :
 
 ```{r 05-geometry-operations-33}
 multilinestring_list = list(matrix(c(1, 4, 5, 3), ncol = 2), 
@@ -558,17 +559,17 @@ multilinestring_sf = st_sf(geom = st_sfc(multilinestring))
 multilinestring_sf
 ```
 
-You can imagine it as a road or river network. 
-The new object has only one row that defines all the lines.
-This restricts the number of operations that can be done, for example it prevents adding names to each line segment or calculating lengths of single lines.
-The `st_cast` function can be used in this situation, as it separates one mutlilinestring into three linestrings:
+Vous pouvez l'imaginer comme un réseau routier ou fluvial. 
+Le nouvel objet n'a qu'une seule ligne qui définit toutes les lignes.
+Cela limite le nombre d'opérations qui peuvent être faites, par exemple, cela empêche d'ajouter des noms à chaque segment de ligne ou de calculer les longueurs des lignes individuelles.
+La fonction `st_cast` peut être utilisée dans cette situation, car elle sépare un mutlilinestring en trois linestrings :
 
 ```{r 05-geometry-operations-34}
 linestring_sf2 = st_cast(multilinestring_sf, "LINESTRING")
 linestring_sf2
 ```
 
-```{r line-cast, echo=FALSE, fig.cap="Examples of type casting between MULTILINESTRING (left) and LINESTRING (right).", warning=FALSE, fig.scap="Examples of type casting."}
+```{r line-cast, echo=FALSE, fig.cap="Exemples de transformation de type de géométrie entre MULTILINESTRING (à gauche) et LINESTRING (à droite).", warning=FALSE, fig.scap="Exemples de transformation de type de géométrie."}
 p_lc1 = tm_shape(multilinestring_sf) + tm_lines(lwd = 3) +
   tm_layout(main.title = "MULTILINESTRING")
 linestring_sf2$name = c("Riddle Rd", "Marshall Ave", "Foulke St")
@@ -577,7 +578,7 @@ p_lc2 = tm_shape(linestring_sf2) + tm_lines(lwd = 3, col = "name", palette = "Se
 tmap_arrange(p_lc1, p_lc2, ncol = 2)
 ```
 
-The newly created object allows for attributes creation (see more in Section \@ref(vec-attr-creation)) and length measurements:
+Le nouvel objet permet la création d'attributs (voir la section \@ref(vec-attr-creation)) et la mesure de la longueur :
 
 ```{r 05-geometry-operations-35}
 linestring_sf2$name = c("Riddle Rd", "Marshall Ave", "Foulke St")
