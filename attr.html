@@ -67,6 +67,7 @@
 <li><a class="" href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></li>
 <li><a class="active" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
 <li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
+<li><a class="" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
 </ul>
 
         <div class="book-extra">
@@ -179,7 +180,7 @@ La compatibilité avec le tidyverse est un avantage de <strong>sf</strong> par r
 Les principales fonctions de sélection de sous-ensembles <strong>dplyr</strong> sont <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> et <code><a href="https://dplyr.tidyverse.org/reference/slice.html">slice()</a></code> pour la sélection des lignes, et <code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code> pour la sélection des colonnes.
 Ces deux approches préservent les composantes spatiales des données attributaires dans les objets <code>sf</code>, tandis que l’utilisation de l’opérateur <code>$</code> ou de la fonction <strong>dplyr</strong> <code><a href="https://dplyr.tidyverse.org/reference/pull.html">pull()</a></code> pour retourner une seule colonne d’attribut sous forme de vecteur perdra les données d’attribut, comme nous le verrons plus loin.
 
-Cette section se concentre sur la sélection de sous-ensembles de tableaux de données <code>sf</code> ; pour plus de détails sur les cas de vecteurs et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors">2.7</a> de An Introduction to R <span class="citation">(<a href="spatial-operations.html#ref-rcoreteam_introduction_2021" role="doc-biblioref">R Core Team, Smith, and Team 2021</a>)</span> et le chapitre <a href="https://adv-r.hadley.nz/subsetting.html">4</a> de Advanced R Programming <span class="citation">(<a href="spatial-operations.html#ref-wickham_advanced_2019" role="doc-biblioref">Wickham 2019</a>)</span>.</p>
+Cette section se concentre sur la sélection de sous-ensembles de tableaux de données <code>sf</code> ; pour plus de détails sur les cas de vecteurs et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors">2.7</a> de An Introduction to R <span class="citation">(<a href="geometric-operations.html#ref-rcoreteam_introduction_2021" role="doc-biblioref">R Core Team, Smith, and Team 2021</a>)</span> et le chapitre <a href="https://adv-r.hadley.nz/subsetting.html">4</a> de Advanced R Programming <span class="citation">(<a href="geometric-operations.html#ref-wickham_advanced_2019" role="doc-biblioref">Wickham 2019</a>)</span>.</p>
 <p>L’opérateur <code>[</code> peut sélectionner à la fois les lignes et les colonnes.
 Il est possible de spécifier les éléments à conserver en indiquant leur rang entre crochets, directement après le nom de l’objet de type tableau de données qui les contient.
 La commande <code>object[i, j]</code> signifie ’retourner les lignes représentées par <code>i</code> et les colonnes représentées par <code>j</code>, où <code>i</code> et <code>j</code> contiennent typiquement des entiers ou des <code>TRUE</code> et <code>FALSE</code> (les index peuvent aussi être des chaînes de caractères, indiquant les noms de lignes ou de colonnes).
@@ -301,7 +302,7 @@ Elle ne conserve que les lignes correspondant à des critères donnés, par exem
 <h3>
 <span class="header-section-number">3.2.2</span> Enchainement de commandes avec des <em>pipes</em><a class="anchor" aria-label="anchor" href="#enchainement-de-commandes-avec-des-pipes"><i class="fas fa-link"></i></a>
 </h3>
-<p>La clé des flux de travail utilisant les fonctions <strong>dplyr</strong> est l’opérateur <a href="http://r4ds.had.co.nz/pipes.html">‘pipe’</a> <code>%&gt;%</code> (ou depuis R <code>4.1.0</code> le <em>pipe</em> natif <code>|&gt;</code>), qui tire son nom du <em>pipe</em> Unix <code>|</code> <span class="citation">(<a href="spatial-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.
+<p>La clé des flux de travail utilisant les fonctions <strong>dplyr</strong> est l’opérateur <a href="http://r4ds.had.co.nz/pipes.html">‘pipe’</a> <code>%&gt;%</code> (ou depuis R <code>4.1.0</code> le <em>pipe</em> natif <code>|&gt;</code>), qui tire son nom du <em>pipe</em> Unix <code>|</code> <span class="citation">(<a href="geometric-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.
 Les <em>pipes</em> permettent un code expressif : la sortie d’une fonction précédente devient le premier argument de la fonction suivante, permettant l’<em>enchaînement</em>.
 Ceci est illustré ci-dessous, dans lequel seuls les pays d’Asie sont filtrés de l’ensemble de données <code>world</code>, l’objet est ensuite sélectionné par les colonnes (<code>name_long</code> et <code>continent</code>) et les cinq premières lignes (résultat non montré).</p>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
@@ -415,7 +416,7 @@ Plus de détails sont fournis dans les pages d´aide (qui sont accessibles via <
 <p>La combinaison de données provenant de différentes sources est une tâche courante dans la préparation des données.
 Les jointures le font en combinant des tables basées sur une variable “clé” partagée.
 <strong>dplyr</strong> possède plusieurs fonctions de jointure, dont <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join()</a></code> et <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join()</a></code> — voir <code><a href="https://dplyr.tidyverse.org/articles/two-table.html">vignette("two-table")</a></code> pour une liste complète.
-Ces noms de fonctions suivent les conventions utilisées dans le langage des base de données <a href="http://r4ds.had.co.nz/relational-data.html">SQL</a> <span class="citation">(<a href="spatial-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>, Chapitre 13)</span> ; leur utilisation pour joindre des ensembles de données non spatiales à des objets <code>sf</code> est l’objet de cette section.
+Ces noms de fonctions suivent les conventions utilisées dans le langage des base de données <a href="http://r4ds.had.co.nz/relational-data.html">SQL</a> <span class="citation">(<a href="geometric-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>, Chapitre 13)</span> ; leur utilisation pour joindre des ensembles de données non spatiales à des objets <code>sf</code> est l’objet de cette section.
 Les fonctions de jointure <strong>dplyr</strong> fonctionnent de la même manière sur les tableau de données et les objets <code>sf</code>, la seule différence importante étant la colonne de liste <code>geometry</code>.
 Le résultat des jointures de données peut être un objet <code>sf</code> ou <code>data.frame</code>.
 Le type le plus courant de jointure attributaures sur des données spatiales prend un objet <code>sf</code> comme premier argument et lui ajoute des colonnes à partir d’un <code>data.frame</code> spécifié comme second argument.
@@ -507,7 +508,7 @@ Elle ne peut être utilisée pour créer des cartes et des opérations spatiales
 Heureusement, les tableaux de données non spatiaux avec une colonne de liste de géométrie (comme <code>coffee_world</code>) peuvent être convertis en un objet <code>sf</code> comme suit : <code>st_as_sf(coffee_world)</code>.
 </div>
 <p>Cette section couvre la majorité des cas d’utilisation de la jointure.
-Pour plus d’informations, nous recommandons <span class="citation">Grolemund and Wickham (<a href="spatial-operations.html#ref-grolemund_r_2016" role="doc-biblioref">2016</a>)</span>, la <a href="https://geocompr.github.io/geocompkg/articles/join.html">vignette join</a> dans le paquet <strong>geocompkg</strong> qui accompagne ce livre, et la documentation du paquet <strong>data.table</strong> .<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
+Pour plus d’informations, nous recommandons <span class="citation">Grolemund and Wickham (<a href="geometric-operations.html#ref-grolemund_r_2016" role="doc-biblioref">2016</a>)</span>, la <a href="https://geocompr.github.io/geocompkg/articles/join.html">vignette join</a> dans le paquet <strong>geocompkg</strong> qui accompagne ce livre, et la documentation du paquet <strong>data.table</strong> .<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 &lt;strong&gt;data.table&lt;/strong&gt; est un paquet de traitement de données très performant.
 Son application aux données géographiques est couverte dans un billet de blog hébergé à r-spatial.org/r/2017/11/13/perp-performance.html.&lt;/p&gt;"><sup>18</sup></a>
 Un autre type de jointure est la jointure spatiale, traitée dans le chapitre suivant (section <a href="#spatial-joining"><strong>??</strong></a>).</p>
@@ -811,7 +812,7 @@ Sélectionnez les valeurs des cellules de chaque coin.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-12.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-13.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
