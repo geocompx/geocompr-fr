@@ -609,13 +609,13 @@ Une autre raison d'agréger une image matricielle est simplement de réduire le 
 Bien entendu, cela n'est possible que si la tâche à accomplir permet une résolution plus grossière.
 Parfois, une résolution plus grossière est suffisante!
 
-### Geometric intersections
+### Intersections géométriques
 
 \index{raster!intersection} 
-In Section \@ref(spatial-raster-subsetting) we have shown how to extract values from a raster overlaid by other spatial objects.
-To retrieve a spatial output, we can use almost the same subsetting syntax.
-The only difference is that we have to make clear that we would like to keep the matrix structure by setting the `drop` argument to `FALSE`.
-This will return a raster object containing the cells whose midpoints overlap with `clip`.
+Dans la section \@ref(spatial-raster-subsetting), nous avons montré comment extraire des valeurs d'un raster superposé à d'autres objets spatiaux.
+Pour récupérer une sortie spatiale, nous pouvons utiliser pratiquement la même syntaxe de sélection.
+La seule différence est que nous devons préciser que nous souhaitons conserver la structure matricielle en mettant l'argument `drop` à `FALSE`.
+Ceci retournera un objet raster contenant les cellules dont les points médians se chevauchent avec `clip`.
 
 ```{r 05-geometry-operations-36}
 elev = rast(system.file("raster/elev.tif", package = "spData"))
@@ -624,24 +624,24 @@ clip = rast(xmin = 0.9, xmax = 1.8, ymin = -0.45, ymax = 0.45,
 elev[clip, drop = FALSE]
 ```
 
-For the same operation we can also use the `intersect()` and `crop()` command.
+Pour la même opération, nous pouvons également utiliser les commandes `intersect()` et `crop()`.
 
-### Extent and origin
+### Étendue et origine
 
 \index{raster!merging} 
-When merging or performing map algebra on rasters, their resolution, projection, origin and/or extent have to match. Otherwise, how should we add the values of one raster with a resolution of 0.2 decimal degrees to a second raster with a resolution of 1 decimal degree?
-The same problem arises when we would like to merge satellite imagery from different sensors with different projections and resolutions. 
-We can deal with such mismatches by aligning the rasters.
+Lors de la fusion ou de l'exécution de l'algèbre raster sur des rasters, leur résolution, leur projection, leur origine et/ou leur étendue doivent correspondre. Sinon, comment ajouter les valeurs d'un raster ayant une résolution de 0,2 degré décimal à un second raster ayant une résolution de 1 degré décimal ?
+Le même problème se pose lorsque nous souhaitons fusionner des images satellite provenant de différents capteurs avec des projections et des résolutions différentes. 
+Nous pouvons traiter de telles disparités en alignant les trames.
 
-In the simplest case, two images only differ with regard to their extent.
-Following code adds one row and two columns to each side of the raster while setting all new values to an elevation of 1000 meters (Figure \@ref(fig:extend-example)).
+Dans le cas le plus simple, deux images ne diffèrent que par leur étendue.
+Le code suivant ajoute une ligne et deux colonnes de chaque côté de l'image raster tout en fixant toutes les nouvelles valeurs à une altitude de 1000 mètres (Figure \@ref(fig:extend-example)).
 
 ```{r extend-example0}
 elev = rast(system.file("raster/elev.tif", package = "spData"))
 elev_2 = extend(elev, c(1, 2))
 ```
 
-```{r extend-example, fig.cap = "Original raster (left) and the same raster (right) extended by one row on the top and bottom and two columns on the left and right.", fig.scap="Extending rasters.", echo=FALSE, fig.asp=0.5}
+```{r extend-example, fig.cap = "Trame originale (à gauche) et la même trame (à droite) agrandie d'une ligne en haut et en bas et de deux colonnes à gauche et à droite.", fig.scap="Étendre les rasters.", echo=FALSE, fig.asp=0.5}
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-extend-example.R", print.eval = TRUE)
 ```
 
@@ -651,35 +651,35 @@ Performing an algebraic operation on two objects with differing extents in R, th
 elev_3 = elev + elev_2
 ```
 
-However, we can align the extent of two rasters with `extend()`. 
-Instead of telling the function how many rows or columns should be added (as done before), we allow it to figure it out by using another raster object.
-Here, we extend the `elev` object to the extent of `elev_2`. 
-The newly added rows and column receive the default value of the `value` parameter, i.e., `NA`.
+Cependant, nous pouvons aligner l'étendue de deux rasters avec `extend()`. 
+Au lieu d'indiquer à la fonction le nombre de lignes ou de colonnes à ajouter (comme nous l'avons fait précédemment), nous lui permettons de le déterminer en utilisant un autre objet raster.
+Ici, nous étendons l'objet `elev` à l'étendue de `elev_2`. 
+Les lignes et colonnes nouvellement ajoutées reçoivent  `NA`.
 
 ```{r 05-geometry-operations-38}
 elev_4 = extend(elev, elev_2)
 ```
 
-The origin of a raster is the cell corner closest to the coordinates (0, 0).
-The `origin()` function returns the coordinates of the origin.
-In the below example a cell corner exists with coordinates (0, 0), but that is not necessarily the case.
+L'origine d'un raster est le coin de la cellule le plus proche des coordonnées (0, 0).
+La fonction `origin()` renvoie les coordonnées de l'origine.
+Dans l'exemple ci-dessous, un coin de cellule existe avec les coordonnées (0, 0), mais ce n'est pas toujours le cas.
 
 ```{r 05-geometry-operations-39}
 origin(elev_4)
 ```
 
-If two rasters have different origins, their cells do not overlap completely which would make map algebra impossible.
-To change the origin -- use `origin()`.^[
-If the origins of two raster datasets are just marginally apart, it sometimes is sufficient to simply increase the `tolerance` argument  of `terra::terraOptions()`.
+Si deux rasters ont des origines différentes, leurs cellules ne se chevauchent pas complètement, ce qui rends l'algèbre raster impossible.
+Pour changer l'origine -- utilisez `origin()`.^[
+Si les origines de deux données matricielles ne sont que marginalement éloignées, il suffit parfois d'augmenter l'argument `tolerance` de `terra::terraOptions()`.
 ]
-Figure \@ref(fig:origin-example) reveals the effect of changing the origin in this way.
+La figure \@ref(fig:origin-example) révèle l'effet de la modification de l'origine de cette manière.
 
 ```{r}
-# change the origin
+# changer l'origine
 origin(elev_4) = c(0.25, 0.25)
 ```
 
-```{r origin-example, fig.cap="Rasters with identical values but different origins.", echo=FALSE}
+```{r origin-example, fig.cap="Rasters avec des valeurs identiques mais des origines différentes.", echo=FALSE}
 elev_poly = st_as_sf(as.polygons(elev, dissolve = FALSE))
 elev4_poly = st_as_sf(as.polygons(elev_4, dissolve = FALSE))
 tm_shape(elev4_poly) +
@@ -693,27 +693,27 @@ tm_shape(elev4_poly) +
 # knitr::include_graphics("https://user-images.githubusercontent.com/1825120/146618199-786fe3ad-9718-4dd0-a640-41180fc17e63.png")
 ```
 
-Note that changing the resolution (next section) frequently also changes the origin.
+Notez que le changement de résolution (section suivante) modifie souvent aussi l'origine.
 
-### Aggregation and disaggregation
+### Agrégation et désagrégation
 
 \index{raster!aggregation} 
 \index{raster!disaggregation} 
-Raster datasets can also differ with regard to their resolution. 
-To match resolutions, one can either decrease  (`aggregate()`) or increase (`disagg()`) the resolution of one raster.^[
-Here we refer to spatial resolution.
-In remote sensing the spectral (spectral bands), temporal (observations through time of the same area) and radiometric (color depth) resolution are also important.
-Check out the `tapp()` example in the documentation for getting an idea on how to do temporal raster aggregation.
+Les jeux de données raster peuvent également différer en ce qui concerne leur résolution. 
+Pour faire correspondre les résolutions, on peut soit diminuer (`aggregate()`) soit augmenter (`disagg()`) la résolution des rasters.^[
+Nous faisons ici référence à la résolution spatiale.
+En télédétection, les résolutions spectrale (bandes spectrales), temporelle (observations dans le temps de la même zone) et radiométrique (profondeur de couleur) sont également importantes.
+Consultez l'exemple `tapp()` dans la documentation pour avoir une idée sur la façon de faire une agrégation de raster temporel.
 ]
-As an example, we here change the spatial resolution of `dem` (found in the **spDataLarge** package) by a factor of 5 (Figure \@ref(fig:aggregate-example)).
-Additionally, the output cell value should correspond to the mean of the input cells (note that one could use other functions as well, such as `median()`, `sum()`, etc.):
+À titre d'exemple, nous modifions ici la résolution spatiale de `dem` (trouvé dans le paquet **spDataLarge**) par un facteur 5 (Figure \@ref(fig:aggregate-example)).
+De plus, la valeur de la cellule de sortie doit correspondre à la moyenne des cellules d'entrée (notez que l'on pourrait également utiliser d'autres fonctions, telles que `median()`, `sum()`, etc ):
 
 ```{r 05-geometry-operations-40}
 dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))
 dem_agg = aggregate(dem, fact = 5, fun = mean)
 ```
 
-```{r aggregate-example, fig.cap = "Original raster (left). Aggregated raster (right).", echo=FALSE}
+```{r aggregate-example, fig.cap = "Raster original (gauche). Raster agrégé (droite).", echo=FALSE}
 p_ar1 = tm_shape(dem) +
   tm_raster(style = "cont", legend.show = FALSE) +
   tm_layout(main.title = "A. Original", frame = FALSE)
@@ -723,31 +723,31 @@ p_ar2 = tm_shape(dem_agg) +
 tmap_arrange(p_ar1, p_ar2, ncol = 2)
 ```
 
-The `disagg()` function increases the resolution of raster objects, providing two a methods for assigning values to the newly created cells: the default method (`method = "near"`) simply gives all output cells the value of the input cell, and hence duplicates values, leading to a 'blocky' output.
-The `bilinear` method uses the four nearest pixel centers of the input image (salmon colored points in Figure \@ref(fig:bilinear)) to compute an average weighted by distance (arrows in Figure \@ref(fig:bilinear).
-The value of the output cell is represented by a square in the upper left corner in Figure \@ref(fig:bilinear)).
+La fonction `disagg()` augmente la résolution des objets matriciels, en fournissant deux méthodes pour assigner des valeurs aux cellules nouvellement créées : la méthode par défaut (`method = "near"`) donne simplement à toutes les cellules de sortie la valeur de la cellule d'entrée, et donc duplique les valeurs, ce qui conduit à une sortie "en bloc".
+La méthode `bilinear` utilise les quatre centres de pixels les plus proches de l'image d'entrée (points de couleur saumon sur la figure \@ref(fig:bilinear)) pour calculer une moyenne pondérée par la distance (flèches sur la figure \@ref(fig:bilinear).
+La valeur de la cellule de sortie est représentée par un carré dans le coin supérieur gauche de la figure \@ref(fig:bilinear)).
 
 ```{r 05-geometry-operations-41}
 dem_disagg = disagg(dem_agg, fact = 5, method = "bilinear")
 identical(dem, dem_disagg)
 ```
 
-```{r bilinear, echo = FALSE, fig.width=8, fig.height=10, fig.cap="The distance-weighted average of the four closest input cells determine the output when using the bilinear method for disaggregation.", fig.scap="Bilinear disaggregation in action.", warning=FALSE}
+```{r bilinear, echo = FALSE, fig.width=8, fig.height=10, fig.cap="La moyenne pondérée par la distance des quatre cellules d'entrée les plus proches détermine la sortie lors de l'utilisation de la méthode bilinéaire pour la désagrégation.", fig.scap="Bilinear disaggregation in action.", warning=FALSE}
 source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-bilinear.R", print.eval = TRUE)
 # knitr::include_graphics("https://user-images.githubusercontent.com/1825120/146619205-3c0c2e3f-9e8b-4fda-b014-9c342a4befbb.png")
 ```
 
-Comparing the values of `dem` and `dem_disagg` tells us that they are not identical (you can also use `compareGeom()` or `all.equal()`).
-However, this was hardly to be expected, since disaggregating is a simple interpolation technique.
-It is important to keep in mind that disaggregating results in a finer resolution; the corresponding values, however, are only as accurate as their lower resolution source.
+En comparant les valeurs de `dem` et `dem_disagg`, on constate qu'elles ne sont pas identiques (vous pouvez aussi utiliser `compareGeom()` ou `all.equal()`).
+Cependant, il ne fallait pas s'y attendre, puisque la désagrégation est une simple technique d'interpolation.
+Il est important de garder à l'esprit que la désagrégation permet d'obtenir une résolution plus fine ; les valeurs correspondantes, cependant, ne peuvent qu'êtres aussi précises que leur source de résolution initiale.
 
-### Resampling
+### Rééchantillonnage
 
 \index{raster!resampling}
-The above methods of aggregation and disaggregation are only suitable when we want to change the resolution of our raster by the aggregation/disaggregation factor. 
-However, what to do when we have two or more rasters with different resolutions and origins?
-This is the role of resampling -- a process of computing values for new pixel locations.
-In short, this process takes the values of our original raster and recalculates new values for a target raster with custom resolution and origin.
+Les méthodes d'agrégation et de désagrégation ci-dessus ne conviennent que lorsque nous voulons modifier la résolution de notre raster par le facteur d'agrégation/désagrégation. 
+Cependant, que faire lorsque nous avons deux ou plusieurs raster avec des résolutions et des origines différentes ?
+C'est le rôle du rééchantillonnage - un processus de calcul des valeurs pour les nouveaux emplacements des pixels.
+En bref, ce processus prend les valeurs de notre raster original et recalcule de nouvelles valeurs pour un raster cible avec une résolution et une origine personnalisées.
 
 <!--toDo: jn-->
 <!-- consider if adding this new figure makes sense -->
@@ -778,24 +778,25 @@ tmap_arrange(tm1, tm2, tm3, nrow = 1)
 ```
 
 
-Several methods for recalculating (estimating) values for a raster with different resolutions/origins exist (Figure \@ref(fig:resampl)).
-It includes:
+Il existe plusieurs méthodes pour estimer les valeurs d'un raster avec différentes résolutions/origines, comme le montre la figure \@ref(fig:resampl).
+Ces méthodes comprennent :
 
-- Nearest neighbor - assigns the value of the nearest cell of the original raster to the cell of the target one.
-It is fast and usually suitable for categorical rasters
-- Bilinear interpolation - assigns a weighted average of the four nearest cells from the original raster to the cell of the target one (Figure \@ref(fig:bilinear)). The fastest method for continuous rasters
-- Cubic interpolation - uses values of 16 nearest cells of the original raster to determine the output cell value, applying third-order polynomial functions. Used for continuous rasters. It results in a more smoothed surface than the bilinear interpolation, but is also more computationally demanding
-- Cubic spline interpolation - also uses values of 16 nearest cells of the original raster to determine the output cell value, but applies cubic splines (piecewise third-order polynomial functions) to derive the results. Used for continuous rasters
-- Lanczos windowed sinc resampling - uses values of 36 nearest cells of the original raster to determine the output cell value. Used for continuous rasters^[More detailed explanation of this method can be found at https://gis.stackexchange.com/a/14361/20955.]
+- Plus proche voisin - attribue la valeur de la cellule la plus proche du raster original à la cellule du raster cible.
+Cette méthode est rapide et convient généralement aux raster de catégories.
+- Interpolation bilinéaire - affecte une moyenne pondérée des quatre cellules les plus proches de l'image originale à la cellule de l'image cible (Figure \@ref(fig:bilinear)). La méthode la plus rapide pour les rasters continus
+- Interpolation cubique - utilise les valeurs des 16 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie, en appliquant des fonctions polynomiales du troisième ordre. Elle est aussi utilisée pour les raster continus. Elle permet d'obtenir une surface plus lissée que l'interpolation bilinéaire, mais elle est également plus exigeante en termes de calcul.
+- Interpolation par spline cubique - utilise également les valeurs des 16 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie, mais applique des splines cubiques (fonctions polynomiales du troisième ordre par morceaux) pour obtenir les résultats. Elle est utilisée pour les trames continues
+- Rééchantillonnage par fenêtré de Lanczos - utilise les valeurs des 36 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie. Il est tilisé pour les raster continues^ [Une explication plus détaillée de cette méthode peut être trouvée sur https://gis.stackexchange.com/a/14361/20955.
+]
 
-As you can find in the above explanation, only *nearest neighbor* is suitable for categorical rasters, while all the methods can be used (with different outcomes) for the continuous rasters.
-Additionally, each successive method requires more processing time.
+Les explications ci-dessus mettent en évidence le fait que seul le rééchantillonnage par *voisin le plus proche* est adapté aux rasters contenant des catégories, alors que toutes les méthodes peuvent être utilisées (avec des résultats différents) pour les matrices continues.
+En outre, chaque méthode successive nécessite plus de temps de traitement.
 
-To apply resampling, the **terra** package provides a `resample()` function.
-It accepts an input raster (`x`), a raster with target spatial properties (`y`), and a resampling method (`method`).
+Pour appliquer le rééchantillonnage, le package **terra** fournit une fonction `resample()`.
+Elle accepte un raster d'entrée (`x`), un raster avec des propriétés spatiales cibles (`y`), et une méthode de rééchantillonnage (`method`).
 
-We need a raster with target spatial properties to see how the `resample()` function works.
-For this example, we create `target_rast`, but you would often use an already existing raster object.
+Nous avons besoin d'un raster avec des propriétés spatiales cibles pour voir comment la fonction `resample()` fonctionne.
+Pour cet exemple, nous créons `target_rast`, mais vous utiliserez souvent un objet raster déjà existant.
 
 ```{r 05-geometry-operations-42}
 target_rast = rast(xmin = 794600, xmax = 798200, 
@@ -803,15 +804,15 @@ target_rast = rast(xmin = 794600, xmax = 798200,
                    resolution = 150, crs = "EPSG:32717")
 ```
 
-Next, we need to provide our two raster objects as the first two arguments and one of the resampling methods described above.
+Ensuite, nous devons fournir nos deux objets rasters comme deux premiers arguments et l'une des méthodes de rééchantillonnage décrites ci-dessus.
 
 ```{r 05-geometry-operations-42b}
 dem_resampl = resample(dem, y = target_rast, method = "bilinear")
 ```
 
-Figure \@ref(fig:resampl) shows a comparison of different resampling methods on the `dem` object.
+La figure \@ref(fig:resampl) montre une comparaison de différentes méthodes de rééchantillonnage sur l'objet `dem`.
 
-```{r resampl, echo=FALSE, fig.cap="Visual comparison of the original raster and five different resampling methods."}
+```{r resampl, echo=FALSE, fig.cap="Comparaison visuelle du raster d'entré et de cinq méthodes de rééchantillonnage différentes."}
 dem_resampl1 = resample(dem, target_rast, method = "near")
 dem_resampl2 = resample(dem, target_rast, method = "bilinear")
 dem_resampl3 = resample(dem, target_rast, method = "cubic")
@@ -821,26 +822,26 @@ dem_resampl5 = resample(dem, target_rast, method = "lanczos")
 library(tmap)
 tm1 = tm_shape(dem) +
   tm_raster(breaks = seq(200, 1100, by = 150), legend.show = FALSE) +
-  tm_layout(frame = FALSE, main.title = "Original raster")
+  tm_layout(frame = FALSE, main.title = "Raster original")
 tm2 = tm_shape(dem_resampl1) +
   tm_raster(breaks = seq(200, 1100, by = 150), legend.show = FALSE) +
-  tm_layout(frame = FALSE, main.title = "near")
+  tm_layout(frame = FALSE, main.title = "proche voisins")
 tm3 = tm_shape(dem_resampl2) +
   tm_raster(breaks = seq(200, 1100, by = 150), legend.show = FALSE) +
-  tm_layout(frame = FALSE, main.title = "bilinear")
+  tm_layout(frame = FALSE, main.title = "bilinéare")
 tm4 = tm_shape(dem_resampl3) +
   tm_raster(breaks = seq(200, 1100, by = 150), legend.show = FALSE) +
-  tm_layout(frame = FALSE, main.title = "cubic")
+  tm_layout(frame = FALSE, main.title = "cubique")
 tm5 = tm_shape(dem_resampl4) +
   tm_raster(breaks = seq(200, 1100, by = 150), legend.show = FALSE) +
-  tm_layout(frame = FALSE, main.title = "cubicspline")
+  tm_layout(frame = FALSE, main.title = "cubiquespline")
 tm6 = tm_shape(dem_resampl5) +
   tm_raster(breaks = seq(200, 1100, by = 150), legend.show = FALSE) +
   tm_layout(frame = FALSE, main.title = "lanczos")
 tmap_arrange(tm1, tm2, tm3, tm4, tm5, tm6)
 ```
 
-As you will see in section \@ref(reproj-ras), raster reprojection is a special case of resampling when our target raster has a different CRS than the original raster.
+Comme vous le verrez dans la section \@ref(reproj-ras), la reprojection de raster est un cas particulier de rééchantillonnage lorsque notre raster cible a un CRS différent de la trame d'origine.
 
 <!--jn:toDo-->
 <!-- decide -->
@@ -850,20 +851,20 @@ As you will see in section \@ref(reproj-ras), raster reprojection is a special c
 <!-- also - add some reference to GDAL functions! -->
 \index{GDAL}
 ```{block2 type='rmdnote'}
-Most geometry operations in **terra** are user-friendly, rather fast, and work on large raster objects.
-However, there could be some cases, when **terra** is not the most performant either for extensive rasters or many raster files, and some alternatives should be considered.
+La plupart des opérations géométriques dans **terra** sont conviviales, plutôt rapides, et fonctionnent sur de grands objets rasters.
+Cependant, il peut y avoir des cas où **terra** n´est pas le plus performant, que ce soit pour des objets rasters étendus ou pour de nombreux fichiers rasters, et où des alternatives doivent être envisagées.
 
-The most established alternatives come with the GDAL library.
-It contains several utility functions, including:
+Les alternatives les plus établies sont fournies par la bibliothèque GDAL.
+Elle contient plusieurs fonctions utilitaires, dont :
 
-- `gdalinfo` - lists various information about a raster file, including its resolution, CRS, bounding box, and more
-- `gdal_translate` - converts raster data between different file formats
-- `gdal_rasterize` - converts vector data into raster files
-- `gdalwarp` - allows for raster mosaicing, resampling, cropping, and reprojecting
+- `gdalinfo` - liste diverses informations sur un fichier raster, y compris sa résolution, son CRS, sa boîte de délimitation, et plus encore.
+- `gdal_translate` - convertit les données raster entre différents formats de fichiers.
+- `gdal_rasterize` - Convertit les données vectorielles en fichiers raster.
+- `gdalwarp` - permet le mosaïquage, le rééchantillonnage, le recadrage et la reprojection de données matricielles.
 
-All of the above functions are written in C++, but can be called in R using the **gdalUtilities** package.
-Importantly, all of these functions expect a raster file path as an input and often return their output as a raster file (for example, `gdalUtilities::gdal_translate("my_file.tif", "new_file.tif", t_srs = "EPSG:4326")`)
-This is very different from the usual **terra** approach, which expects `SpatRaster` objects as inputs.
+Toutes les fonctions ci-dessus sont écrites en C++, mais peuvent être appelées dans R en utilisant le paquet **gdalUtilities**.
+Il est important de noter que toutes ces fonctions attendent un chemin de fichier raster en entrée et retournent souvent leur sortie sous forme de fichier raster (par exemple, `gdalUtilities::gdal_translate("mon_fichier.tif", "nouveau_fichier.tif", t_srs = "EPSG:4326")`).
+Ceci est très différent de l´approche habituelle de **terra**, qui attend des objets `SpatRaster` en entrée.
 ```
 
 ## Exercises
