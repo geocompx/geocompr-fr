@@ -411,12 +411,12 @@ Ceci est démontré par le code ci-dessous qui crée une union des Etats-Unis de
 </h3>
 <p>
 La transformation d’un type de géométrie en un autre (<em>casting</em>) est une opération puissante.
-Elle est implémentée dans la fonction <code>st_cast</code> du package <strong>sf</strong>.
-Il est important de noter que la fonction <code>st_cast</code> se comporte différemment selon qu’il s’agit d’un objet géométrique simple (<code>sfg</code>), d’une colonne géométrique simple (<code>sfc</code>) ou d’un objet simple.</p>
+Elle est implémentée dans la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> du package <strong>sf</strong>.
+Il est important de noter que la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> se comporte différemment selon qu’il s’agit d’un objet géométrique simple (<code>sfg</code>), d’une colonne géométrique simple (<code>sfc</code>) ou d’un objet simple.</p>
 <p>Créons un multipoint pour illustrer le fonctionnement des transformations de type géométrique sur des objets de géométrie simple (<code>sfg</code>) :</p>
 <div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">multipoint</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_multipoint</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Dans ce cas, <code>st_cast</code> peut être utile pour transformer le nouvel objet en <em>linestring</em> (ligne) ou en polygone (Figure <a href="geometric-operations.html#fig:single-cast">5.11</a>) :</p>
+<p>Dans ce cas, <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> peut être utile pour transformer le nouvel objet en <em>linestring</em> (ligne) ou en polygone (Figure <a href="geometric-operations.html#fig:single-cast">5.11</a>) :</p>
 <div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">linestring</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="st">"LINESTRING"</span><span class="op">)</span>
 <span class="va">polyg</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="st">"POLYGON"</span><span class="op">)</span></code></pre></div>
@@ -429,7 +429,7 @@ FIGURE 5.11: Exemples de lignes et de polygones créés à partir d’une géom�
 <p>La conversion de multipoint en ligne est une opération courante qui crée un objet ligne à partir d’observations ponctuelles ordonnées, telles que des mesures GPS ou des sources géolocalisés.
 Cela permet d’effectuer des opérations spatiales telles que la longueur du chemin parcouru.
 La conversion de multipoint ou de <em>linestring</em> en polygone est souvent utilisée pour calculer une surface, par exemple à partir de l’ensemble des mesures GPS prises autour d’un lac ou des coins d’un terrain à bâtir.</p>
-<p>Le processus de transformation peut également être inversé en utilisant <code>st_cast</code> :</p>
+<p>Le processus de transformation peut également être inversé en utilisant <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> :</p>
 <div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">multipoint_2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">linestring</span>, <span class="st">"MULTIPOINT"</span><span class="op">)</span>
 <span class="va">multipoint_3</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">polyg</span>, <span class="st">"MULTIPOINT"</span><span class="op">)</span>
@@ -442,14 +442,14 @@ La conversion de multipoint ou de <em>linestring</em> en polygone est souvent ut
 Pour les géométries d´entités simples (<code>sfg</code>), <code>st_cast</code> permet également de transformer des géométries de non-multi-types vers des multi-types (par exemple, <code>POINT</code> vers <code>MULTIPOINT</code>) et de multi-types vers des non-multi-types.
 Toutefois, dans le deuxième groupe de cas, seul le premier élément de l´ancien objet est conservé.
 </div>
-<p>La transformation en différent types géométrique des colonnes géométriques d’entités simples (<code>sfc</code>) et des objets d’entités simples fonctionnent de la même manière que pour les géométries simples dans la plupart des cas.
+<p>La transformation en différent types géométrique des colonnes géométriques d’entités simples (<code>sfc</code>) et des objets d’entités simples fonctionnent de la même manière que pour les géométries simples (<code>sfg</code>) dans la plupart des cas.
 Une différence importante est la conversion des multi-types en non-multi-types.
-À la suite de ce processus, les multi-objets sont divisés en plusieurs non-multi-objets.</p>
+À la suite de ce processus, les multi-objets, <code>sf</code> ou <code>sfg</code> sont divisés en plusieurs non-multi-objets.</p>
 <p>Le tableau <a href="geometric-operations.html#tab:sfs-st-cast">5.1</a> montre les transformations de type géométrique possibles sur les objets d’entités simples.
-Each input simple feature object with only one element (first column) is transformed directly into another geometry type.
+Les géométries d’entités simples (représentées par la première colonne du tableau) peuvent être transformées en plusieurs types de géométrie, représentés par les colonnes du tableau <a href="geometric-operations.html#tab:sfs-st-cast">5.1</a>
 Plusieurs des transformations ne sont pas possibles, par exemple, vous ne pouvez pas convertir un point unique en un multilinestring ou un polygone (ainsi les cellules <code>[1, 4:5]</code> dans le tableau sont NA).
-D’autre part, certaines transformations divisent l’objet d’entrée: on passe d’un élément unique en un objet à éléments multiples.
-Vous pouvez le constater, par exemple, lorsque vous transformez un multipoint composé de cinq paires de coordonnées en un point.</p>
+Certaines transformations divisent l’objet d’entrée: on passe d’un élément unique en un objet à éléments multiples.
+Lorsqu’une géométrie multipoint constituée de cinq paires de coordonnées est transformée en géométrie “POINT”, par exemple, la sortie contiendra cinq entités.</p>
 <div class="inline-table"><table class="table table-sm">
 <caption>
 <span id="tab:sfs-st-cast">TABLE 5.1: </span>Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d’entrée par ligne et type de sortie par colonne
@@ -687,7 +687,7 @@ NA
 <p>Vous pouvez l’imaginer comme un réseau routier ou fluvial.
 Le nouvel objet n’a qu’une seule ligne qui définit toutes les lignes.
 Cela limite le nombre d’opérations qui peuvent être faites, par exemple, cela empêche d’ajouter des noms à chaque segment de ligne ou de calculer les longueurs des lignes individuelles.
-La fonction <code>st_cast</code> peut être utilisée dans cette situation, car elle sépare un mutlilinestring en trois linestrings :</p>
+La fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> peut être utilisée dans cette situation, car elle sépare un mutlilinestring en trois linestrings :</p>
 <div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">linestring_sf2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">multilinestring_sf</span>, <span class="st">"LINESTRING"</span><span class="op">)</span>
 <span class="va">linestring_sf2</span>
@@ -1338,7 +1338,7 @@ Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <spa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-13.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-16.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

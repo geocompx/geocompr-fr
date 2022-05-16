@@ -413,8 +413,8 @@ texas_union = st_union(us_west_union, texas)
 
 \index{vector!geometry casting} 
 La transformation d'un type de géométrie en un autre (*casting*)  est une opération puissante.
-Elle est implémentée dans la fonction `st_cast` du package **sf**.
-Il est important de noter que la fonction `st_cast` se comporte différemment selon qu'il s'agit d'un objet géométrique simple (`sfg`), d'une colonne géométrique simple (`sfc`) ou d'un objet simple.
+Elle est implémentée dans la fonction `st_cast()` du package **sf**.
+Il est important de noter que la fonction `st_cast()` se comporte différemment selon qu'il s'agit d'un objet géométrique simple (`sfg`), d'une colonne géométrique simple (`sfc`) ou d'un objet simple.
 
 Créons un multipoint pour illustrer le fonctionnement des transformations de type géométrique sur des objets de géométrie simple (`sfg`) :
 
@@ -423,7 +423,7 @@ Créons un multipoint pour illustrer le fonctionnement des transformations de ty
 multipoint = st_multipoint(matrix(c(1, 3, 5, 1, 3, 1), ncol = 2))
 ```
 
-Dans ce cas, `st_cast` peut être utile pour transformer le nouvel objet en *linestring* (ligne) ou en polygone (Figure \@ref(fig:single-cast)) :
+Dans ce cas, `st_cast()` peut être utile pour transformer le nouvel objet en *linestring* (ligne) ou en polygone (Figure \@ref(fig:single-cast)) :
 
 
 ```r
@@ -440,7 +440,7 @@ La conversion de multipoint en ligne est une opération courante qui crée un ob
 Cela permet d'effectuer des opérations spatiales telles que la longueur du chemin parcouru.
 La conversion de multipoint ou de *linestring* en polygone est souvent utilisée pour calculer une surface, par exemple à partir de l'ensemble des mesures GPS prises autour d'un lac ou des coins d'un terrain à bâtir.
 
-Le processus de transformation peut également être inversé en utilisant `st_cast` :
+Le processus de transformation peut également être inversé en utilisant `st_cast()` :
 
 
 ```r
@@ -457,15 +457,15 @@ Toutefois, dans le deuxième groupe de cas, seul le premier élément de l´anci
 
 
 
-La transformation en différent types géométrique des colonnes géométriques d'entités simples (`sfc`) et des objets d'entités simples fonctionnent de la même manière que pour les géométries simples dans la plupart des cas. 
+La transformation en différent types géométrique des colonnes géométriques d'entités simples (`sfc`) et des objets d'entités simples fonctionnent de la même manière que pour les géométries simples (`sfg`) dans la plupart des cas. 
 Une différence importante est la conversion des multi-types en non-multi-types.
-À la suite de ce processus, les multi-objets sont divisés en plusieurs non-multi-objets.
+À la suite de ce processus, les multi-objets, `sf` ou `sfg` sont divisés en plusieurs non-multi-objets.
 
 Le tableau \@ref(tab:sfs-st-cast) montre les transformations de type géométrique possibles sur les objets d'entités simples.
-Each input simple feature object with only one element (first column) is transformed directly into another geometry type.
+Les géométries d'entités simples (représentées par la première colonne du tableau) peuvent être transformées en plusieurs types de géométrie, représentés par les colonnes du tableau \@ref(tab:sfs-st-cast)
 Plusieurs des transformations ne sont pas possibles, par exemple, vous ne pouvez pas convertir un point unique en un multilinestring ou un polygone (ainsi les cellules `[1, 4:5]` dans le tableau sont NA).
-D'autre part, certaines transformations divisent l'objet d'entrée: on passe d'un élément unique en un objet à éléments multiples.
-Vous pouvez le constater, par exemple, lorsque vous transformez un multipoint composé de cinq paires de coordonnées en un point.
+Certaines transformations divisent l'objet d'entrée: on passe d'un élément unique en un objet à éléments multiples.
+Lorsqu'une géométrie multipoint constituée de cinq paires de coordonnées est transformée en géométrie "POINT", par exemple, la sortie contiendra cinq entités.
 
 <table>
 <caption>(\#tab:sfs-st-cast)Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d'entrée par ligne et type de sortie par colonne</caption>
@@ -582,7 +582,7 @@ multilinestring_sf
 Vous pouvez l'imaginer comme un réseau routier ou fluvial. 
 Le nouvel objet n'a qu'une seule ligne qui définit toutes les lignes.
 Cela limite le nombre d'opérations qui peuvent être faites, par exemple, cela empêche d'ajouter des noms à chaque segment de ligne ou de calculer les longueurs des lignes individuelles.
-La fonction `st_cast` peut être utilisée dans cette situation, car elle sépare un mutlilinestring en trois linestrings :
+La fonction `st_cast()` peut être utilisée dans cette situation, car elle sépare un mutlilinestring en trois linestrings :
 
 
 ```r
