@@ -866,49 +866,49 @@ Ceci est très différent de l´approche habituelle de **terra**, qui attend des
 ## Exercises
 
 
-E1. Generate and plot simplified versions of the `nz` dataset.
-Experiment with different values of `keep` (ranging from 0.5 to 0.00005) for `ms_simplify()` and `dTolerance` (from 100 to 100,000) `st_simplify()`.
+E1. Générer et représenter des versions simplifiées de l'ensemble de données `nz`.
+Expérimentez avec différentes valeurs de `keep` (allant de 0,5 à 0,00005) pour `ms_simplify()` et `dTolerance` (de 100 à 100 000) pour `st_simplify()`.
 
-- At what value does the form of the result start to break down for each method, making New Zealand unrecognizable?
-- Advanced: What is different about the geometry type of the results from `st_simplify()` compared with the geometry type of `ms_simplify()`? What problems does this create and how can this be resolved?
-
-
-
-E2. In the first exercise in Chapter Spatial data operations it was established that Canterbury region had 70 of the 101 highest points in New Zealand. 
-Using `st_buffer()`, how many points in `nz_height` are within 100 km of Canterbury?
+- À partir de quelle valeur la forme du résultat commence-t-elle à se dégrader pour chaque méthode, rendant la Nouvelle-Zélande méconnaissable ?
+- Avancé : Qu'est-ce qui est différent dans le type de géométrie des résultats de `st_simplify()` par rapport au type de géométrie de `ms_simplify()` ? Quels problèmes cela crée-t-il et comment peut-on les résoudre ?
 
 
 
-E3. Find the geographic centroid of New Zealand. 
-How far is it from the geographic centroid of Canterbury?
+E2. Dans le premier exercice du chapitre Opérations sur les données spatiales, il a été établi que la région de Canterbury comptait 70 des 101 points les plus élevés de Nouvelle-Zélande. 
+En utilisant `st_buffer()`, combien de points dans `nz_height` sont à moins de 100 km de Canterbury ?
 
 
 
-E4. Most world maps have a north-up orientation.
-A world map with a south-up orientation could be created by a reflection (one of the affine transformations not mentioned in this chapter) of the `world` object's geometry.
-Write code to do so.
-Hint: you need to use a two-element vector for this transformation.
- Bonus: create an upside-down map of your country.
- 
-
-
-E5. Subset the point in `p` that is contained within `x` *and* `y`.
-
-- Using base subsetting operators.
-- Using an intermediary object created with `st_intersection()`\index{vector!intersection}.
+E3. Trouvez le centroïde géographique de la Nouvelle-Zélande. 
+A quelle distance se trouve-t-il du centroïde géographique de Canterbury ?
 
 
 
+E4. La plupart des cartes du monde sont orientées du nord vers le haut.
+Une carte du monde orientée vers le sud pourrait être créée par une réflexion (une des transformations affines non mentionnées dans ce chapitre) de la géométrie de l'objet `world`.
+Comment faire ?
+Astuce : vous devez utiliser un vecteur à deux éléments pour cette transformation.
+ Bonus : créez une carte de votre pays à l'envers.
 
 
-E6. Calculate the length of the boundary lines of US states in meters.
-Which state has the longest border and which has the shortest?
-Hint: The `st_length` function computes the length of a `LINESTRING` or `MULTILINESTRING` geometry.
+
+E5. Sélectionnez le point dans `p` qui est contenu dans `x` *et* `y`.
+
+- En utilisant les opérateurs de sélection de base.
+- En utilisant un objet intermédiaire créé avec `st_intersection()`\index{vector!intersection}.
 
 
 
-E7. Read the srtm.tif file into R (`srtm = rast(system.file("raster/srtm.tif", package = "spDataLarge"))`).
-This raster has a resolution of 0.00083 by 0.00083 degrees. 
-Change its resolution to 0.01 by 0.01 degrees using all of the method available in the **terra** package.
-Visualize the results.
-Can you notice any differences between the results of these resampling methods?
+
+
+E6. Calculez la longueur des limites des États américains en mètres.
+Quel État a la frontière la plus longue et quel État a la plus courte ?
+Indice : La fonction `st_length` calcule la longueur d'une géométrie `LINESTRING` ou `MULTILINESTRING`.
+
+
+
+E7. Lire le fichier srtm.tif dans R (`srtm = rast(system.file("raster/srtm.tif", package = "spDataLarge"))`).
+Ce raster a une résolution de 0.00083 par 0.00083 degrés. 
+Changez sa résolution à 0,01 par 0,01 degrés en utilisant toutes les méthodes disponibles dans le paquet **terra**.
+Visualisez les résultats.
+Pouvez-vous remarquer des différences entre les résultats de ces différentes méthodes de rééchantillonnage ?

@@ -934,34 +934,34 @@ Ceci est très différent de l´approche habituelle de <strong>terra</strong>, q
 <h2>
 <span class="header-section-number">5.4</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-2"><i class="fas fa-link"></i></a>
 </h2>
-<p>E1. Generate and plot simplified versions of the <code>nz</code> dataset.
-Experiment with different values of <code>keep</code> (ranging from 0.5 to 0.00005) for <code>ms_simplify()</code> and <code>dTolerance</code> (from 100 to 100,000) <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code>.</p>
+<p>E1. Générer et représenter des versions simplifiées de l’ensemble de données <code>nz</code>.
+Expérimentez avec différentes valeurs de <code>keep</code> (allant de 0,5 à 0,00005) pour <code>ms_simplify()</code> et <code>dTolerance</code> (de 100 à 100 000) pour <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code>.</p>
 <ul>
-<li>At what value does the form of the result start to break down for each method, making New Zealand unrecognizable?</li>
-<li>Advanced: What is different about the geometry type of the results from <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> compared with the geometry type of <code>ms_simplify()</code>? What problems does this create and how can this be resolved?</li>
+<li>À partir de quelle valeur la forme du résultat commence-t-elle à se dégrader pour chaque méthode, rendant la Nouvelle-Zélande méconnaissable ?</li>
+<li>Avancé : Qu’est-ce qui est différent dans le type de géométrie des résultats de <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> par rapport au type de géométrie de <code>ms_simplify()</code> ? Quels problèmes cela crée-t-il et comment peut-on les résoudre ?</li>
 </ul>
-<p>E2. In the first exercise in Chapter Spatial data operations it was established that Canterbury region had 70 of the 101 highest points in New Zealand.
-Using <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer()</a></code>, how many points in <code>nz_height</code> are within 100 km of Canterbury?</p>
-<p>E3. Find the geographic centroid of New Zealand.
-How far is it from the geographic centroid of Canterbury?</p>
-<p>E4. Most world maps have a north-up orientation.
-A world map with a south-up orientation could be created by a reflection (one of the affine transformations not mentioned in this chapter) of the <code>world</code> object’s geometry.
-Write code to do so.
-Hint: you need to use a two-element vector for this transformation.
-Bonus: create an upside-down map of your country.</p>
-<p>E5. Subset the point in <code>p</code> that is contained within <code>x</code> <em>and</em> <code>y</code>.</p>
+<p>E2. Dans le premier exercice du chapitre Opérations sur les données spatiales, il a été établi que la région de Canterbury comptait 70 des 101 points les plus élevés de Nouvelle-Zélande.
+En utilisant <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer()</a></code>, combien de points dans <code>nz_height</code> sont à moins de 100 km de Canterbury ?</p>
+<p>E3. Trouvez le centroïde géographique de la Nouvelle-Zélande.
+A quelle distance se trouve-t-il du centroïde géographique de Canterbury ?</p>
+<p>E4. La plupart des cartes du monde sont orientées du nord vers le haut.
+Une carte du monde orientée vers le sud pourrait être créée par une réflexion (une des transformations affines non mentionnées dans ce chapitre) de la géométrie de l’objet <code>world</code>.
+Comment faire ?
+Astuce : vous devez utiliser un vecteur à deux éléments pour cette transformation.
+Bonus : créez une carte de votre pays à l’envers.</p>
+<p>E5. Sélectionnez le point dans <code>p</code> qui est contenu dans <code>x</code> <em>et</em> <code>y</code>.</p>
 <ul>
-<li>Using base subsetting operators.</li>
-<li>Using an intermediary object created with <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection()</a></code>.</li>
+<li>En utilisant les opérateurs de sélection de base.</li>
+<li>En utilisant un objet intermédiaire créé avec <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection()</a></code>.</li>
 </ul>
-<p>E6. Calculate the length of the boundary lines of US states in meters.
-Which state has the longest border and which has the shortest?
-Hint: The <code>st_length</code> function computes the length of a <code>LINESTRING</code> or <code>MULTILINESTRING</code> geometry.</p>
-<p>E7. Read the srtm.tif file into R (<code>srtm = rast(system.file("raster/srtm.tif", package = "spDataLarge"))</code>).
-This raster has a resolution of 0.00083 by 0.00083 degrees.
-Change its resolution to 0.01 by 0.01 degrees using all of the method available in the <strong>terra</strong> package.
-Visualize the results.
-Can you notice any differences between the results of these resampling methods?</p>
+<p>E6. Calculez la longueur des limites des États américains en mètres.
+Quel État a la frontière la plus longue et quel État a la plus courte ?
+Indice : La fonction <code>st_length</code> calcule la longueur d’une géométrie <code>LINESTRING</code> ou <code>MULTILINESTRING</code>.</p>
+<p>E7. Lire le fichier srtm.tif dans R (<code>srtm = rast(system.file("raster/srtm.tif", package = "spDataLarge"))</code>).
+Ce raster a une résolution de 0.00083 par 0.00083 degrés.
+Changez sa résolution à 0,01 par 0,01 degrés en utilisant toutes les méthodes disponibles dans le paquet <strong>terra</strong>.
+Visualisez les résultats.
+Pouvez-vous remarquer des différences entre les résultats de ces différentes méthodes de rééchantillonnage ?</p>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-akima_akima_2016" class="csl-entry">
@@ -1338,7 +1338,7 @@ Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <spa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-16.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-17.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
