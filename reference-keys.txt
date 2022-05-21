@@ -55,6 +55,15 @@ fig:origin-example
 fig:aggregate-example
 fig:bilinear
 fig:resampl
+fig:cropmask
+fig:pointextr
+fig:lineextr
+fig:polyextr
+fig:vector-rasterization1
+fig:vector-rasterization2
+fig:raster-vectorization1
+fig:contour-tmap
+fig:06-raster-vector-40
 intro
 what-is-geocomputation
 why-use-r-for-geocomputation
@@ -134,3 +143,10 @@ intersections-géométriques
 agrégation-et-désagrégation
 rééchantillonnage
 exercises-2
+raster-vector
+introduction-3
+découpage-de-raster
+extraction-de-raster
+rasterization
+vectorisation-spatiale
+exercises-3

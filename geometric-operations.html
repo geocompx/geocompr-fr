@@ -68,6 +68,7 @@
 <li><a class="" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
 <li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
 <li><a class="active" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
+<li><a class="" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
 </ul>
 
         <div class="book-extra">
@@ -107,7 +108,7 @@ Les transformations de type (d’un polygone à une ligne, par exemple) sont pr�
 Il s’agit de modifier la taille et le nombre des pixels, et de leur attribuer de nouvelles valeurs.
 Elle enseigne comment modifier la résolution (également appelée agrégation et désagrégation), l’étendue et l’origine d’un objet matriciel.
 Ces opérations sont particulièrement utiles si l’on souhaite aligner des rasters provenant de sources diverses.
-Les objets rasters alignés partagent une correspondance biunivoque entre les pixels, ce qui permet de les traiter à l’aide d’opérations d’algèbre raster, décrites dans la section <a href="#map-algebra"><strong>??</strong></a>. La dernière section <a href="#raster-vector"><strong>??</strong></a> relie les objets vectoriels et rasters.
+Les objets rasters alignés partagent une correspondance biunivoque entre les pixels, ce qui permet de les traiter à l’aide d’opérations d’algèbre raster, décrites dans la section <a href="#map-algebra"><strong>??</strong></a>. La dernière section <a href="raster-vector.html#raster-vector">6</a> relie les objets vectoriels et rasters.
 Elle montre comment les valeurs matricielles peuvent être “masquées” et “extraites” par des géométries vectorielles.
 Il est important de noter qu’elle montre comment ” polygoniser ” les données raster et ” rastériser ” les veceurs, ce qui rend les deux modèles de données plus interchangeables.</p>
 </div>
@@ -127,7 +128,7 @@ La simplification est un processus de généralisation des objets vectoriels (li
 Une autre raison de simplifier les objets est de réduire la quantité de mémoire, d’espace disque et de bande passante qu’ils consomment :
 il peut être judicieux de simplifier des géométries complexes avant de les publier sous forme de cartes interactives.
 Le paquet <strong>sf</strong> fournit <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code>, qui utilise l’implémentation GEOS de l’algorithme de Douglas-Peucker pour réduire le nombre de sommets.
-<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> utilise la <code>dTolerance</code> pour contrôler le niveau de généralisation des unités de la carte <span class="citation">(voir <a href="geometric-operations.html#ref-douglas_algorithms_1973" role="doc-biblioref">Douglas and Peucker 1973</a> pour plus de détails)</span>.
+<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> utilise la <code>dTolerance</code> pour contrôler le niveau de généralisation des unités de la carte <span class="citation">(voir <a href="raster-vector.html#ref-douglas_algorithms_1973" role="doc-biblioref">Douglas and Peucker 1973</a> pour plus de détails)</span>.
 La figure <a href="geometric-operations.html#fig:seine-simp">5.1</a> illustre la simplification d’une géométrie <code>LINESTRING</code> représentant la Seine et ses affluents.
 La géométrie simplifiée a été créée par la commande suivante :</p>
 <div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
@@ -159,7 +160,7 @@ Par conséquent, la première étape consiste à projeter les données dans un C
 <p>Une limitation de <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> est qu’il simplifie les objets sur une base géométrique.
 Cela signifie que la “topologie” est perdue, ce qui donne lieu à des polygones se superposant ou séparés par des vides, comme le montre la figure <a href="geometric-operations.html#fig:us-simp">5.2</a> (panneau du milieu).
 <code>ms_simplify()</code> de <strong>rmapshaper</strong> fournit une alternative qui surmonte ce problème.
-Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines limitations de l’algorithme de Douglas-Peucker <span class="citation">(<a href="geometric-operations.html#ref-visvalingam_line_1993" role="doc-biblioref">Visvalingam and Whyatt 1993</a>)</span>.
+Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines limitations de l’algorithme de Douglas-Peucker <span class="citation">(<a href="raster-vector.html#ref-visvalingam_line_1993" role="doc-biblioref">Visvalingam and Whyatt 1993</a>)</span>.
 <!-- https://bost.ocks.org/mike/simplify/ -->
 L’extrait de code suivant utilise cette fonction pour simplifier <code>us_states2163</code>.
 Le résultat n’a que 1% des sommets de l’entrée (fixée à l’aide de l’argument <code>keep</code>) mais son nombre d’objets reste intact car nous avons fixé <code>keep_shapes = TRUE</code> :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
@@ -334,7 +335,7 @@ Cela peut être fait en utilisant la fonction <code><a href="https://r-spatial.g
 FIGURE 5.7: Cercles superposés avec une couleur grise pour indiquer l’intersection entre eux
 </p>
 </div>
-<p>Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant <code>x</code> et <code>y</code>, inspiré de la <a href="http://r4ds.had.co.nz/transform.html#logical-operators">Figure 5.1</a> du livre <em>R for Data Science</em> <span class="citation">(<a href="geometric-operations.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.</p>
+<p>Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant <code>x</code> et <code>y</code>, inspiré de la <a href="http://r4ds.had.co.nz/transform.html#logical-operators">Figure 5.1</a> du livre <em>R for Data Science</em> <span class="citation">(<a href="raster-vector.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.</p>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:venn-clip"></span>
 <img src="05-geometry-operations_files/figure-html/venn-clip-1.png" alt="Équivalents spatiaux des opérateurs logiques." width="100%"><p class="caption">
@@ -728,7 +729,7 @@ FIGURE 5.12: Exemples de transformation de type de géométrie entre MULTILINEST
 </h2>
 <p>
 Les opérations géométriques sur des raster comprennent le décalage, le retournement, la mise en miroir, la mise à l’échelle, la rotation ou la déformation des images.
-Ces opérations sont nécessaires pour une variété d’applications, y compris le géoréférencement, utilisé pour permettre aux images d’être superposées sur une carte précise avec un CRS connu <span class="citation">(<a href="geometric-operations.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
+Ces opérations sont nécessaires pour une variété d’applications, y compris le géoréférencement, utilisé pour permettre aux images d’être superposées sur une carte précise avec un CRS connu <span class="citation">(<a href="raster-vector.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
 Il existe une variété de techniques de géoréférencement, notamment :</p>
 <ul>
 <li>Géorectification basée sur des <a href="https://www.qgistutorials.com/en/docs/3/georeferencing_basics.html">points de contrôle au sol</a> connus</li>
@@ -963,326 +964,12 @@ Changez sa résolution à 0,01 par 0,01 degrés en utilisant toutes les méthode
 Visualisez les résultats.
 Pouvez-vous remarquer des différences entre les résultats de ces différentes méthodes de rééchantillonnage ?</p>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-akima_akima_2016" class="csl-entry">
-Akima, Hiroshi, and Albrecht Gebhardt. 2016. <em>Akima: <span>Interpolation</span> of <span>Irregularly</span> and <span>Regularly Spaced Data</span></em>. <a href="https://CRAN.R-project.org/package=akima">https://CRAN.R-project.org/package=akima</a>.
 </div>
-<div id="ref-baddeley_spatial_2015" class="csl-entry">
-Baddeley, Adrian, Ege Rubak, and Rolf Turner. 2015. <em>Spatial Point Patterns: Methodology and Applications with <span>R</span></em>. <span>CRC Press</span>.
 </div>
-<div id="ref-bivand_using_2000" class="csl-entry">
-Bivand, Roger. 2000. <span>“Using the <span>R</span> Statistical Data Analysis Language on <span>GRASS</span> 5.0 <span>GIS</span> Database Files.”</span> <em>Computers &amp; Geosciences</em> 26 (9): 1043–52. <a href="https://doi.org/10.1016/S0098-3004(00)00057-1">https://doi.org/10.1016/S0098-3004(00)00057-1</a>.
-</div>
-<div id="ref-bivand_more_2001" class="csl-entry">
-———. 2001. <span>“More on <span>Spatial Data Analysis</span>.”</span> <em>R News</em> 1 (3): 13–17.
-</div>
-<div id="ref-hornik_approaches_2003" class="csl-entry">
-———. 2003. <span>“Approaches to <span>Classes</span> for <span>Spatial Data</span> in <span>R</span>.”</span> In <em>Proceedings of <span>DSC</span></em>, edited by Kurt Hornik, Friedrich Leisch, and Achim Zeileis. <a href="https://www.r-project.org/nosvn/conferences/DSC-2003/Proceedings/Bivand.pdf">https://www.r-project.org/nosvn/conferences/DSC-2003/Proceedings/Bivand.pdf</a>.
-</div>
-<div id="ref-bivand_rgrass7_2016" class="csl-entry">
-———. 2016a. <em>Rgrass7: <span>Interface Between GRASS</span> 7 <span>Geographical Information System</span> and <span>R</span></em>. <a href="https://CRAN.R-project.org/package=rgrass7">https://CRAN.R-project.org/package=rgrass7</a>.
-</div>
-<div id="ref-bivand_spgrass6_2016" class="csl-entry">
-———. 2016b. <em>Spgrass6: <span>Interface</span> Between <span>GRASS</span> 6 and <span>R</span></em>. <a href="http://CRAN.R-project.org/package=spgrass6">http://CRAN.R-project.org/package=spgrass6</a>.
-</div>
-<div id="ref-bivand_spdep_2017" class="csl-entry">
-———. 2017. <em>Spdep: <span>Spatial Dependence</span>: <span>Weighting Schemes</span>, <span>Statistics</span> and <span>Models</span></em>. <a href="https://CRAN.R-project.org/package=spdep">https://CRAN.R-project.org/package=spdep</a>.
-</div>
-<div id="ref-bivand_progress_2021" class="csl-entry">
-———. 2021. <span>“Progress in the <span>R</span> Ecosystem for Representing and Handling Spatial Data.”</span> <em>Journal of Geographical Systems</em> 23 (4): 515–46. <a href="https://doi.org/ghnwg3">https://doi.org/ghnwg3</a>.
-</div>
-<div id="ref-bivand_implementing_2000" class="csl-entry">
-Bivand, Roger, and Albrecht Gebhardt. 2000. <span>“Implementing Functions for Spatial Statistical Analysis Using the Language.”</span> <em>Journal of Geographical Systems</em> 2 (3): 307–17. <a href="https://doi.org/10.1007/PL00011460">https://doi.org/10.1007/PL00011460</a>.
-</div>
-<div id="ref-R-rgdal" class="csl-entry">
-Bivand, Roger, Tim Keitt, and Barry Rowlingson. 2018. <em>Rgdal: Bindings for the ’Geospatial’ Data Abstraction Library</em>. <a href="https://CRAN.R-project.org/package=rgdal">https://CRAN.R-project.org/package=rgdal</a>.
-</div>
-<div id="ref-bivand_maptools_2017" class="csl-entry">
-Bivand, Roger, and Nicholas Lewin-Koh. 2017. <em>Maptools: <span>Tools</span> for <span>Reading</span> and <span>Handling Spatial Objects</span></em>. <a href="https://CRAN.R-project.org/package=maptools">https://CRAN.R-project.org/package=maptools</a>.
-</div>
-<div id="ref-bivand_open_2000" class="csl-entry">
-Bivand, Roger, and Markus Neteler. 2000. <span>“Open Source Geocomputation: Using the <span>R</span> Data Analysis Language Integrated with <span>GRASS GIS</span> and <span>PostgreSQL</span> Data Base Systems.”</span> In <em>Proceedings of the 5th <span>International Conference</span> on <span>GeoComputation</span></em>, edited by Markus Neteler and Roger S. Bivand. <a href="http://www.geocomputation.org/2000/GC009/Gc009.htm">http://www.geocomputation.org/2000/GC009/Gc009.htm</a>.
-</div>
-<div id="ref-bivand_applied_2013" class="csl-entry">
-Bivand, Roger, Edzer Pebesma, and Virgilio Gómez-Rubio. 2013. <em>Applied Spatial Data Analysis with <span>R</span></em>. Vol. 747248717. <span>Springer</span>. <a href="https://books.google.com?id=v0eIU9ObJXgC">https://books.google.com?id=v0eIU9ObJXgC</a>.
-</div>
-<div id="ref-R-rgeos" class="csl-entry">
-Bivand, Roger, and Colin Rundel. 2018. <em>Rgeos: Interface to Geometry Engine - Open Source (’GEOS’)</em>. <a href="https://CRAN.R-project.org/package=rgeos">https://CRAN.R-project.org/package=rgeos</a>.
-</div>
-<div id="ref-bondaruk_assessing_2020" class="csl-entry">
-Bondaruk, Ben, Steven A. Roberts, and Colin Robertson. 2020. <span>“Assessing the State of the Art in <span>Discrete Global Grid Systems</span>: <span>OGC</span> Criteria and Present Functionality.”</span> <em>Geomatica</em> 74 (1): 9–30. <a href="https://doi.org/10.1139/geomat-2019-0015">https://doi.org/10.1139/geomat-2019-0015</a>.
-</div>
-<div id="ref-brenning_arcgis_2012" class="csl-entry">
-Brenning, Alexander. 2012. <em><span>ArcGIS Geoprocessing</span> in <span>R</span> via <span>Python</span></em>. <a href="https://CRAN.R-project.org/package=RPyGeo">https://CRAN.R-project.org/package=RPyGeo</a>.
-</div>
-<div id="ref-R-RSAGA" class="csl-entry">
-Brenning, Alexander, Donovan Bangs, and Marc Becker. 2018. <em>RSAGA: SAGA Geoprocessing and Terrain Analysis</em>. <a href="https://CRAN.R-project.org/package=RSAGA">https://CRAN.R-project.org/package=RSAGA</a>.
-</div>
-<div id="ref-brzustowicz_data_2017" class="csl-entry">
-Brzustowicz, Michael R. 2017. <em>Data Science with <span>Java</span>: [Practical Methods for Scientists and Engineers]</em>. First. <span>Beijing Boston Farnham</span>: <span>O´Reilly</span>.
-</div>
-<div id="ref-burrough_principles_2015" class="csl-entry">
-Burrough, P. A., Rachael McDonnell, and Christopher D. Lloyd. 2015. <em>Principles of Geographical Information Systems</em>. Third. <span>Oxford, New York</span>: <span>Oxford University Press</span>.
-</div>
-<div id="ref-calenge_package_2006" class="csl-entry">
-Calenge, C. 2006. <span>“The Package Adehabitat for the <span>R</span> Software: Tool for the Analysis of Space and Habitat Use by Animals.”</span> <em>Ecological Modelling</em> 197: 1035. <a href="https://doi.org/10.1016/j.ecolmodel.2006.03.017">https://doi.org/10.1016/j.ecolmodel.2006.03.017</a>.
-</div>
-<div id="ref-chambers_extending_2016" class="csl-entry">
-Chambers, John M. 2016. <em>Extending <span>R</span></em>. <span>CRC Press</span>. <a href="https://books.google.com?id=kxxjDAAAQBAJ">https://books.google.com?id=kxxjDAAAQBAJ</a>.
-</div>
-<div id="ref-clementini_comparison_1995" class="csl-entry">
-Clementini, Eliseo, and Paolino Di Felice. 1995. <span>“A Comparison of Methods for Representing Topological Relationships.”</span> <em>Information Sciences - Applications</em> 3 (3): 149–78. <a href="https://doi.org/ddtnhx">https://doi.org/ddtnhx</a>.
-</div>
-<div id="ref-cooley_sfheaders_2020" class="csl-entry">
-Cooley, David. 2020. <em>Sfheaders: <span>Converts</span> Between r Objects and Simple Feature Objects</em>. Manual. <a href="https://CRAN.R-project.org/package=sfheaders">https://CRAN.R-project.org/package=sfheaders</a>.
-</div>
-<div id="ref-coppock_history_1991" class="csl-entry">
-Coppock, J Terry, and David W Rhind. 1991. <span>“The History of <span>GIS</span>.”</span> <em>Geographical Information Systems: Principles and Applications, Vol. 1.</em> 1 (1): 21–43. <a href="https://www.geos.ed.ac.uk/~gisteac/ilw/generic_resources/books_and_papers/Thx1ARTICLE.pdf">https://www.geos.ed.ac.uk/~gisteac/ilw/generic_resources/books_and_papers/Thx1ARTICLE.pdf</a>.
-</div>
-<div id="ref-dieck_algebraic_2008" class="csl-entry">
-Dieck, Tammo tom. 2008. <em>Algebraic Topology</em>. <span>EMS</span> Textbooks in Mathematics. <span>Zürich</span>: <span>European Mathematical Society</span>. <a href="https://www.maths.ed.ac.uk/~v1ranick/papers/diecktop.pdf">https://www.maths.ed.ac.uk/~v1ranick/papers/diecktop.pdf</a>.
-</div>
-<div id="ref-douglas_algorithms_1973" class="csl-entry">
-Douglas, David H, and Thomas K Peucker. 1973. <span>“Algorithms for the Reduction of the Number of Points Required to Represent a Digitized Line or Its Caricature.”</span> <em>Cartographica: The International Journal for Geographic Information and Geovisualization</em> 10 (2): 112–22. <a href="https://doi.org/bjwv52">https://doi.org/bjwv52</a>.
-</div>
-<div id="ref-dunnington_ggspatial_2021" class="csl-entry">
-Dunnington, Dewey. 2021. <em>Ggspatial: <span>Spatial</span> Data Framework for Ggplot2</em>. Manual. <a href="https://CRAN.R-project.org/package=ggspatial">https://CRAN.R-project.org/package=ggspatial</a>.
-</div>
-<div id="ref-eddelbuettel_extending_2018" class="csl-entry">
-Eddelbuettel, Dirk, and James Joseph Balamuta. 2018. <span>“Extending <span>R</span> with <span>C</span>++: <span>A Brief Introduction</span> to <span>Rcpp</span>.”</span> <em>The American Statistician</em> 72 (1): 28–36. <a href="https://doi.org/gdg3fb">https://doi.org/gdg3fb</a>.
-</div>
-<div id="ref-egenhofer_mathematical_1990" class="csl-entry">
-Egenhofer, Max, and John Herring. 1990. <span>“A Mathematical Framework for the Definition of Topological Relations.”</span> In <em>Proc. The Fourth International Symposium on Spatial Data Handing</em>, 803–13.
-</div>
-<div id="ref-garrard_geoprocessing_2016" class="csl-entry">
-Garrard, Chris. 2016. <em>Geoprocessing with <span>Python</span></em>. <span>Shelter Island, NY</span>: <span>Manning Publications</span>.
-</div>
-<div id="ref-gillespie_efficient_2016" class="csl-entry">
-Gillespie, Colin, and Robin Lovelace. 2016. <em>Efficient <span>R Programming</span>: <span>A Practical Guide</span> to <span>Smarter Programming</span></em>. <span>O’Reilly Media</span>. <a href="https://csgillespie.github.io/efficientR/">https://csgillespie.github.io/efficientR/</a>.
-</div>
-<div id="ref-giraud_mapsf_2021" class="csl-entry">
-Giraud, Timothée. 2021. <em>Mapsf: <span>Thematic</span> Cartography</em>. Manual. <a href="https://CRAN.R-project.org/package=mapsf">https://CRAN.R-project.org/package=mapsf</a>.
-</div>
-<div id="ref-grolemund_r_2016" class="csl-entry">
-Grolemund, Garrett, and Hadley Wickham. 2016. <em>R for <span>Data Science</span></em>. <span>O’Reilly Media</span>.
-</div>
-<div id="ref-hijmans_geosphere_2016" class="csl-entry">
-Hijmans, Robert J. 2016. <em>Geosphere: <span>Spherical Trigonometry</span></em>. <a href="https://CRAN.R-project.org/package=geosphere">https://CRAN.R-project.org/package=geosphere</a>.
-</div>
-<div id="ref-R-raster" class="csl-entry">
-———. 2017. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.
-</div>
-<div id="ref-hijmans_terra_2021" class="csl-entry">
-———. 2021. <em>Terra: <span>Spatial</span> Data Analysis</em>. Manual. <a href="https://rspatial.org/terra/">https://rspatial.org/terra/</a>.
-</div>
-<div id="ref-essd-11-647-2019" class="csl-entry">
-Ince, E. S., F. Barthelmes, S. Reißland, K. Elger, C. Förste, F. Flechtner, and H. Schuh. 2019. <span>“<span>ICGEM</span> – 15 Years of Successful Collection and Distribution of Global Gravitational Models, Associated Services, and Future Plans.”</span> <em>Earth System Science Data</em> 11 (2): 647–74. <a href="https://doi.org/gg5tzm">https://doi.org/gg5tzm</a>.
-</div>
-<div id="ref-jr_geor_2016" class="csl-entry">
-Jr, Paulo J. Ribeiro, and Peter J. Diggle. 2016. <em><span class="nocase">geoR</span>: <span>Analysis</span> of <span>Geostatistical Data</span></em>. <a href="https://CRAN.R-project.org/package=geoR">https://CRAN.R-project.org/package=geoR</a>.
-</div>
-<div id="ref-kahle_ggmap_2013" class="csl-entry">
-Kahle, D, and Hadley Wickham. 2013. <span>“Ggmap: <span>Spatial Visualization</span> with Ggplot2.”</span> <em>The R Journal</em> 5: 144–61. <a href="https://doi.org/10.32614/RJ-2013-014">https://doi.org/10.32614/RJ-2013-014</a>.
-</div>
-<div id="ref-lamigueiro_displaying_2018" class="csl-entry">
-Lamigueiro, Oscar Perpinan. 2018. <em>Displaying <span>Time Series</span>, <span>Spatial</span>, and <span>Space-Time Data</span> with <span>R</span></em>. Second. <span>Boca Raton</span>: <span>Chapman and Hall/CRC</span>.
-</div>
-<div id="ref-liu_essential_2009" class="csl-entry">
-Liu, Jian-Guo, and Philippa J. Mason. 2009. <em>Essential Image Processing and <span>GIS</span> for Remote Sensing</em>. <span>Chichester, West Sussex, UK, Hoboken, NJ</span>: <span>Wiley-Blackwell</span>.
-</div>
-<div id="ref-livingstone_geographical_1992" class="csl-entry">
-Livingstone, David N. 1992. <em>The <span>Geographical Tradition</span>: <span>Episodes</span> in the <span>History</span> of a <span>Contested Enterprise</span></em>. <span>Oxford, UK ; Cambridge, USA</span>: <span>John Wiley &amp; Sons Ltd</span>.
-</div>
-<div id="ref-loecher_rgooglemaps_2015" class="csl-entry">
-Loecher, Markus, and Karl Ropkins. 2015. <span>“<span>RgoogleMaps</span> and Loa: <span>Unleashing R Graphics Power</span> on <span>Map Tiles</span>.”</span> <em>Journal of Statistical Software</em> 63 (February): 1–18. <a href="https://doi.org/gfgwng">https://doi.org/gfgwng</a>.
-</div>
-<div id="ref-longley_geographic_2015" class="csl-entry">
-Longley, Paul. 2015. <em>Geographic Information Science &amp; Systems</em>. Fourth edition. <span>Hoboken, NJ</span>: <span>Wiley</span>.
-</div>
-<div id="ref-longley_geocomputation_1998" class="csl-entry">
-Longley, Paul, Sue M. Brooks, Rachael McDonnell, and Bill MacMillan, eds. 1998. <em>Geocomputation: <span>A Primer</span></em>. <span>Chichester, Eng. ; New York</span>: <span>Wiley</span>.
-</div>
-<div id="ref-majure_sgeostat_2016" class="csl-entry">
-Majure, James J., and Albrecht Gebhardt. 2016. <em>Sgeostat: <span>An Object-Oriented Framework</span> for <span>Geostatistical Modeling</span> in <span>S</span>+</em>. <a href="https://CRAN.R-project.org/package=sgeostat">https://CRAN.R-project.org/package=sgeostat</a>.
-</div>
-<div id="ref-maling_coordinate_1992" class="csl-entry">
-Maling, D. H. 1992. <em>Coordinate Systems and Map Projections</em>. Second. <span>Oxford ; New York</span>: <span>Pergamon Press</span>.
-</div>
-<div id="ref-_map_1993" class="csl-entry">
-<span>“Map Projections.”</span> 1993. <span>US Geological Survey</span>. <a href="https://doi.org/10.3133/70047422">https://doi.org/10.3133/70047422</a>.
-</div>
-<div id="ref-morganwall_rayshader_2021" class="csl-entry">
-Morgan-Wall, Tyler. 2021. <em>Rayshader: <span>Create</span> Maps and Visualize Data in <span>2d</span> and <span>3d</span></em>. Manual. <a href="https://CRAN.R-project.org/package=rayshader">https://CRAN.R-project.org/package=rayshader</a>.
-</div>
-<div id="ref-muenchow_rqgis:_2017" class="csl-entry">
-Muenchow, Jannes, Patrick Schratz, and Alexander Brenning. 2017. <span>“<span>RQGIS</span>: <span>Integrating R</span> with <span>QGIS</span> for Statistical Geocomputing.”</span> <em>The R Journal</em> 9 (2): 409–28. <a href="https://doi.org/gf3d48">https://doi.org/gf3d48</a>.
-</div>
-<div id="ref-neteler_open_2008" class="csl-entry">
-Neteler, Markus, and Helena Mitasova. 2008. <em>Open Source <span>GIS</span>: A <span>GRASS GIS</span> Approach</em>. Third. <span>New York, NY</span>: <span>Springer</span>.
-</div>
-<div id="ref-openshaw_geocomputation_2000" class="csl-entry">
-Openshaw, Stan, and Robert J. Abrahart, eds. 2000. <em>Geocomputation</em>. <span>London ; New York</span>: <span>CRC Press</span>.
-</div>
-<div id="ref-pebesma_simple_2018" class="csl-entry">
-Pebesma, Edzer. 2018. <span>“Simple Features for <span>R</span>: <span>Standardized</span> Support for Spatial Vector Data.”</span> <em>The R Journal</em>. <a href="https://doi.org/gf2ztt">https://doi.org/gf2ztt</a>.
-</div>
-<div id="ref-pebesma_stars_2021" class="csl-entry">
-———. 2021. <em>Stars: <span>Spatiotemporal</span> Arrays, Raster and Vector Data Cubes</em>. Manual. <a href="https://CRAN.R-project.org/package=stars">https://CRAN.R-project.org/package=stars</a>.
-</div>
-<div id="ref-pebesma_classes_2005" class="csl-entry">
-Pebesma, Edzer, and Roger Bivand. 2005. <span>“Classes and Methods for Spatial Data in <span>R</span>.”</span> <em>R News</em> 5 (2): 9–13. <a href="https://cran.r-project.org/doc/Rnews/Rnews_2005-2.pdf">https://cran.r-project.org/doc/Rnews/Rnews_2005-2.pdf</a>.
-</div>
-<div id="ref-R-sp" class="csl-entry">
-———. 2018. <em>Sp: Classes and Methods for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=sp">https://CRAN.R-project.org/package=sp</a>.
-</div>
-<div id="ref-pebesma_spatial_2022" class="csl-entry">
-———. 2022. <em>Spatial <span>Data Science</span> with Applications in <span>R</span></em>. <a href="https://r-spatial.org/book">https://r-spatial.org/book</a>.
-</div>
-<div id="ref-R-gstat" class="csl-entry">
-Pebesma, Edzer, and Benedikt Graeler. 2018. <em>Gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation</em>. <a href="https://CRAN.R-project.org/package=gstat">https://CRAN.R-project.org/package=gstat</a>.
-</div>
-<div id="ref-pebesma_measurement_2016" class="csl-entry">
-Pebesma, Edzer, Thomas Mailund, and James Hiebert. 2016. <span>“Measurement <span>Units</span> in <span>R</span>.”</span> <em>The R Journal</em> 8 (2): 486–94. <a href="https://doi.org/gkb5pd">https://doi.org/gkb5pd</a>.
-</div>
-<div id="ref-pebesma_r_2012" class="csl-entry">
-Pebesma, Edzer, Daniel Nüst, and Roger Bivand. 2012. <span>“The <span>R</span> Software Environment in Reproducible Geoscientific Research.”</span> <em>Eos, Transactions American Geophysical Union</em> 93 (16): 163–63. <a href="https://doi.org/gd8djc">https://doi.org/gd8djc</a>.
-</div>
-<div id="ref-pedersen_gganimate_2020" class="csl-entry">
-Pedersen, Thomas Lin, and David Robinson. 2020. <em>Gganimate: <span>A</span> Grammar of Animated Graphics</em>. Manual. <a href="https://CRAN.R-project.org/package=gganimate">https://CRAN.R-project.org/package=gganimate</a>.
-</div>
-<div id="ref-qiu_development_2012" class="csl-entry">
-Qiu, Fang, Caiyun Zhang, and Yuhong Zhou. 2012. <span>“The <span>Development</span> of an <span>Areal Interpolation ArcGIS Extension</span> and a <span>Comparative Study</span>.”</span> <em>GIScience &amp; Remote Sensing</em> 49 (5): 644–63. <a href="https://doi.org/gkb5fn">https://doi.org/gkb5fn</a>.
-</div>
-<div id="ref-rcoreteam_introduction_2021" class="csl-entry">
-R Core Team, D. M. Smith, and R Core Team. 2021. <em>An <span>Introduction</span> to <span>R</span></em>. <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html">https://cran.r-project.org/doc/manuals/r-release/R-intro.html</a>.
-</div>
-<div id="ref-ripley_spatial_2001" class="csl-entry">
-Ripley, Brian D. 2001. <span>“Spatial <span>Statistics</span> in <span>R</span>.”</span> <em>R News</em> 1 (2): 14–15.
-</div>
-<div id="ref-Roussel2020" class="csl-entry">
-Roussel, Jean-Romain, David Auty, Nicholas C. Coops, Piotr Tompalski, Tristan R. H. Goodbody, Andrew Sánchez Meador, Jean-François Bourdon, Florian de Boissieu, and Alexis Achim. 2020. <span>“<span class="nocase">lidR</span>: <span>An</span> r Package for Analysis of Airborne Laser Scanning (<span>ALS</span>) Data.”</span> <em>Remote Sensing of Environment</em> 251 (December): 112061. <a href="https://doi.org/ghddxb">https://doi.org/ghddxb</a>.
-</div>
-<div id="ref-rowlingson_splancs_1993" class="csl-entry">
-Rowlingson, B. S, and P. J Diggle. 1993. <span>“Splancs: <span>Spatial</span> Point Pattern Analysis Code in <span class="nocase">S-plus</span>.”</span> <em>Computers &amp; Geosciences</em> 19 (5): 627–55. <a href="https://doi.org/dvzffd">https://doi.org/dvzffd</a>.
-</div>
-<div id="ref-rowlingson_rasp:_2003" class="csl-entry">
-Rowlingson, Barry, Adrian Baddeley, Rolf Turner, and Peter Diggle. 2003. <span>“Rasp: <span>A Package</span> for <span>Spatial Statistics</span>.”</span> In <em>Proceedings of the 3rd <span>International Workshop</span> on <span>Distributed Statistical Computing</span></em>, edited by Kurt Hornik. <a href="https://www.r-project.org/conferences/DSC-2003/Proceedings/RowlingsonEtAl.pdf">https://www.r-project.org/conferences/DSC-2003/Proceedings/RowlingsonEtAl.pdf</a>.
-</div>
-<div id="ref-rowlingson_splancs_2017" class="csl-entry">
-Rowlingson, Barry, and Peter Diggle. 2017. <em>Splancs: <span>Spatial</span> and <span>Space-Time Point Pattern Analysis</span></em>. <a href="https://CRAN.R-project.org/package=splancs">https://CRAN.R-project.org/package=splancs</a>.
-</div>
-<div id="ref-shen_classification_2018" class="csl-entry">
-Shen, Jingwei, Min Chen, and Xintao Liu. 2018. <span>“Classification of Topological Relations Between Spatial Objects in Two-Dimensional Space Within the Dimensionally Extended 9-Intersection Model.”</span> <em>Transactions in GIS</em> 22 (2): 514–41. <a href="https://doi.org/gnhcx9">https://doi.org/gnhcx9</a>.
-</div>
-<div id="ref-sherman_desktop_2008" class="csl-entry">
-Sherman, Gary. 2008. <em>Desktop <span>GIS</span>: <span>Mapping</span> the <span>Planet</span> with <span>Open Source Tools</span></em>. <span>Pragmatic Bookshelf</span>.
-</div>
-<div id="ref-spanier_algebraic_1995" class="csl-entry">
-Spanier, Edwin Henry. 1995. <em>Algebraic Topology</em>. 1. corr. Springer ed. <span>New York Berlin Barcelona Budapest</span>: <span>Springer</span>.
-</div>
-<div id="ref-talbert_ancient_2014" class="csl-entry">
-Talbert, Richard J. A. 2014. <em>Ancient <span>Perspectives</span>: <span>Maps</span> and <span>Their Place</span> in <span>Mesopotamia</span>, <span>Egypt</span>, <span>Greece</span>, and <span>Rome</span></em>. <span>University of Chicago Press</span>. <a href="https://books.google.com?id=srTbAgAAQBAJ">https://books.google.com?id=srTbAgAAQBAJ</a>.
-</div>
-<div id="ref-tennekes_elegant_2022" class="csl-entry">
-Tennekes, Martijn, and Jakub Nowosad. 2022. <em>Elegant and Informative Maps with Tmap</em>.
-</div>
-<div id="ref-theeconomist_autonomous_2016" class="csl-entry">
-The Economist. 2016. <span>“The Autonomous Car’s Reality Check.”</span> <em>The Economist</em>, 2016. <a href="https://www.economist.com/news/science-and-technology/21696925-building-highly-detailed-maps-robotic-vehicles-autonomous-cars-reality">https://www.economist.com/news/science-and-technology/21696925-building-highly-detailed-maps-robotic-vehicles-autonomous-cars-reality</a>.
-</div>
-<div id="ref-tobler_smooth_1979" class="csl-entry">
-Tobler, Waldo R. 1979. <span>“Smooth <span>Pycnophylactic Interpolation</span> for <span>Geographical Regions</span>.”</span> <em>Journal of the American Statistical Association</em> 74 (367): 519–30. <a href="https://doi.org/ghz78f">https://doi.org/ghz78f</a>.
-</div>
-<div id="ref-tomlin_geographic_1990" class="csl-entry">
-Tomlin, C. Dana. 1990. <em>Geographic Information Systems and Cartographic Modeling</em>. <span>Englewood Cliffs, N.J</span>: <span>Prentice Hall</span>.
-</div>
-<div id="ref-tomlin_map_1994" class="csl-entry">
-———. 1994. <span>“Map Algebra: One Perspective.”</span> <em>Landscape and Urban Planning</em> 30 (1-2): 3–12. <a href="https://doi.org/dm2qm2">https://doi.org/dm2qm2</a>.
-</div>
-<div id="ref-venables_modern_2002" class="csl-entry">
-Venables, W. N., and B. D. Ripley. 2002. <em>Modern <span>Applied Statistics</span> with <span>S</span></em>. Fourth. <span>New York</span>: <span>Springer</span>. <a href="http://www.stats.ox.ac.uk/pub/MASS4">http://www.stats.ox.ac.uk/pub/MASS4</a>.
-</div>
-<div id="ref-visvalingam_line_1993" class="csl-entry">
-Visvalingam, M., and J. D. Whyatt. 1993. <span>“Line Generalisation by Repeated Elimination of Points.”</span> <em>The Cartographic Journal</em> 30 (1): 46–51. <a href="https://doi.org/fx74gh">https://doi.org/fx74gh</a>.
-</div>
-<div id="ref-wegmann_remote_2016" class="csl-entry">
-Wegmann, Martin, Benjamin Leutner, and Stefan Dech, eds. 2016. <em>Remote Sensing and <span>GIS</span> for Ecologists: Using Open Source Software</em>. Data in the Wild. <span>Exeter</span>: <span>Pelagic Publishing</span>.
-</div>
-<div id="ref-wickham_advanced_2019" class="csl-entry">
-Wickham, Hadley. 2019. <em>Advanced <span>R</span>, <span>Second Edition</span></em>. <span>CRC Press</span>. <a href="https://adv-r.hadley.nz/">https://adv-r.hadley.nz/</a>.
-</div>
-<div id="ref-wulf_invention_2015" class="csl-entry">
-Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <span>Humboldt</span>’s New World</em>. <span>New York</span>: <span>Alfred A. Knopf</span>.
-</div>
-</div>
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <div class="chapter-nav">
 <div class="prev"><a href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></div>
-<div class="empty"></div>
+<div class="next"><a href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <h2>Note: La Seconde Edition est en construction 🏗</h2>
     <!--<p>C'est le moment idéal pour tester les paquets en cours de développement et fournir vos commentaires</p>

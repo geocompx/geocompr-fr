@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 6 Interactions raster-vecteur | Geocomputation avec R</title>
+<meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
+<meta name="description" content="Ce chapitre nécessite les paquets suivants : library(dplyr) library(terra) library(sf)  6.1 Introduction  Ce chapitre porte sur les interactions entre les modèles de données géographiques raster...">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
+<meta property="og:title" content="Chapter 6 Interactions raster-vecteur | Geocomputation avec R">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://geocompr.github.io/fr/raster-vector.html">
+<meta property="og:image" content="https://geocompr.github.io/es/images/cover.png">
+<meta property="og:description" content="Ce chapitre nécessite les paquets suivants : library(dplyr) library(terra) library(sf)  6.1 Introduction  Ce chapitre porte sur les interactions entre les modèles de données géographiques raster...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 6 Interactions raster-vecteur | Geocomputation avec R">
+<meta name="twitter:description" content="Ce chapitre nécessite les paquets suivants : library(dplyr) library(terra) library(sf)  6.1 Introduction  Ce chapitre porte sur les interactions entre les modèles de données géographiques raster...">
+<meta name="twitter:image" content="https://geocompr.github.io/es/images/cover.png">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Lato-0.4.1/font.css" rel="stylesheet">
+<link href="libs/_Roboto%20Mono-0.4.1/font.css" rel="stylesheet">
+<link href="libs/_Montserrat-0.4.1/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-99618359-1', 'auto');
+      ga('send', 'pageview');
+
+    </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><link rel="stylesheet" href="style/style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h2>
+        <a href="index.html" title="">Geocomputation avec R</a>
+      </h2>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table des matières</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Bienvenue!</a></li>
+<li><a class="" href="foreword-1st-edition.html">Foreword (1st Edition)</a></li>
+<li><a class="" href="preface.html">Preface</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li class="book-part">Foundations</li>
+<li><a class="" href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></li>
+<li><a class="" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
+<li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
+<li><a class="" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
+<li><a class="active" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/geocompr/fr">Code source du livre <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="raster-vector" class="section level1" number="6">
+<h1>
+<span class="header-section-number">6</span> Interactions raster-vecteur<a class="anchor" aria-label="anchor" href="#raster-vector"><i class="fas fa-link"></i></a>
+</h1>
+<p>Ce chapitre nécessite les paquets suivants :</p>
+<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></code></pre></div>
+<div id="introduction-3" class="section level2" number="6.1">
+<h2>
+<span class="header-section-number">6.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-3"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+Ce chapitre porte sur les interactions entre les modèles de données géographiques raster et vectorielles, introduites au chapitre <a href="spatial-class.html#spatial-class">2</a>.
+Il comprend quatre techniques principales :
+le découpage et les masques de données raster à l’aide d’objets vectoriels (chapitre <a href="#raster-cropping"><strong>??</strong></a>) ;
+l’extraction de valeurs raster à l’aide de différents types de données vectorielles (section <a href="#raster-extraction"><strong>??</strong></a>) ;
+et la conversion raster-vecteur (sections <a href="raster-vector.html#rasterization">6.4</a> et <a href="#spatial-vectorization"><strong>??</strong></a>).
+Les concepts ci-dessus sont démontrés à l’aide des données utilisées dans les chapitres précédents afin de comprendre leurs applications potentielles dans le monde réel.</p>
+</div>
+<div id="découpage-de-raster" class="section level2" number="6.2">
+<h2>
+<span class="header-section-number">6.2</span> Découpage de raster<a class="anchor" aria-label="anchor" href="#d%C3%A9coupage-de-raster"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+De nombreux projets de données géographiques impliquent l’intégration de données provenant de nombreuses sources différentes, telles que des images de télédétection (rasters) et des limites administratives (vecteurs).
+Souvent, l’étendue des jeux de données raster en entrée est plus grande que la zone d’intérêt.
+Dans ce cas, le <strong>cropping</strong> (découpage) et le <strong>masking</strong> (masque) sont utiles pour unifier l’étendue spatiale des données d’entrée.
+Ces deux opérations réduisent l’utilisation de la mémoire des objets et les ressources informatiques associées pour les étapes d’analyse ultérieures, et peuvent constituer une étape de prétraitement nécessaire avant de créer des cartes attrayantes impliquant des données rasters.</p>
+<!--jn:toDo-->
+<!-- two possibilities: -->
+<!-- 1. explain the need of the use of `vect()` -->
+<!-- 2. wait for https://github.com/rspatial/terra/issues/89 -->
+<p>Nous allons utiliser deux objets pour illustrer le recadrage d’un raster :</p>
+<ul>
+<li>Un objet <code>SpatRaster</code> <code>srtm</code> représentant l’altitude (mètres au-dessus du niveau de la mer) dans le sud-ouest de l’Utah.</li>
+<li>Un objet vectoriel (<code>sf</code>) <code>zion</code> représentant le parc national de Zion.</li>
+</ul>
+<p>Les objets cibles et les objets de recadrage doivent avoir la même projection.
+L’extrait de code suivant lit donc les jeux de données du paquet <strong>spDataLarge</strong> (installé au chapitre <a href="spatial-class.html#spatial-class">2</a>) puis il reprojette <code>zion</code> (voir le chapitre <a href="#reproj-geo-data"><strong>??</strong></a> pour en savoir plus sur la reprojection) :</p>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">srtm</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/srtm.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"vector/zion.gpkg"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">zion</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">srtm</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Nous allons utiliser <code><a href="https://rdrr.io/pkg/terra/man/crop.html">crop()</a></code> du paquet <strong>terra</strong> pour découper le raster <code>srtm</code>.
+Elle réduit l’étendue rectangulaire de l’objet passé en premier argument en fonction de l’étendue de l’objet passé en second argument, comme le montre la commande ci-dessous (qui génère la figure <a href="raster-vector.html#fig:cropmask">6.1</a>(B) — notez la plus petite étendue du fond de l’image) :</p>
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">srtm_cropped</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html">crop</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>
+La fonction <strong>terra</strong> <code><a href="https://rdrr.io/pkg/terra/man/mask.html">mask()</a></code> est liée à <code><a href="https://rdrr.io/pkg/terra/man/crop.html">crop()</a></code>, qui définit les valeurs situées en dehors des limites de l’objet passé en second argument à <code>NA</code>.
+La commande suivante masque donc toutes les cellules situées à l’extérieur des limites du parc national de Zion (figure <a href="raster-vector.html#fig:cropmask">6.1</a>(C)) :</p>
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">srtm_masked</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/mask.html">mask</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>La fonction <strong>terra</strong> <code><a href="https://rdrr.io/pkg/terra/man/mask.html">mask()</a></code> est liée à <code><a href="https://rdrr.io/pkg/terra/man/crop.html">crop()</a></code>, elle définit les valeurs situées en dehors des limites de l’objet passé en second argument à <code>NA</code>.
+La commande suivante masque donc toutes les cellules situées à l’extérieur des limites du parc national de Zion (figure <a href="raster-vector.html#fig:cropmask">6.1</a>(C)) :</p>
+<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">srtm_cropped</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crop.html">crop</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span><span class="op">)</span>
+<span class="va">srtm_final</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/mask.html">mask</a></span><span class="op">(</span><span class="va">srtm_cropped</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>En modifiant les paramètres de <code><a href="https://rdrr.io/pkg/terra/man/mask.html">mask()</a></code>, on obtient des résultats différents.
+En réglant <code>updatevalue = 0</code>, par exemple, tous les pixels à l’extérieur du parc national seront mis à 0.
+Si vous définissez <code>inverse = TRUE</code>, vous masquerez tout ce qui se trouve <em>à l’intérieur</em> des limites du parc (voir <code><a href="https://rdrr.io/pkg/terra/man/mask.html">?mask</a></code> pour plus de détails) (Figure <a href="raster-vector.html#fig:cropmask">6.1</a>(D)).</p>
+<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">srtm_inv_masked</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/mask.html">mask</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span>, inverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:cropmask"></span>
+<img src="06-raster-vector_files/figure-html/cropmask-1.png" alt="Illustration du découpage et de l'application de masque sur des rasters." width="100%"><p class="caption">
+FIGURE 6.1: Illustration du découpage et de l’application de masque sur des rasters.
+</p>
+</div>
+</div>
+<div id="extraction-de-raster" class="section level2" number="6.3">
+<h2>
+<span class="header-section-number">6.3</span> Extraction de raster<a class="anchor" aria-label="anchor" href="#extraction-de-raster"><i class="fas fa-link"></i></a>
+</h2>
+<!--jn:toDo-->
+<!-- two possibilities: -->
+<!-- 1. explain the need of the use of `vect()` -->
+<!-- 2. wait for https://github.com/rspatial/terra/issues/89 -->
+<p>
+L’extraction de raster est le processus d’identification et de retour des valeurs associées d’une image raster “cible” à des emplacements spécifiques, en fonction d’un objet “sélecteur” géographique (généralement vectoriel).
+Les résultats dépendent du type de sélecteur utilisé (points, lignes ou polygones) et des arguments passés à la fonction <code><a href="https://rdrr.io/pkg/terra/man/extract.html">terra::extract()</a></code>, qui sera utilisée pour démontrer l’extraction raster.
+L’inverse de l’extraction raster — l’attribution de valeurs de cellules basées sur des objets vectoriels — est la rasterisation, décrite dans la section <a href="raster-vector.html#rasterization">6.4</a>’.</p>
+<p>L’exemple le plus simple consiste à extraire la valeur d’une cellule matricielle à des <strong>points</strong> spécifiques.
+Dans ce but, nous utiliserons <code>zion_points</code>, qui contient un échantillon de 30 emplacements dans le Parc National de Zion (Figure <a href="raster-vector.html#fig:pointextr">6.2</a>).
+La commande suivante extrait les valeurs d’élévation de <code>srtm</code> et crée un cadre de données avec les ID des points (une valeur par ligne du vecteur) et les valeurs <code>srtm</code> associées pour chaque point.
+Maintenant, nous pouvons ajouter l’objet résultant à notre jeu de données <code>zion_points</code> avec la fonction <code><a href="https://rdrr.io/r/base/cbind.html">cbind()</a></code> :</p>
+<div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"zion_points"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span>
+<span class="va">elevation</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/extract.html">extract</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion_points</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion_points</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">zion_points</span>, <span class="va">elevation</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pointextr"></span>
+<img src="06-raster-vector_files/figure-html/pointextr-1.png" alt="Localisation des points utilisés pour l'extraction de la trame." width="100%"><p class="caption">
+FIGURE 6.2: Localisation des points utilisés pour l’extraction de la trame.
+</p>
+</div>
+<p>L’extraction raster fonctionne également avec des sélecteurs de type <strong>ligne</strong>.
+Elle extrait alors une valeur pour chaque cellule matricielle touchée par une ligne.
+Cependant, elle n’est pas recommandée pour obtenir des valeurs le long des transects car il est difficile d’obtenir la distance correcte entre chaque paire de valeurs extraites.</p>
+<p>Dans ce cas, une meilleure approche consiste à diviser la ligne en plusieurs points, puis à extraire les valeurs de ces points.
+Pour le démontrer, le code ci-dessous crée <code>zion_transect</code>, une ligne droite allant du nord-ouest au sud-est du parc national de Zion, illustrée sur la figure <a href="raster-vector.html#fig:lineextr">6.3</a>(A) (voir la section <a href="#vector-data"><strong>??</strong></a> pour un récapitulatif du modèle de données vectorielles) :</p>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">zion_transect</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">113.2</span>, <span class="op">-</span><span class="fl">112.9</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/c.html">c</a></span><span class="op">(</span><span class="fl">37.45</span>, <span class="fl">37.2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_linestring</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html">st_sfc</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">srtm</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html">st_sf</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>L’utilité de l’extraction des hauteurs à partir d’un sélecteur linéaire est illustrée en imaginant que vous planifiez une randonnée.
+La méthode présentée ci-dessous fournit un “profil d’élévation” de l’itinéraire (la ligne n’a pas besoin d’être droite), utile pour estimer la durée de la randonnée en cas de longues montées.</p>
+<p>La première étape est d’ajouter un <code>id</code> unique pour chaque transect.
+Ensuite, avec la fonction <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_segmentize()</a></code>, nous pouvons ajouter des points le long de nos lignes en spécifiant une densité de points (<code>dfMaxLength</code>) et les convertir en points avec <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code>.</p>
+<div class="sourceCode" id="cb205"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">zion_transect</span><span class="op">$</span><span class="va">id</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html">nrow</a></span><span class="op">(</span><span class="va">zion_transect</span><span class="op">)</span>
+<span class="va">zion_transect</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_segmentize</a></span><span class="op">(</span><span class="va">zion_transect</span>, dfMaxLength <span class="op">=</span> <span class="fl">250</span><span class="op">)</span>
+<span class="va">zion_transect</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">zion_transect</span>, <span class="st">"POINT"</span><span class="op">)</span></code></pre></div>
+<p>Maintenant, nous avons un grand nombre de points et nous voulons calculer la distance entre le premier point de nos transects et chacun des points suivants.
+Dans ce cas, nous n’avons qu’un seul transect, mais le code, en principe, devrait fonctionner sur n’importe quel nombre de transects :</p>
+<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">zion_transect</span> <span class="op">=</span> <span class="va">zion_transect</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> </code></pre></div>
+<p>Enfin, nous pouvons extraire les valeurs d’élévation pour chaque point de nos transects et combiner ces informations avec notre objet principal.</p>
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">zion_elev</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/extract.html">extract</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion_transect</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion_transect</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">zion_transect</span>, <span class="va">zion_elev</span><span class="op">)</span></code></pre></div>
+<p>Le <code>zion_transect</code> résultant peut être utilisé pour créer des profils d’élévation, comme illustré sur la figure <a href="raster-vector.html#fig:lineextr">6.3</a>(B).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:lineextr"></span>
+<img src="06-raster-vector_files/figure-html/lineextr-1.png" alt="Location of a line used for raster extraction (left) and the elevation along this line (right)." width="100%"><p class="caption">
+FIGURE 6.3: Location of a line used for raster extraction (left) and the elevation along this line (right).
+</p>
+</div>
+<p>Le dernier type d’objet vectoriel géographique pour l’extraction de raster est le <strong>polygone</strong>.
+Comme les lignes, les polygones ont tendance à retourner de nombreuses valeurs matricielles par polygone.
+Ceci est démontré dans la commande ci-dessous, qui résulte en un jeux de données avec les noms de colonnes <code>ID</code> (le numéro de ligne du polygone) et <code>srtm</code> (valeurs d’élévation associées)</p>
+<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">zion_srtm_values</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/extract.html">extract</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">srtm</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Ces résultats peuvent être utilisés pour générer des statistiques synthétiques pour les valeurs matricielles par polygone, par exemple pour caractériser une seule région ou pour comparer plusieurs régions.
+La génération de statistiques résumées est démontrée dans le code ci-dessous, qui crée l’objet <code>zion_srtm_df</code> contenant des statistiques résumées pour les valeurs d’élévation dans le Parc National de Zion (voir Figure <a href="raster-vector.html#fig:polyextr">6.4</a>(A)) :</p>
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">zion_srtm_values</span>, <span class="va">ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html">across</a></span><span class="op">(</span><span class="va">srtm</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min <span class="op">=</span> <span class="va">min</span>, mean <span class="op">=</span> <span class="va">mean</span>, max <span class="op">=</span> <span class="va">max</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 1 × 4</span>
+<span class="co">#&gt;      ID srtm_min srtm_mean srtm_max</span>
+<span class="co">#&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;</span>
+<span class="co">#&gt; 1     1     1122     1818.     2661</span></code></pre></div>
+<!--jn:toDo -->
+<!--should we use the tidyverse name or dplyr here?-->
+<!--btw we could also add reference to the tidyverse paper somewhere in the book-->
+<p>L’extrait de code précédent a utilisé le <strong>tidyverse</strong> pour fournir des statistiques sommaires pour les valeurs des cellules par ID de polygone, comme décrit dans le chapitre <a href="attr.html#attr">3</a>.
+Les résultats fournissent des résumés utiles, par exemple que la hauteur maximale dans le parc est d’environ 2 661 mètres au-dessus du niveau de la mer (d’autres statistiques sommaires, comme l’écart-type, peuvent également être calculées de cette manière).
+Étant donné qu’il n’y a qu’un seul polygone dans l’exemple, un tableau de données avec une seule ligne est renvoyé ; cependant, la méthode fonctionne lorsque plusieurs polygones sélecteurs sont utilisés.</p>
+<p>La même approche fonctionne pour compter les occurrences de valeurs raster catégorielles dans les polygones.
+Ceci est illustré avec un jeu de données de couverture du sol (<code>nlcd</code>) du paquet <strong>spDataLarge</strong> dans la Figure <a href="raster-vector.html#fig:polyextr">6.4</a>(B), et démontré dans le code ci-dessous :</p>
+<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nlcd</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/nlcd.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">zion</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">nlcd</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion_nlcd</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/extract.html">extract</a></span><span class="op">(</span><span class="va">nlcd</span>, <span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">zion2</span><span class="op">)</span><span class="op">)</span>
+<span class="va">zion_nlcd</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">ID</span>, <span class="va">levels</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 7 × 3</span>
+<span class="co">#&gt; # Groups:   ID, levels [7]</span>
+<span class="co">#&gt;      ID levels         n</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;fct&gt;      &lt;int&gt;</span>
+<span class="co">#&gt; 1     1 Developed   4205</span>
+<span class="co">#&gt; 2     1 Barren     98285</span>
+<span class="co">#&gt; 3     1 Forest    298299</span>
+<span class="co">#&gt; 4     1 Shrubland 203701</span>
+<span class="co">#&gt; # … with 3 more rows</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:polyextr"></span>
+<img src="06-raster-vector_files/figure-html/polyextr-1.png" alt="Extraction de données raster continues (à gauche) et catégorielles (à droite)." width="100%"><p class="caption">
+FIGURE 6.4: Extraction de données raster continues (à gauche) et catégorielles (à droite).
+</p>
+</div>
+
+<div class="rmdnote">
+Les polygones ont généralement des formes irrégulières, et par conséquent, un polygone ne peut recouvrir que certaines parties des cellules d´un raster.
+Pour obtenir des résultats plus détaillés, la fonction <code><a href="https://rdrr.io/pkg/terra/man/extract.html">extract()</a></code> possède un argument appelé <code>exact</code>.
+Avec <code>exact = TRUE</code>, nous obtenons une colonne supplémentaire <code>fraction</code> dans le cadre de données de sortie, qui contient une fraction de chaque cellule qui est couverte par le polygone.
+Cela peut être utile pour calculer une moyenne pondérée pour des rasters continus ou une couverture plus précise pour des rasters catégoriels.
+Par défaut, c´est <code>FALSE</code> car cette opération nécessite plus de calculs.
+</div>
+<!--toDo:JN-->
+<!-- mention https://github.com/isciences/exactextractr -->
+</div>
+<div id="rasterization" class="section level2" number="6.4">
+<h2>
+<span class="header-section-number">6.4</span> Rasterisation<a class="anchor" aria-label="anchor" href="#rasterization"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+La rastérisation est la conversion d’objets vectoriels en objets rasters.
+En général, le raster produit est utilisé pour l’analyse quantitative (par exemple, les analyses de terrain) ou la modélisation.
+Comme nous l’avons vu au chapitre <a href="spatial-class.html#spatial-class">2</a>, le modèle de données raster possède certaines caractéristiques qui le rendent propice à certaines méthodes.
+En outre, le processus de rastérisation peut contribuer à simplifier les jeux de données car les valeurs résultantes ont toutes la même résolution spatiale : la rastérisation peut être considérée comme un type particulier d’agrégation de données géographiques.</p>
+<p>Le paquet <strong>terra</strong> contient la fonction <code><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize()</a></code> pour effectuer ce travail.
+Ses deux premiers arguments sont, <code>x</code>, un objet vectoriel à rasteriser et, <code>y</code>, un objet ‘template raster’ définissant l’étendue, la résolution et le CRS de la sortie.
+La résolution géographique de l’objet raster en entrée a un impact majeur sur les résultats : si elle est trop faible (la taille de la cellule est trop grande), le résultat peut manquer toute la variabilité géographique des données vectorielles ; si elle est trop élevée, les temps de calcul peuvent être excessifs.
+Il n’existe pas de règles simples à suivre pour décider de la résolution géographique appropriée, qui dépend fortement de l’utilisation prévue des résultats.
+Souvent, la résolution cible est imposée à l’utilisateur, par exemple lorsque le résultat d’une rastérisation doit être aligné sur des rasters existants.</p>
+<p>Pour mieux expliciter la rastérisation, nous allons utiliser un modèle de raster qui a la même étendue et le même CRS que les données vectorielles d’entrée <code>cycle_hire_osm_projected</code> (un ensemble de données sur les points de location de vélos à Londres est illustré dans la Figure <a href="raster-vector.html#fig:vector-rasterization1">6.5</a>(A)) et une résolution spatiale de 1000 mètres :</p>
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cycle_hire_osm</span> <span class="op">=</span> <span class="fu">spData</span><span class="fu">::</span><span class="va"><a href="https://nowosad.github.io/spData/reference/cycle_hire_osm.html">cycle_hire_osm</a></span>
+<span class="va">cycle_hire_osm_projected</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">cycle_hire_osm</span>, <span class="st">"EPSG:27700"</span><span class="op">)</span>
+<span class="va">raster_template</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/ext.html">ext</a></span><span class="op">(</span><span class="va">cycle_hire_osm_projected</span><span class="op">)</span>, resolution <span class="op">=</span> <span class="fl">1000</span>,
+                       crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">cycle_hire_osm_projected</span><span class="op">)</span><span class="op">$</span><span class="va">wkt</span><span class="op">)</span></code></pre></div>
+<p>La rastérisation est une opération très flexible : les résultats dépendent non seulement de la nature du modèle de raster, mais aussi du type de vecteur d’entrée (par exemple, points, polygones) et d’une variété d’arguments pris par la fonction <code><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize()</a></code>.</p>
+<p>Pour illustrer cette flexibilité, nous allons essayer trois approches différentes de la rastérisation.
+Premièrement, nous créons un raster représentant la présence ou l’absence de points d’attache de vélos (connu sous le nom de rasters de présence/absence).
+Dans ce cas, <code><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize()</a></code> ne requiert qu’un seul argument en plus de <code>x</code> et <code>y</code> (les objets vecteur et raster mentionnés plus haut) : une valeur à transférer dans toutes les cellules non vides spécifiées par <code>field</code> (résultats illustrés Figure : <a href="raster-vector.html#fig:vector-rasterization1">6.5</a>(B)).</p>
+<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ch_raster1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">cycle_hire_osm_projected</span><span class="op">)</span>, <span class="va">raster_template</span>,
+                       field <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<p>L’argument <code>fun</code> spécifie des statistiques résumées utilisées pour convertir plusieurs observations proches en cellules associées dans l’objet raster.
+Par défaut, <code>fun = "last"</code> est utilisé mais d’autres options telles que <code>fun = "length"</code> peuvent être utilisées, dans ce cas pour compter le nombre de points de locations de vélos dans chaque cellule de la grille (les résultats de cette opération sont illustrés dans la figure <a href="raster-vector.html#fig:vector-rasterization1">6.5</a>(C)).</p>
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ch_raster2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">cycle_hire_osm_projected</span><span class="op">)</span>, <span class="va">raster_template</span>, 
+                       fun <span class="op">=</span> <span class="st">"length"</span><span class="op">)</span></code></pre></div>
+<p>La nouvelle sortie, <code>ch_raster2</code>, montre le nombre de points de location de vélos dans chaque cellule de la grille.
+Les points de location de vélos ont des nombres différents de vélos décrits par la variable <code>capacité</code>, ce qui soulève la question suivante : quelle est la capacité de chaque cellule de la grille ?
+Pour le calculer, nous devons “additionner” le champ (<code>"capacité"</code>), ce qui donne la sortie illustrée dans la Figure <a href="raster-vector.html#fig:vector-rasterization1">6.5</a>(D), calculée avec la commande suivante (d’autres fonctions de résumé telles que la <code>moyenne</code> peuvent être utilisées) :</p>
+<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ch_raster3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">cycle_hire_osm_projected</span><span class="op">)</span>, <span class="va">raster_template</span>, 
+                       field <span class="op">=</span> <span class="st">"capacity"</span>, fun <span class="op">=</span> <span class="va">sum</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:vector-rasterization1"></span>
+<img src="06-raster-vector_files/figure-html/vector-rasterization1-1.png" alt="Exemples de rastérisation de points." width="100%"><p class="caption">
+FIGURE 6.5: Exemples de rastérisation de points.
+</p>
+</div>
+<p>Un autre jeu de données basé sur les polygones et les frontières de la Californie (créé ci-dessous) illustre la rastérisation des lignes.
+Après avoir transformé les objets de type polygone dans un multilinestring, un modèle de raster est créé avec une résolution de 0,5 degré :</p>
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">california</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">us_states</span>, <span class="va">NAME</span> <span class="op">==</span> <span class="st">"California"</span><span class="op">)</span>
+<span class="va">california_borders</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">california</span>, <span class="st">"MULTILINESTRING"</span><span class="op">)</span>
+<span class="va">raster_template2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/ext.html">ext</a></span><span class="op">(</span><span class="va">california</span><span class="op">)</span>, resolution <span class="op">=</span> <span class="fl">0.5</span>,
+                        crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">california</span><span class="op">)</span><span class="op">$</span><span class="va">wkt</span><span class="op">)</span></code></pre></div>
+<p>Lorsque l’on considère la rasterisation de lignes ou de polygones, un argument supplémentaire utile est <code>touches</code>.
+Par défaut, il est <code>FALSE</code>, mais lorsqu’il est changé en <code>TRUE</code> – toutes les cellules qui sont touchées par une ligne ou une bordure de polygone obtiennent une valeur.
+La rastérisation de lignes avec <code>touches = TRUE</code> est démontré dans le code ci-dessous (Figure <a href="raster-vector.html#fig:vector-rasterization2">6.6</a>(A)).</p>
+<div class="sourceCode" id="cb216"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">california_raster1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">california_borders</span><span class="op">)</span>, <span class="va">raster_template2</span>,
+                               touches <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>Comparez-la à une rastérisation de polygone, avec <code>touches = FALSE</code> par défaut, qui ne sélectionne que les cellules dont les centroïdes sont à l’intérieur du polygone de sélection, comme illustré sur la figure <a href="raster-vector.html#fig:vector-rasterization2">6.6</a>(B).</p>
+<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">california_raster2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rasterize.html">rasterize</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html">vect</a></span><span class="op">(</span><span class="va">california</span><span class="op">)</span>, <span class="va">raster_template2</span><span class="op">)</span> </code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:vector-rasterization2"></span>
+<img src="06-raster-vector_files/figure-html/vector-rasterization2-1.png" alt="Examples of line and polygon rasterizations." width="100%"><p class="caption">
+FIGURE 6.6: Examples of line and polygon rasterizations.
+</p>
+</div>
+</div>
+<div id="vectorisation-spatiale" class="section level2" number="6.5">
+<h2>
+<span class="header-section-number">6.5</span> Vectorisation spatiale<a class="anchor" aria-label="anchor" href="#vectorisation-spatiale"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+La vectorisation spatiale est le pendant de la rastérisation (section <a href="raster-vector.html#rasterization">6.4</a>), mais dans le sens inverse.
+Elle consiste à convertir des données matricielles spatialement continues en données vectorielles spatialement discrètes telles que des points, des lignes ou des polygones.</p>
+
+<div class="rmdnote">
+Faites attention à la formulation !
+Dans R, la vectorisation fait référence à la possibilité de remplacer les boucles <code>for</code> et autres en faisant des choses comme <code>1:10 / 2</code> (voir aussi <span class="citation">Wickham (<a href="raster-vector.html#ref-wickham_advanced_2019" role="doc-biblioref">2019</a>)</span>).
+</div>
+<p>La forme la plus simple de vectorisation consiste à convertir les centroïdes des cellules matricielles en points.
+<code><a href="https://rdrr.io/pkg/terra/man/as.spatvector.html">as.points()</a></code> fait exactement cela pour toutes les cellules de grille raster non-<code>NA</code> (Figure <code><a href="raster-vector.html#fig:raster-vectorization1">6.7</a>). Notez qu'ici nous avons également utilisé</code>st_as_sf()<code>pour convertir l'objet résultant en classe</code>sf`.</p>
+<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">elev</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/elev.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">elev_point</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/as.spatvector.html">as.points</a></span><span class="op">(</span><span class="va">elev</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:raster-vectorization1"></span>
+<img src="06-raster-vector_files/figure-html/raster-vectorization1-1.png" alt="Raster and point representation of the elev object." width="100%"><p class="caption">
+FIGURE 6.7: Raster and point representation of the elev object.
+</p>
+</div>
+<p>Un autre type courant de vectorisation spatiale est la création de courbes de niveau représentant des lignes de hauteur continue ou des températures (isothermes) par exemple.
+Nous utiliserons un vrai modèle numérique d’élévation (MNE) car le raster artificiel <code>elev</code> produit des lignes parallèles (tâche pour le lecteur : vérifier cela et expliquer pourquoi cela se produit).
+Les lignes de contour peuvent être créées avec la fonction <strong>terra</strong> <code><a href="https://rdrr.io/pkg/terra/man/contour.html">as.contour()</a></code>, qui est elle-même une fonction wrapper autour de <code><a href="https://rdrr.io/r/graphics/filled.contour.html">filled.contour()</a></code>, comme démontré ci-dessous (non montré) :</p>
+<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dem</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/dem.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">cl</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/contour.html">as.contour</a></span><span class="op">(</span><span class="va">dem</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">dem</span>, axes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">cl</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>Les contours peuvent également être ajoutés aux tracés existants avec des fonctions telles que <code><a href="https://rdrr.io/pkg/terra/man/contour.html">contour()</a></code>, <code>rasterVis::contourplot()</code> ou <code><a href="https://rdrr.io/pkg/tmap/man/tm_iso.html">tmap::tm_iso()</a></code>.
+Comme l’illustre la figure <a href="raster-vector.html#fig:contour-tmap">6.8</a>, les isolignes peuvent être étiquetées.</p>
+<p></p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:contour-tmap"></span>
+<img src="figures/05-contour-tmap.png" alt="MNE avec ombrage des collines, montrant le flanc sud du Mont Mongon superposé avec des lignes de contour." width="100%"><p class="caption">
+FIGURE 6.8: MNE avec ombrage des collines, montrant le flanc sud du Mont Mongon superposé avec des lignes de contour.
+</p>
+</div>
+<p>Le dernier type de vectorisation implique la conversion de rasters en polygones.
+Ceci peut être fait avec <code><a href="https://rdrr.io/pkg/terra/man/as.spatvector.html">terra::as.polygons()</a></code>, qui convertit chaque cellule matricielle en un polygone composé de cinq coordonnées, qui sont toutes stockées en mémoire (ce qui explique pourquoi les matrices sont souvent rapides comparées aux vecteurs !)</p>
+<p>Ceci est illustré ci-dessous en convertissant l’objet <code>grain</code> en polygones et en dissolvant ensuite les frontières entre les polygones ayant les mêmes valeurs d’attributs (voir aussi l’argument <code>dissolve</code> dans <code><a href="https://rdrr.io/pkg/terra/man/as.spatvector.html">as.polygons()</a></code>).</p>
+<div class="sourceCode" id="cb220"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">grain</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/grain.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">grain_poly</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/as.spatvector.html">as.polygons</a></span><span class="op">(</span><span class="va">grain</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:06-raster-vector-40"></span>
+<img src="06-raster-vector_files/figure-html/06-raster-vector-40-1.png" alt="Illustration de la vectorisation d'un raster (à gauche) en polygone (au centre) et de l'agrégation de polygones (à droite)." width="100%"><p class="caption">
+FIGURE 6.9: Illustration de la vectorisation d’un raster (à gauche) en polygone (au centre) et de l’agrégation de polygones (à droite).
+</p>
+</div>
+</div>
+<div id="exercises-3" class="section level2" number="6.6">
+<h2>
+<span class="header-section-number">6.6</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-3"><i class="fas fa-link"></i></a>
+</h2>
+<p>Some of the exercises use a vector (<code>zion_points</code>) and raster dataset (<code>srtm</code>) from the <strong>spDataLarge</strong> package.
+They also use a polygonal ‘convex hull’ derived from the vector dataset (<code>ch</code>) to represent the area of interest:</p>
+<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span>
+<span class="va">zion_points_path</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"vector/zion_points.gpkg"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span>
+<span class="va">zion_points</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="va">zion_points_path</span><span class="op">)</span>
+<span class="va">srtm</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/srtm.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ch</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_combine</a></span><span class="op">(</span><span class="va">zion_points</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_convex_hull</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>E1. Crop the <code>srtm</code> raster using (1) the <code>zion_points</code> dataset and (2) the <code>ch</code> dataset.
+Are there any differences in the output maps?
+Next, mask <code>srtm</code> using these two datasets.
+Can you see any difference now?
+How can you explain that?</p>
+<p>E2. Firstly, extract values from <code>srtm</code> at the points represented in <code>zion_points</code>.
+Next, extract average values of <code>srtm</code> using a 90 buffer around each point from <code>zion_points</code> and compare these two sets of values.
+When would extracting values by buffers be more suitable than by points alone?</p>
+<p>E3. Subset points higher than 3100 meters in New Zealand (the <code>nz_height</code> object) and create a template raster with a resolution of 3 km for the extent of the new point dataset.
+Using these two new objects:</p>
+<ul>
+<li>Count numbers of the highest points in each grid cell.</li>
+<li>Find the maximum elevation in each grid cell.</li>
+</ul>
+<p>E4. Aggregate the raster counting high points in New Zealand (created in the previous exercise), reduce its geographic resolution by half (so cells are 6 by 6 km) and plot the result.</p>
+<ul>
+<li>Resample the lower resolution raster back to the original resolution of 3 km. How have the results changed?</li>
+<li>Name two advantages and disadvantages of reducing raster resolution.</li>
+</ul>
+<p>E5. Polygonize the <code>grain</code> dataset and filter all squares representing clay.</p>
+<ul>
+<li>Name two advantages and disadvantages of vector data over raster data.</li>
+<li>When would it be useful to convert rasters to vectors in your work?</li>
+</ul>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-akima_akima_2016" class="csl-entry">
+Akima, Hiroshi, and Albrecht Gebhardt. 2016. <em>Akima: <span>Interpolation</span> of <span>Irregularly</span> and <span>Regularly Spaced Data</span></em>. <a href="https://CRAN.R-project.org/package=akima">https://CRAN.R-project.org/package=akima</a>.
+</div>
+<div id="ref-baddeley_spatial_2015" class="csl-entry">
+Baddeley, Adrian, Ege Rubak, and Rolf Turner. 2015. <em>Spatial Point Patterns: Methodology and Applications with <span>R</span></em>. <span>CRC Press</span>.
+</div>
+<div id="ref-bivand_using_2000" class="csl-entry">
+Bivand, Roger. 2000. <span>“Using the <span>R</span> Statistical Data Analysis Language on <span>GRASS</span> 5.0 <span>GIS</span> Database Files.”</span> <em>Computers &amp; Geosciences</em> 26 (9): 1043–52. <a href="https://doi.org/10.1016/S0098-3004(00)00057-1">https://doi.org/10.1016/S0098-3004(00)00057-1</a>.
+</div>
+<div id="ref-bivand_more_2001" class="csl-entry">
+———. 2001. <span>“More on <span>Spatial Data Analysis</span>.”</span> <em>R News</em> 1 (3): 13–17.
+</div>
+<div id="ref-hornik_approaches_2003" class="csl-entry">
+———. 2003. <span>“Approaches to <span>Classes</span> for <span>Spatial Data</span> in <span>R</span>.”</span> In <em>Proceedings of <span>DSC</span></em>, edited by Kurt Hornik, Friedrich Leisch, and Achim Zeileis. <a href="https://www.r-project.org/nosvn/conferences/DSC-2003/Proceedings/Bivand.pdf">https://www.r-project.org/nosvn/conferences/DSC-2003/Proceedings/Bivand.pdf</a>.
+</div>
+<div id="ref-bivand_rgrass7_2016" class="csl-entry">
+———. 2016a. <em>Rgrass7: <span>Interface Between GRASS</span> 7 <span>Geographical Information System</span> and <span>R</span></em>. <a href="https://CRAN.R-project.org/package=rgrass7">https://CRAN.R-project.org/package=rgrass7</a>.
+</div>
+<div id="ref-bivand_spgrass6_2016" class="csl-entry">
+———. 2016b. <em>Spgrass6: <span>Interface</span> Between <span>GRASS</span> 6 and <span>R</span></em>. <a href="http://CRAN.R-project.org/package=spgrass6">http://CRAN.R-project.org/package=spgrass6</a>.
+</div>
+<div id="ref-bivand_spdep_2017" class="csl-entry">
+———. 2017. <em>Spdep: <span>Spatial Dependence</span>: <span>Weighting Schemes</span>, <span>Statistics</span> and <span>Models</span></em>. <a href="https://CRAN.R-project.org/package=spdep">https://CRAN.R-project.org/package=spdep</a>.
+</div>
+<div id="ref-bivand_progress_2021" class="csl-entry">
+———. 2021. <span>“Progress in the <span>R</span> Ecosystem for Representing and Handling Spatial Data.”</span> <em>Journal of Geographical Systems</em> 23 (4): 515–46. <a href="https://doi.org/ghnwg3">https://doi.org/ghnwg3</a>.
+</div>
+<div id="ref-bivand_implementing_2000" class="csl-entry">
+Bivand, Roger, and Albrecht Gebhardt. 2000. <span>“Implementing Functions for Spatial Statistical Analysis Using the Language.”</span> <em>Journal of Geographical Systems</em> 2 (3): 307–17. <a href="https://doi.org/10.1007/PL00011460">https://doi.org/10.1007/PL00011460</a>.
+</div>
+<div id="ref-R-rgdal" class="csl-entry">
+Bivand, Roger, Tim Keitt, and Barry Rowlingson. 2018. <em>Rgdal: Bindings for the ’Geospatial’ Data Abstraction Library</em>. <a href="https://CRAN.R-project.org/package=rgdal">https://CRAN.R-project.org/package=rgdal</a>.
+</div>
+<div id="ref-bivand_maptools_2017" class="csl-entry">
+Bivand, Roger, and Nicholas Lewin-Koh. 2017. <em>Maptools: <span>Tools</span> for <span>Reading</span> and <span>Handling Spatial Objects</span></em>. <a href="https://CRAN.R-project.org/package=maptools">https://CRAN.R-project.org/package=maptools</a>.
+</div>
+<div id="ref-bivand_open_2000" class="csl-entry">
+Bivand, Roger, and Markus Neteler. 2000. <span>“Open Source Geocomputation: Using the <span>R</span> Data Analysis Language Integrated with <span>GRASS GIS</span> and <span>PostgreSQL</span> Data Base Systems.”</span> In <em>Proceedings of the 5th <span>International Conference</span> on <span>GeoComputation</span></em>, edited by Markus Neteler and Roger S. Bivand. <a href="http://www.geocomputation.org/2000/GC009/Gc009.htm">http://www.geocomputation.org/2000/GC009/Gc009.htm</a>.
+</div>
+<div id="ref-bivand_applied_2013" class="csl-entry">
+Bivand, Roger, Edzer Pebesma, and Virgilio Gómez-Rubio. 2013. <em>Applied Spatial Data Analysis with <span>R</span></em>. Vol. 747248717. <span>Springer</span>. <a href="https://books.google.com?id=v0eIU9ObJXgC">https://books.google.com?id=v0eIU9ObJXgC</a>.
+</div>
+<div id="ref-R-rgeos" class="csl-entry">
+Bivand, Roger, and Colin Rundel. 2018. <em>Rgeos: Interface to Geometry Engine - Open Source (’GEOS’)</em>. <a href="https://CRAN.R-project.org/package=rgeos">https://CRAN.R-project.org/package=rgeos</a>.
+</div>
+<div id="ref-bondaruk_assessing_2020" class="csl-entry">
+Bondaruk, Ben, Steven A. Roberts, and Colin Robertson. 2020. <span>“Assessing the State of the Art in <span>Discrete Global Grid Systems</span>: <span>OGC</span> Criteria and Present Functionality.”</span> <em>Geomatica</em> 74 (1): 9–30. <a href="https://doi.org/10.1139/geomat-2019-0015">https://doi.org/10.1139/geomat-2019-0015</a>.
+</div>
+<div id="ref-brenning_arcgis_2012" class="csl-entry">
+Brenning, Alexander. 2012. <em><span>ArcGIS Geoprocessing</span> in <span>R</span> via <span>Python</span></em>. <a href="https://CRAN.R-project.org/package=RPyGeo">https://CRAN.R-project.org/package=RPyGeo</a>.
+</div>
+<div id="ref-R-RSAGA" class="csl-entry">
+Brenning, Alexander, Donovan Bangs, and Marc Becker. 2018. <em>RSAGA: SAGA Geoprocessing and Terrain Analysis</em>. <a href="https://CRAN.R-project.org/package=RSAGA">https://CRAN.R-project.org/package=RSAGA</a>.
+</div>
+<div id="ref-brzustowicz_data_2017" class="csl-entry">
+Brzustowicz, Michael R. 2017. <em>Data Science with <span>Java</span>: [Practical Methods for Scientists and Engineers]</em>. First. <span>Beijing Boston Farnham</span>: <span>O´Reilly</span>.
+</div>
+<div id="ref-burrough_principles_2015" class="csl-entry">
+Burrough, P. A., Rachael McDonnell, and Christopher D. Lloyd. 2015. <em>Principles of Geographical Information Systems</em>. Third. <span>Oxford, New York</span>: <span>Oxford University Press</span>.
+</div>
+<div id="ref-calenge_package_2006" class="csl-entry">
+Calenge, C. 2006. <span>“The Package Adehabitat for the <span>R</span> Software: Tool for the Analysis of Space and Habitat Use by Animals.”</span> <em>Ecological Modelling</em> 197: 1035. <a href="https://doi.org/10.1016/j.ecolmodel.2006.03.017">https://doi.org/10.1016/j.ecolmodel.2006.03.017</a>.
+</div>
+<div id="ref-chambers_extending_2016" class="csl-entry">
+Chambers, John M. 2016. <em>Extending <span>R</span></em>. <span>CRC Press</span>. <a href="https://books.google.com?id=kxxjDAAAQBAJ">https://books.google.com?id=kxxjDAAAQBAJ</a>.
+</div>
+<div id="ref-clementini_comparison_1995" class="csl-entry">
+Clementini, Eliseo, and Paolino Di Felice. 1995. <span>“A Comparison of Methods for Representing Topological Relationships.”</span> <em>Information Sciences - Applications</em> 3 (3): 149–78. <a href="https://doi.org/ddtnhx">https://doi.org/ddtnhx</a>.
+</div>
+<div id="ref-cooley_sfheaders_2020" class="csl-entry">
+Cooley, David. 2020. <em>Sfheaders: <span>Converts</span> Between r Objects and Simple Feature Objects</em>. Manual. <a href="https://CRAN.R-project.org/package=sfheaders">https://CRAN.R-project.org/package=sfheaders</a>.
+</div>
+<div id="ref-coppock_history_1991" class="csl-entry">
+Coppock, J Terry, and David W Rhind. 1991. <span>“The History of <span>GIS</span>.”</span> <em>Geographical Information Systems: Principles and Applications, Vol. 1.</em> 1 (1): 21–43. <a href="https://www.geos.ed.ac.uk/~gisteac/ilw/generic_resources/books_and_papers/Thx1ARTICLE.pdf">https://www.geos.ed.ac.uk/~gisteac/ilw/generic_resources/books_and_papers/Thx1ARTICLE.pdf</a>.
+</div>
+<div id="ref-dieck_algebraic_2008" class="csl-entry">
+Dieck, Tammo tom. 2008. <em>Algebraic Topology</em>. <span>EMS</span> Textbooks in Mathematics. <span>Zürich</span>: <span>European Mathematical Society</span>. <a href="https://www.maths.ed.ac.uk/~v1ranick/papers/diecktop.pdf">https://www.maths.ed.ac.uk/~v1ranick/papers/diecktop.pdf</a>.
+</div>
+<div id="ref-douglas_algorithms_1973" class="csl-entry">
+Douglas, David H, and Thomas K Peucker. 1973. <span>“Algorithms for the Reduction of the Number of Points Required to Represent a Digitized Line or Its Caricature.”</span> <em>Cartographica: The International Journal for Geographic Information and Geovisualization</em> 10 (2): 112–22. <a href="https://doi.org/bjwv52">https://doi.org/bjwv52</a>.
+</div>
+<div id="ref-dunnington_ggspatial_2021" class="csl-entry">
+Dunnington, Dewey. 2021. <em>Ggspatial: <span>Spatial</span> Data Framework for Ggplot2</em>. Manual. <a href="https://CRAN.R-project.org/package=ggspatial">https://CRAN.R-project.org/package=ggspatial</a>.
+</div>
+<div id="ref-eddelbuettel_extending_2018" class="csl-entry">
+Eddelbuettel, Dirk, and James Joseph Balamuta. 2018. <span>“Extending <span>R</span> with <span>C</span>++: <span>A Brief Introduction</span> to <span>Rcpp</span>.”</span> <em>The American Statistician</em> 72 (1): 28–36. <a href="https://doi.org/gdg3fb">https://doi.org/gdg3fb</a>.
+</div>
+<div id="ref-egenhofer_mathematical_1990" class="csl-entry">
+Egenhofer, Max, and John Herring. 1990. <span>“A Mathematical Framework for the Definition of Topological Relations.”</span> In <em>Proc. The Fourth International Symposium on Spatial Data Handing</em>, 803–13.
+</div>
+<div id="ref-garrard_geoprocessing_2016" class="csl-entry">
+Garrard, Chris. 2016. <em>Geoprocessing with <span>Python</span></em>. <span>Shelter Island, NY</span>: <span>Manning Publications</span>.
+</div>
+<div id="ref-gillespie_efficient_2016" class="csl-entry">
+Gillespie, Colin, and Robin Lovelace. 2016. <em>Efficient <span>R Programming</span>: <span>A Practical Guide</span> to <span>Smarter Programming</span></em>. <span>O’Reilly Media</span>. <a href="https://csgillespie.github.io/efficientR/">https://csgillespie.github.io/efficientR/</a>.
+</div>
+<div id="ref-giraud_mapsf_2021" class="csl-entry">
+Giraud, Timothée. 2021. <em>Mapsf: <span>Thematic</span> Cartography</em>. Manual. <a href="https://CRAN.R-project.org/package=mapsf">https://CRAN.R-project.org/package=mapsf</a>.
+</div>
+<div id="ref-grolemund_r_2016" class="csl-entry">
+Grolemund, Garrett, and Hadley Wickham. 2016. <em>R for <span>Data Science</span></em>. <span>O’Reilly Media</span>.
+</div>
+<div id="ref-hijmans_geosphere_2016" class="csl-entry">
+Hijmans, Robert J. 2016. <em>Geosphere: <span>Spherical Trigonometry</span></em>. <a href="https://CRAN.R-project.org/package=geosphere">https://CRAN.R-project.org/package=geosphere</a>.
+</div>
+<div id="ref-R-raster" class="csl-entry">
+———. 2017. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.
+</div>
+<div id="ref-hijmans_terra_2021" class="csl-entry">
+———. 2021. <em>Terra: <span>Spatial</span> Data Analysis</em>. Manual. <a href="https://rspatial.org/terra/">https://rspatial.org/terra/</a>.
+</div>
+<div id="ref-essd-11-647-2019" class="csl-entry">
+Ince, E. S., F. Barthelmes, S. Reißland, K. Elger, C. Förste, F. Flechtner, and H. Schuh. 2019. <span>“<span>ICGEM</span> – 15 Years of Successful Collection and Distribution of Global Gravitational Models, Associated Services, and Future Plans.”</span> <em>Earth System Science Data</em> 11 (2): 647–74. <a href="https://doi.org/gg5tzm">https://doi.org/gg5tzm</a>.
+</div>
+<div id="ref-jr_geor_2016" class="csl-entry">
+Jr, Paulo J. Ribeiro, and Peter J. Diggle. 2016. <em><span class="nocase">geoR</span>: <span>Analysis</span> of <span>Geostatistical Data</span></em>. <a href="https://CRAN.R-project.org/package=geoR">https://CRAN.R-project.org/package=geoR</a>.
+</div>
+<div id="ref-kahle_ggmap_2013" class="csl-entry">
+Kahle, D, and Hadley Wickham. 2013. <span>“Ggmap: <span>Spatial Visualization</span> with Ggplot2.”</span> <em>The R Journal</em> 5: 144–61. <a href="https://doi.org/10.32614/RJ-2013-014">https://doi.org/10.32614/RJ-2013-014</a>.
+</div>
+<div id="ref-lamigueiro_displaying_2018" class="csl-entry">
+Lamigueiro, Oscar Perpinan. 2018. <em>Displaying <span>Time Series</span>, <span>Spatial</span>, and <span>Space-Time Data</span> with <span>R</span></em>. Second. <span>Boca Raton</span>: <span>Chapman and Hall/CRC</span>.
+</div>
+<div id="ref-liu_essential_2009" class="csl-entry">
+Liu, Jian-Guo, and Philippa J. Mason. 2009. <em>Essential Image Processing and <span>GIS</span> for Remote Sensing</em>. <span>Chichester, West Sussex, UK, Hoboken, NJ</span>: <span>Wiley-Blackwell</span>.
+</div>
+<div id="ref-livingstone_geographical_1992" class="csl-entry">
+Livingstone, David N. 1992. <em>The <span>Geographical Tradition</span>: <span>Episodes</span> in the <span>History</span> of a <span>Contested Enterprise</span></em>. <span>Oxford, UK ; Cambridge, USA</span>: <span>John Wiley &amp; Sons Ltd</span>.
+</div>
+<div id="ref-loecher_rgooglemaps_2015" class="csl-entry">
+Loecher, Markus, and Karl Ropkins. 2015. <span>“<span>RgoogleMaps</span> and Loa: <span>Unleashing R Graphics Power</span> on <span>Map Tiles</span>.”</span> <em>Journal of Statistical Software</em> 63 (February): 1–18. <a href="https://doi.org/gfgwng">https://doi.org/gfgwng</a>.
+</div>
+<div id="ref-longley_geographic_2015" class="csl-entry">
+Longley, Paul. 2015. <em>Geographic Information Science &amp; Systems</em>. Fourth edition. <span>Hoboken, NJ</span>: <span>Wiley</span>.
+</div>
+<div id="ref-longley_geocomputation_1998" class="csl-entry">
+Longley, Paul, Sue M. Brooks, Rachael McDonnell, and Bill MacMillan, eds. 1998. <em>Geocomputation: <span>A Primer</span></em>. <span>Chichester, Eng. ; New York</span>: <span>Wiley</span>.
+</div>
+<div id="ref-majure_sgeostat_2016" class="csl-entry">
+Majure, James J., and Albrecht Gebhardt. 2016. <em>Sgeostat: <span>An Object-Oriented Framework</span> for <span>Geostatistical Modeling</span> in <span>S</span>+</em>. <a href="https://CRAN.R-project.org/package=sgeostat">https://CRAN.R-project.org/package=sgeostat</a>.
+</div>
+<div id="ref-maling_coordinate_1992" class="csl-entry">
+Maling, D. H. 1992. <em>Coordinate Systems and Map Projections</em>. Second. <span>Oxford ; New York</span>: <span>Pergamon Press</span>.
+</div>
+<div id="ref-_map_1993" class="csl-entry">
+<span>“Map Projections.”</span> 1993. <span>US Geological Survey</span>. <a href="https://doi.org/10.3133/70047422">https://doi.org/10.3133/70047422</a>.
+</div>
+<div id="ref-morganwall_rayshader_2021" class="csl-entry">
+Morgan-Wall, Tyler. 2021. <em>Rayshader: <span>Create</span> Maps and Visualize Data in <span>2d</span> and <span>3d</span></em>. Manual. <a href="https://CRAN.R-project.org/package=rayshader">https://CRAN.R-project.org/package=rayshader</a>.
+</div>
+<div id="ref-muenchow_rqgis:_2017" class="csl-entry">
+Muenchow, Jannes, Patrick Schratz, and Alexander Brenning. 2017. <span>“<span>RQGIS</span>: <span>Integrating R</span> with <span>QGIS</span> for Statistical Geocomputing.”</span> <em>The R Journal</em> 9 (2): 409–28. <a href="https://doi.org/gf3d48">https://doi.org/gf3d48</a>.
+</div>
+<div id="ref-neteler_open_2008" class="csl-entry">
+Neteler, Markus, and Helena Mitasova. 2008. <em>Open Source <span>GIS</span>: A <span>GRASS GIS</span> Approach</em>. Third. <span>New York, NY</span>: <span>Springer</span>.
+</div>
+<div id="ref-openshaw_geocomputation_2000" class="csl-entry">
+Openshaw, Stan, and Robert J. Abrahart, eds. 2000. <em>Geocomputation</em>. <span>London ; New York</span>: <span>CRC Press</span>.
+</div>
+<div id="ref-pebesma_simple_2018" class="csl-entry">
+Pebesma, Edzer. 2018. <span>“Simple Features for <span>R</span>: <span>Standardized</span> Support for Spatial Vector Data.”</span> <em>The R Journal</em>. <a href="https://doi.org/gf2ztt">https://doi.org/gf2ztt</a>.
+</div>
+<div id="ref-pebesma_stars_2021" class="csl-entry">
+———. 2021. <em>Stars: <span>Spatiotemporal</span> Arrays, Raster and Vector Data Cubes</em>. Manual. <a href="https://CRAN.R-project.org/package=stars">https://CRAN.R-project.org/package=stars</a>.
+</div>
+<div id="ref-pebesma_classes_2005" class="csl-entry">
+Pebesma, Edzer, and Roger Bivand. 2005. <span>“Classes and Methods for Spatial Data in <span>R</span>.”</span> <em>R News</em> 5 (2): 9–13. <a href="https://cran.r-project.org/doc/Rnews/Rnews_2005-2.pdf">https://cran.r-project.org/doc/Rnews/Rnews_2005-2.pdf</a>.
+</div>
+<div id="ref-R-sp" class="csl-entry">
+———. 2018. <em>Sp: Classes and Methods for Spatial Data</em>. <a href="https://CRAN.R-project.org/package=sp">https://CRAN.R-project.org/package=sp</a>.
+</div>
+<div id="ref-pebesma_spatial_2022" class="csl-entry">
+———. 2022. <em>Spatial <span>Data Science</span> with Applications in <span>R</span></em>. <a href="https://r-spatial.org/book">https://r-spatial.org/book</a>.
+</div>
+<div id="ref-R-gstat" class="csl-entry">
+Pebesma, Edzer, and Benedikt Graeler. 2018. <em>Gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation</em>. <a href="https://CRAN.R-project.org/package=gstat">https://CRAN.R-project.org/package=gstat</a>.
+</div>
+<div id="ref-pebesma_measurement_2016" class="csl-entry">
+Pebesma, Edzer, Thomas Mailund, and James Hiebert. 2016. <span>“Measurement <span>Units</span> in <span>R</span>.”</span> <em>The R Journal</em> 8 (2): 486–94. <a href="https://doi.org/gkb5pd">https://doi.org/gkb5pd</a>.
+</div>
+<div id="ref-pebesma_r_2012" class="csl-entry">
+Pebesma, Edzer, Daniel Nüst, and Roger Bivand. 2012. <span>“The <span>R</span> Software Environment in Reproducible Geoscientific Research.”</span> <em>Eos, Transactions American Geophysical Union</em> 93 (16): 163–63. <a href="https://doi.org/gd8djc">https://doi.org/gd8djc</a>.
+</div>
+<div id="ref-pedersen_gganimate_2020" class="csl-entry">
+Pedersen, Thomas Lin, and David Robinson. 2020. <em>Gganimate: <span>A</span> Grammar of Animated Graphics</em>. Manual. <a href="https://CRAN.R-project.org/package=gganimate">https://CRAN.R-project.org/package=gganimate</a>.
+</div>
+<div id="ref-qiu_development_2012" class="csl-entry">
+Qiu, Fang, Caiyun Zhang, and Yuhong Zhou. 2012. <span>“The <span>Development</span> of an <span>Areal Interpolation ArcGIS Extension</span> and a <span>Comparative Study</span>.”</span> <em>GIScience &amp; Remote Sensing</em> 49 (5): 644–63. <a href="https://doi.org/gkb5fn">https://doi.org/gkb5fn</a>.
+</div>
+<div id="ref-rcoreteam_introduction_2021" class="csl-entry">
+R Core Team, D. M. Smith, and R Core Team. 2021. <em>An <span>Introduction</span> to <span>R</span></em>. <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html">https://cran.r-project.org/doc/manuals/r-release/R-intro.html</a>.
+</div>
+<div id="ref-ripley_spatial_2001" class="csl-entry">
+Ripley, Brian D. 2001. <span>“Spatial <span>Statistics</span> in <span>R</span>.”</span> <em>R News</em> 1 (2): 14–15.
+</div>
+<div id="ref-Roussel2020" class="csl-entry">
+Roussel, Jean-Romain, David Auty, Nicholas C. Coops, Piotr Tompalski, Tristan R. H. Goodbody, Andrew Sánchez Meador, Jean-François Bourdon, Florian de Boissieu, and Alexis Achim. 2020. <span>“<span class="nocase">lidR</span>: <span>An</span> r Package for Analysis of Airborne Laser Scanning (<span>ALS</span>) Data.”</span> <em>Remote Sensing of Environment</em> 251 (December): 112061. <a href="https://doi.org/ghddxb">https://doi.org/ghddxb</a>.
+</div>
+<div id="ref-rowlingson_splancs_1993" class="csl-entry">
+Rowlingson, B. S, and P. J Diggle. 1993. <span>“Splancs: <span>Spatial</span> Point Pattern Analysis Code in <span class="nocase">S-plus</span>.”</span> <em>Computers &amp; Geosciences</em> 19 (5): 627–55. <a href="https://doi.org/dvzffd">https://doi.org/dvzffd</a>.
+</div>
+<div id="ref-rowlingson_rasp:_2003" class="csl-entry">
+Rowlingson, Barry, Adrian Baddeley, Rolf Turner, and Peter Diggle. 2003. <span>“Rasp: <span>A Package</span> for <span>Spatial Statistics</span>.”</span> In <em>Proceedings of the 3rd <span>International Workshop</span> on <span>Distributed Statistical Computing</span></em>, edited by Kurt Hornik. <a href="https://www.r-project.org/conferences/DSC-2003/Proceedings/RowlingsonEtAl.pdf">https://www.r-project.org/conferences/DSC-2003/Proceedings/RowlingsonEtAl.pdf</a>.
+</div>
+<div id="ref-rowlingson_splancs_2017" class="csl-entry">
+Rowlingson, Barry, and Peter Diggle. 2017. <em>Splancs: <span>Spatial</span> and <span>Space-Time Point Pattern Analysis</span></em>. <a href="https://CRAN.R-project.org/package=splancs">https://CRAN.R-project.org/package=splancs</a>.
+</div>
+<div id="ref-shen_classification_2018" class="csl-entry">
+Shen, Jingwei, Min Chen, and Xintao Liu. 2018. <span>“Classification of Topological Relations Between Spatial Objects in Two-Dimensional Space Within the Dimensionally Extended 9-Intersection Model.”</span> <em>Transactions in GIS</em> 22 (2): 514–41. <a href="https://doi.org/gnhcx9">https://doi.org/gnhcx9</a>.
+</div>
+<div id="ref-sherman_desktop_2008" class="csl-entry">
+Sherman, Gary. 2008. <em>Desktop <span>GIS</span>: <span>Mapping</span> the <span>Planet</span> with <span>Open Source Tools</span></em>. <span>Pragmatic Bookshelf</span>.
+</div>
+<div id="ref-spanier_algebraic_1995" class="csl-entry">
+Spanier, Edwin Henry. 1995. <em>Algebraic Topology</em>. 1. corr. Springer ed. <span>New York Berlin Barcelona Budapest</span>: <span>Springer</span>.
+</div>
+<div id="ref-talbert_ancient_2014" class="csl-entry">
+Talbert, Richard J. A. 2014. <em>Ancient <span>Perspectives</span>: <span>Maps</span> and <span>Their Place</span> in <span>Mesopotamia</span>, <span>Egypt</span>, <span>Greece</span>, and <span>Rome</span></em>. <span>University of Chicago Press</span>. <a href="https://books.google.com?id=srTbAgAAQBAJ">https://books.google.com?id=srTbAgAAQBAJ</a>.
+</div>
+<div id="ref-tennekes_elegant_2022" class="csl-entry">
+Tennekes, Martijn, and Jakub Nowosad. 2022. <em>Elegant and Informative Maps with Tmap</em>.
+</div>
+<div id="ref-theeconomist_autonomous_2016" class="csl-entry">
+The Economist. 2016. <span>“The Autonomous Car’s Reality Check.”</span> <em>The Economist</em>, 2016. <a href="https://www.economist.com/news/science-and-technology/21696925-building-highly-detailed-maps-robotic-vehicles-autonomous-cars-reality">https://www.economist.com/news/science-and-technology/21696925-building-highly-detailed-maps-robotic-vehicles-autonomous-cars-reality</a>.
+</div>
+<div id="ref-tobler_smooth_1979" class="csl-entry">
+Tobler, Waldo R. 1979. <span>“Smooth <span>Pycnophylactic Interpolation</span> for <span>Geographical Regions</span>.”</span> <em>Journal of the American Statistical Association</em> 74 (367): 519–30. <a href="https://doi.org/ghz78f">https://doi.org/ghz78f</a>.
+</div>
+<div id="ref-tomlin_geographic_1990" class="csl-entry">
+Tomlin, C. Dana. 1990. <em>Geographic Information Systems and Cartographic Modeling</em>. <span>Englewood Cliffs, N.J</span>: <span>Prentice Hall</span>.
+</div>
+<div id="ref-tomlin_map_1994" class="csl-entry">
+———. 1994. <span>“Map Algebra: One Perspective.”</span> <em>Landscape and Urban Planning</em> 30 (1-2): 3–12. <a href="https://doi.org/dm2qm2">https://doi.org/dm2qm2</a>.
+</div>
+<div id="ref-venables_modern_2002" class="csl-entry">
+Venables, W. N., and B. D. Ripley. 2002. <em>Modern <span>Applied Statistics</span> with <span>S</span></em>. Fourth. <span>New York</span>: <span>Springer</span>. <a href="http://www.stats.ox.ac.uk/pub/MASS4">http://www.stats.ox.ac.uk/pub/MASS4</a>.
+</div>
+<div id="ref-visvalingam_line_1993" class="csl-entry">
+Visvalingam, M., and J. D. Whyatt. 1993. <span>“Line Generalisation by Repeated Elimination of Points.”</span> <em>The Cartographic Journal</em> 30 (1): 46–51. <a href="https://doi.org/fx74gh">https://doi.org/fx74gh</a>.
+</div>
+<div id="ref-wegmann_remote_2016" class="csl-entry">
+Wegmann, Martin, Benjamin Leutner, and Stefan Dech, eds. 2016. <em>Remote Sensing and <span>GIS</span> for Ecologists: Using Open Source Software</em>. Data in the Wild. <span>Exeter</span>: <span>Pelagic Publishing</span>.
+</div>
+<div id="ref-wickham_advanced_2019" class="csl-entry">
+Wickham, Hadley. 2019. <em>Advanced <span>R</span>, <span>Second Edition</span></em>. <span>CRC Press</span>. <a href="https://adv-r.hadley.nz/">https://adv-r.hadley.nz/</a>.
+</div>
+<div id="ref-wulf_invention_2015" class="csl-entry">
+Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <span>Humboldt</span>’s New World</em>. <span>New York</span>: <span>Alfred A. Knopf</span>.
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <h2>Note: La Seconde Edition est en construction 🏗</h2>
+    <!--<p>C'est le moment idéal pour tester les paquets en cours de développement et fournir vos commentaires</p>
+        <ul class="list-unstyled">
+          <li><a href="https://forms.gle/nq9RmbxJyZXQgc948">Fournir un commentaire (5 min)</a></li>>-->
+          <li><a href="https://geocompr.robinlovelace.net/#reproducibility">Installer la dernière version</a></li>
+          <li><a href="https://github.com/Robinlovelace/geocompr/issues">Signaler un problème <i class="fas fa-question"></i></a></li>
+          <li><a href="https://discord.gg/Te3gWeDwmf">Discuter sur Discord <i class="fab fa-discord"></i></a></li>
+          <li><a href="https://how-to-help-ukraine-now.super.site">Support Ukraine 🇺🇦
+</a></li>
+        
+        <hr>
+<nav id="toc" data-toggle="toc" aria-label="On this page"><h2>Sur cette page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#raster-vector"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
+<li><a class="nav-link" href="#introduction-3"><span class="header-section-number">6.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#d%C3%A9coupage-de-raster"><span class="header-section-number">6.2</span> Découpage de raster</a></li>
+<li><a class="nav-link" href="#extraction-de-raster"><span class="header-section-number">6.3</span> Extraction de raster</a></li>
+<li><a class="nav-link" href="#rasterization"><span class="header-section-number">6.4</span> Rasterisation</a></li>
+<li><a class="nav-link" href="#vectorisation-spatiale"><span class="header-section-number">6.5</span> Vectorisation spatiale</a></li>
+<li><a class="nav-link" href="#exercises-3"><span class="header-section-number">6.6</span> Exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/geocompr/fr/blob/main/06-raster-vector.Rmd">Code source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/geocompr/fr/edit/main/06-raster-vector.Rmd">Editer cette page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-21.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>Ce livre a été ecris grâce à <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

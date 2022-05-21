@@ -68,6 +68,7 @@
 <li><a class="" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
 <li><a class="active" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
 <li><a class="" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
+<li><a class="" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
 </ul>
 
         <div class="book-extra">
@@ -211,8 +212,8 @@ La section suivante explore différents types de relations spatiales, également
 <span class="header-section-number">4.2.2</span> Relations topologiques<a class="anchor" aria-label="anchor" href="#relations-topologiques"><i class="fas fa-link"></i></a>
 </h3>
 <p>Les relations topologiques décrivent les relations spatiales entre les objets.
-Les “relations topologiques binaires”, pour leur donner leur nom complet, sont des énoncés logiques (en ce sens que la réponse ne peut être que <code>VRAI</code> ou <code>FAUX</code>) sur les relations spatiales entre deux objets définis par des ensembles ordonnés de points (formant typiquement des points, des lignes et des polygones) en deux dimensions ou plus <span class="citation">(<a href="geometric-operations.html#ref-egenhofer_mathematical_1990" role="doc-biblioref">Egenhofer and Herring 1990</a>)</span>.
-Cela peut sembler plutôt abstrait et, en effet, la définition et la classification des relations topologiques reposent sur des fondements mathématiques publiés pour la première fois sous forme de livre en 1966 <span class="citation">(<a href="geometric-operations.html#ref-spanier_algebraic_1995" role="doc-biblioref">Spanier 1995</a>)</span>, le domaine de la topologie algébrique se poursuivant au 21<sup>e</sup> siècle <span class="citation">(<a href="geometric-operations.html#ref-dieck_algebraic_2008" role="doc-biblioref">Dieck 2008</a>)</span>.</p>
+Les “relations topologiques binaires”, pour leur donner leur nom complet, sont des énoncés logiques (en ce sens que la réponse ne peut être que <code>VRAI</code> ou <code>FAUX</code>) sur les relations spatiales entre deux objets définis par des ensembles ordonnés de points (formant typiquement des points, des lignes et des polygones) en deux dimensions ou plus <span class="citation">(<a href="raster-vector.html#ref-egenhofer_mathematical_1990" role="doc-biblioref">Egenhofer and Herring 1990</a>)</span>.
+Cela peut sembler plutôt abstrait et, en effet, la définition et la classification des relations topologiques reposent sur des fondements mathématiques publiés pour la première fois sous forme de livre en 1966 <span class="citation">(<a href="raster-vector.html#ref-spanier_algebraic_1995" role="doc-biblioref">Spanier 1995</a>)</span>, le domaine de la topologie algébrique se poursuivant au 21<sup>e</sup> siècle <span class="citation">(<a href="raster-vector.html#ref-dieck_algebraic_2008" role="doc-biblioref">Dieck 2008</a>)</span>.</p>
 <p>Malgré leur origine mathématique, les relations topologiques peuvent être comprises intuitivement en se référant à des visualisations de fonctions couramment utilisées qui testent les types courants de relations spatiales.
 La figure <a href="spatial-operations.html#fig:relations">4.2</a> montre une variété de paires géométriques et leurs relations associées.
 Les troisième et quatrième paires de la figure <a href="spatial-operations.html#fig:relations">4.2</a> (de gauche à droite puis vers le bas) montrent que, pour certaines relations, l’ordre est important : alors que les relations <em>equals</em>, <em>intersects</em>, <em>crosses</em>, <em>touches</em> et <em>overlaps</em> sont symétriques, ce qui signifie que si <code>function(x, y)</code> est vraie, <code>function(y, x)</code> le sera aussi, les relations dans lesquelles l’ordre des géométries est important, comme <em>contains</em> et <em>within</em>, ne le sont pas.
@@ -307,7 +308,7 @@ Vous pouvez en savoir plus à l´adresse suivante <a href="https://www.r-spatial
 <span class="header-section-number">4.2.3</span> Les chaines DE-9IM<a class="anchor" aria-label="anchor" href="#les-chaines-de-9im"><i class="fas fa-link"></i></a>
 </h3>
 <p>Les prédicats binaires présentés dans la section précédente reposent sur le modèle <em>Dimensionally Extended 9-Intersection Model</em> (DE-9IM).
-Ce modèle était à l’origine intitulé ” DE + 9IM ” par ses inventeurs, en référence à la ” dimension des intersections des limites, des intérieurs et des extérieurs de deux entités ” <span class="citation">(<a href="geometric-operations.html#ref-clementini_comparison_1995" role="doc-biblioref">Clementini and Di Felice 1995</a>)</span>, mais il est désormais désigné par DE-9IM <span class="citation">(<a href="geometric-operations.html#ref-shen_classification_2018" role="doc-biblioref">Shen, Chen, and Liu 2018</a>)</span>.
+Ce modèle était à l’origine intitulé ” DE + 9IM ” par ses inventeurs, en référence à la ” dimension des intersections des limites, des intérieurs et des extérieurs de deux entités ” <span class="citation">(<a href="raster-vector.html#ref-clementini_comparison_1995" role="doc-biblioref">Clementini and Di Felice 1995</a>)</span>, mais il est désormais désigné par DE-9IM <span class="citation">(<a href="raster-vector.html#ref-shen_classification_2018" role="doc-biblioref">Shen, Chen, and Liu 2018</a>)</span>.
 <!-- The model's workings can be demonstrated with reference to two intersecting polygons, as illustrated in Figure \@ref(fig:de-9im). --></p>
 <p>Pour démontrer le fonctionnement des chaînes DE-9IM, examinons les différentes façons dont la première paire de géométries peut-être reliée dans la figure <a href="spatial-operations.html#fig:relations">4.2</a>.
 La figure <a href="spatial-operations.html#fig:de9imgg">4.4</a> illustre le modèle à 9 intersections (9IM). Elle montre les intersections entre chaque combinaison possible entre l’intérieur, la limite et l’extérieur de chaque objet. Chaque composant du premier objet <code>x</code> est disposé en colonnes et que chaque composant de <code>y</code> est disposé en lignes, un graphique à facettes est créé avec les intersections entre chaque élément mises en évidence.</p>
@@ -527,9 +528,9 @@ Les opérations d’agrégation créant de nouvelles géométries sont décrites
 <p>La congruence spatiale est un concept important lié à l’agrégation spatiale.
 Un <em>objet d’agrégation</em> (que nous appellerons <code>y</code>) est <em>congruent</em> avec l’objet cible (<code>x</code>) si les deux objets ont des frontières communes.
 C’est souvent le cas des données sur les limites administratives, où des unités plus grandes — telles que les Middle Layer Super Output Areas (<a href="https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography">MSOAs</a>) au Royaume-Uni ou les districts dans de nombreux autres pays européens — sont composées de nombreuses unités plus petites.</p>
-<p>Les objets d’agrégation <em>non congruent</em>, en revanche, ne partagent pas de frontières communes avec la cible <span class="citation">(<a href="geometric-operations.html#ref-qiu_development_2012" role="doc-biblioref">Qiu, Zhang, and Zhou 2012</a>)</span>.
+<p>Les objets d’agrégation <em>non congruent</em>, en revanche, ne partagent pas de frontières communes avec la cible <span class="citation">(<a href="raster-vector.html#ref-qiu_development_2012" role="doc-biblioref">Qiu, Zhang, and Zhou 2012</a>)</span>.
 C’est un problème pour l’agrégation spatiale (et d’autres opérations spatiales) illustrée dans la figure <a href="spatial-operations.html#fig:areal-example">4.9</a> : agréger le centroïde de chaque sous-zone ne donnera pas de résultats précis.
-L’interpolation surfacique résout ce problème en transférant les valeurs d’un ensemble d’unités surfaciques à un autre, à l’aide d’une gamme d’algorithmes comprenant des approches simples de pondération de la surface et des approches plus sophistiquées telles que les méthodes ” pycnophylactiques ” <span class="citation">(<a href="geometric-operations.html#ref-tobler_smooth_1979" role="doc-biblioref">Tobler 1979</a>)</span>.</p>
+L’interpolation surfacique résout ce problème en transférant les valeurs d’un ensemble d’unités surfaciques à un autre, à l’aide d’une gamme d’algorithmes comprenant des approches simples de pondération de la surface et des approches plus sophistiquées telles que les méthodes ” pycnophylactiques ” <span class="citation">(<a href="raster-vector.html#ref-tobler_smooth_1979" role="doc-biblioref">Tobler 1979</a>)</span>.</p>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:areal-example"></span>
 <img src="04-spatial-operations_files/figure-html/areal-example-1.png" alt="Illustration des entités surfaciques congruentes (à gauche) et non congruentes (à droite) par rapport à des zones d'agrégation plus grandes (bordures bleues translucides)." width="100%"><p class="caption">
@@ -661,7 +662,7 @@ La sous-section suivante explore ces opérations et d’autres opérations conne
 <span class="header-section-number">4.3.2</span> Algèbre raster<a class="anchor" aria-label="anchor" href="#alg%C3%A8bre-raster"><i class="fas fa-link"></i></a>
 </h3>
 <p>
-Le terme “algèbre raster” a été inventé à la fin des années 1970 pour décrire un “ensemble de conventions, de capacités et de techniques” pour l’analyse des données géographiques raster <em>et</em> (bien que moins marquées) vectorielles <span class="citation">(<a href="geometric-operations.html#ref-tomlin_map_1994" role="doc-biblioref">Tomlin 1994</a>)</span>.
+Le terme “algèbre raster” a été inventé à la fin des années 1970 pour décrire un “ensemble de conventions, de capacités et de techniques” pour l’analyse des données géographiques raster <em>et</em> (bien que moins marquées) vectorielles <span class="citation">(<a href="raster-vector.html#ref-tomlin_map_1994" role="doc-biblioref">Tomlin 1994</a>)</span>.
 <!-- Although the concept never became widely adopted, the term usefully encapsulates and helps classify the range operations that can be undertaken on raster datasets. -->
 Dans ce contexte, nous définissons l’algèbre raster plus strictement, comme des opérations qui modifient ou résument les valeurs des cellules raster, en référence aux cellules environnantes, aux zones ou aux fonctions statistiques s’appliquant à chaque cellule.</p>
 <p>Les opérations d’algèbre raster ont tendance à être rapides, car les jeux de données raster ne stockent qu’implicitement les coordonnées, d’où le <a href="https://geozoneblog.wordpress.com/2013/04/19/raster-vs-vector/">vieil adage</a> “raster is faster but vector is corrector”.
@@ -672,7 +673,7 @@ De plus, si deux ou plusieurs jeux de données raster partagent la même étendu
 Premièrement, les en-têtes des jeux de données raster sont interrogés et (dans les cas où les opérations d’algèbre raster fonctionnent sur plus d’un ensemble de données) vérifiés pour s’assurer que les jeux de données sont compatibles.
 Deuxièmement, l’algèbre raster conserve ce que l’on appelle la correspondance de localisation une à une, ce qui signifie que les cellules ne peuvent pas se déplacer.
 Cela diffère de l’algèbre matricielle, dans laquelle les valeurs changent de position, par exemple lors de la multiplication ou de la division de matrices.</p>
-<p>L’algèbre raster (ou modélisation cartographique avec des données raster) divise les opérations sur des rasters en quatre sous-classes <span class="citation">(<a href="geometric-operations.html#ref-tomlin_geographic_1990" role="doc-biblioref">Tomlin 1990</a>)</span>, chacune travaillant sur une ou plusieurs grilles simultanément :</p>
+<p>L’algèbre raster (ou modélisation cartographique avec des données raster) divise les opérations sur des rasters en quatre sous-classes <span class="citation">(<a href="raster-vector.html#ref-tomlin_geographic_1990" role="doc-biblioref">Tomlin 1990</a>)</span>, chacune travaillant sur une ou plusieurs grilles simultanément :</p>
 <ol style="list-style-type: decimal">
 <li>Opérations <em>locales</em> ou par cellule</li>
 <li>Les opérations <em>Focales</em> ou de voisinage.
@@ -772,7 +773,7 @@ Les prédictions spatiales sur les objets raster peuvent donc être réalisées 
 Alors que les fonctions locales opèrent sur une cellule, bien que pouvant provenir de plusieurs couches, les opérations <strong>focales</strong> prennent en compte une cellule centrale (focale) et ses voisines.
 Le voisinage (également appelé noyau, filtre ou fenêtre mobile) utilisé est généralement de le taille 3 par 3 cellules (c’est-à-dire la cellule centrale et ses huit voisines), mais peut prendre toute autre forme (pas nécessairement rectangulaire) définie par l’utilisateur.
 Une opération focale applique une fonction d’agrégation à toutes les cellules du voisinage spécifié, utilise la sortie correspondante comme nouvelle valeur pour la cellule centrale, puis passe à la cellule centrale suivante (figure <a href="spatial-operations.html#fig:focal-example">4.13</a>).
-Cette opération est également appelée filtrage spatial et convolution <span class="citation">(<a href="geometric-operations.html#ref-burrough_principles_2015" role="doc-biblioref">Burrough, McDonnell, and Lloyd 2015</a>)</span>.</p>
+Cette opération est également appelée filtrage spatial et convolution <span class="citation">(<a href="raster-vector.html#ref-burrough_principles_2015" role="doc-biblioref">Burrough, McDonnell, and Lloyd 2015</a>)</span>.</p>
 <p>Dans R, nous pouvons utiliser la fonction <code><a href="https://rdrr.io/pkg/terra/man/focal.html">focal()</a></code> pour effectuer un filtrage spatial.
 Nous définissons la forme de la fenêtre mobile avec une <code>matrice</code> dont les valeurs correspondent aux poids (voir le paramètre <code>w</code> dans le code ci-dessous).
 Ensuite, le paramètre <code>fun</code> nous permet de spécifier la fonction que nous souhaitons appliquer à ce voisinage.
@@ -839,7 +840,7 @@ Les calculs de visibilité et de bassin visuel appartiennent également à la fa
 <h3>
 <span class="header-section-number">4.3.7</span> Les contreparties de l’algèbre raster dans le traitement vectoriel<a class="anchor" aria-label="anchor" href="#les-contreparties-de-lalg%C3%A8bre-raster-dans-le-traitement-vectoriel"><i class="fas fa-link"></i></a>
 </h3>
-<p>De nombreuses opérations d’algèbre raster ont une contrepartie dans le traitement vectoriel <span class="citation">(<a href="geometric-operations.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
+<p>De nombreuses opérations d’algèbre raster ont une contrepartie dans le traitement vectoriel <span class="citation">(<a href="raster-vector.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
 Le calcul d’une distance raster (opération globale) en ne considérant qu’une distance maximale (opération focale logique) est l’équivalent d’une opération de mise en mémoire tampon vectorielle (section <a href="geometric-operations.html#clipping">5.2.5</a>).
 Le reclassement de données raster (fonction locale ou zonale selon l’entrée) est équivalent à la dissolution de données vectorielles (section <a href="#spatial-joining"><strong>??</strong></a>).
 La superposition de deux données matricielles (opération locale), dont l’une contient des valeurs <code>NULL</code> ou <code>NA</code> représentant un masque, est similaire au découpage vectoriel (Section `<span class="citation">(<a href="#ref-ref" role="doc-biblioref"><strong>ref?</strong></a>)</span>(clipping)).
@@ -886,7 +887,7 @@ Par exemple, nous pourrions calculer la valeur moyenne – cela pourrait lisser 
 <!-- To do so, we need a more advanced approach.  -->
 <!-- Remote sensing scientists frequently apply histogram matching or use regression techniques to align the values of the first image with those of the second image. -->
 <!-- The packages **landsat** (`histmatch()`, `relnorm()`, `PIF()`), **satellite** (`calcHistMatch()`) and **RStoolbox** (`histMatch()`, `pifMatch()`) provide the corresponding functions for the **raster**'s package objects. -->
-Pour une introduction plus détaillée à la télédétection avec R, il est possible de consulter <span class="citation">Wegmann, Leutner, and Dech (<a href="geometric-operations.html#ref-wegmann_remote_2016" role="doc-biblioref">2016</a>)</span>.
+Pour une introduction plus détaillée à la télédétection avec R, il est possible de consulter <span class="citation">Wegmann, Leutner, and Dech (<a href="raster-vector.html#ref-wegmann_remote_2016" role="doc-biblioref">2016</a>)</span>.
 <!--jn:toDo-->
 <!--update the above reference to the 2nd edition--></p>
 </div>
