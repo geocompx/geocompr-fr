@@ -7,7 +7,7 @@
 <title>Chapter 1 Introduction | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="This book is about using the power of computers to do things with geographic data. It teaches a range of spatial skills, including: reading, writing and manipulating geographic data; making static...">
-<meta name="generator" content="bookdown 0.26 with bs4_book()">
+<meta name="generator" content="bookdown 0.27 with bs4_book()">
 <meta property="og:title" content="Chapter 1 Introduction | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://geocompr.github.io/fr/intro.html">
@@ -195,12 +195,10 @@ Instead we use R as a ‘tool for the trade’ for understanding the world, simi
 Although programming can seem like a reductionist activity, the aim is to teach geocomputation with R not only for fun, but for understanding the world.</p>
 <p>R is a multi-platform, open source language and environment for statistical computing and graphics (<a href="https://www.r-project.org/">r-project.org/</a>).
 With a wide range of packages, R also supports advanced geospatial statistics, modeling and visualization.
-
 New integrated development environments (IDEs) such as RStudio have made R more user-friendly for many, easing map making with a panel dedicated to interactive visualization.</p>
 <p>At its core, R is an object-oriented, <a href="http://adv-r.had.co.nz/Functional-programming.html">functional programming language</a> <span class="citation">(<a href="raster-vector.html#ref-wickham_advanced_2019" role="doc-biblioref">Wickham 2019</a>)</span>, and was specifically designed as an interactive interface to other software <span class="citation">(<a href="raster-vector.html#ref-chambers_extending_2016" role="doc-biblioref">Chambers 2016</a>)</span>.
 The latter also includes many ‘bridges’ to a treasure trove of GIS software, ‘geolibraries’ and functions (see Chapter <a href="#gis"><strong>??</strong></a>).
 It is thus ideal for quickly creating ‘geo-tools’, without needing to master lower level languages (compared to R) such as C, FORTRAN or Java (see Section <a href="intro.html#software-for-geocomputation">1.3</a>).
-
 This can feel like breaking free from the metaphorical ‘glass ceiling’ imposed by GUI-based or proprietary geographic information systems (see Table <a href="intro.html#tab:gdsl">1.1</a> for a definition of GUI).
 Furthermore, R facilitates access to other languages:
 the packages <strong>Rcpp</strong> and <strong>reticulate</strong> enable access to C++ and Python code, for example.
@@ -209,13 +207,13 @@ This means R can be used as a ‘bridge’ to a wide range of geospatial program
 As we’ll see in Chapter <a href="#adv-map"><strong>??</strong></a>, the statement that R has “limited interactive [plotting] facilities” <span class="citation">(<a href="raster-vector.html#ref-bivand_applied_2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span> is no longer true.
 This is demonstrated by the following code chunk, which creates Figure <a href="intro.html#fig:interactive">1.1</a> (the functions that generate the plot are covered in Section <a href="#interactive-maps"><strong>??</strong></a>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/">leaflet</a></span><span class="op">)</span>
-<span class="va">popup</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Robin"</span>, <span class="st">"Jakub"</span>, <span class="st">"Jannes"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/leaflet/man/leaflet-imports.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addProviderTiles.html">addProviderTiles</a></span><span class="op">(</span><span class="st">"NASAGIBS.ViirsEarthAtNight2012"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/leaflet/man/leaflet-imports.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addMarkers</a></span><span class="op">(</span>lng <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">23</span>, <span class="fl">11</span><span class="op">)</span>,
-             lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">52</span>, <span class="fl">53</span>, <span class="fl">49</span><span class="op">)</span>, 
-             popup <span class="op">=</span> <span class="va">popup</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/">leaflet</a></span><span class="op">)</span></span>
+<span><span class="va">popup</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Robin"</span>, <span class="st">"Jakub"</span>, <span class="st">"Jannes"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/addProviderTiles.html">addProviderTiles</a></span><span class="op">(</span><span class="st">"NASAGIBS.ViirsEarthAtNight2012"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html">addMarkers</a></span><span class="op">(</span>lng <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">23</span>, <span class="fl">11</span><span class="op">)</span>,</span>
+<span>             lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">52</span>, <span class="fl">53</span>, <span class="fl">49</span><span class="op">)</span>, </span>
+<span>             popup <span class="op">=</span> <span class="va">popup</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:interactive"></span>
 <iframe src="https://geocompr.github.io/img/interactive.html" width="100%" height="400px" data-external="1">
@@ -344,10 +342,8 @@ Its main member is the <strong>terra</strong> package for spatial raster handlin
 </h2>
 <p>There are many benefits of using recent spatial packages such as <strong>sf</strong>, but it also important to be aware of the history of R’s spatial capabilities: many functions, use-cases and teaching material are contained in older packages.
 These can still be useful today, provided you know where to look.
-
 </p>
 <p>R’s spatial capabilities originated in early spatial packages in the S language <span class="citation">(<a href="raster-vector.html#ref-bivand_implementing_2000" role="doc-biblioref">Bivand and Gebhardt 2000</a>)</span>.
-
 The 1990s saw the development of numerous S scripts and a handful of packages for spatial statistics.
 R packages arose from these and by 2000 there were R packages for various spatial methods “point pattern analysis, geostatistics, exploratory spatial data analysis and spatial econometrics”, according to an <a href="http://www.geocomputation.org/2000/GC009/Gc009.htm">article</a> presented at GeoComputation 2000 <span class="citation">(<a href="raster-vector.html#ref-bivand_open_2000" role="doc-biblioref">Bivand and Neteler 2000</a>)</span>.
 Some of these, notably <strong>spatial</strong>, <strong>sgeostat</strong> and <strong>splancs</strong> are still available on CRAN <span class="citation">(<a href="raster-vector.html#ref-rowlingson_splancs_1993" role="doc-biblioref">B. S. Rowlingson and Diggle 1993</a>; <a href="raster-vector.html#ref-rowlingson_splancs_2017" role="doc-biblioref">B. Rowlingson and Diggle 2017</a>; <a href="raster-vector.html#ref-venables_modern_2002" role="doc-biblioref">Venables and Ripley 2002</a>; <a href="raster-vector.html#ref-majure_sgeostat_2016" role="doc-biblioref">Majure and Gebhardt 2016</a>)</span>.</p>
@@ -395,22 +391,18 @@ Other examples of bridges between R and GIS include <strong>RSAGA</strong> <span
 <p>Visualization was not a focus initially, with the bulk of R-spatial development focused on analysis and geographic operations.
 <strong>sp</strong> provided methods for map making using both the base and lattice plotting system but demand was growing for advanced map making capabilities.
 <strong>RgoogleMaps</strong> first released in 2009, allowed to overlay R spatial data on top of ‘basemap’ tiles from online services such as Google Maps or OpenStreetMap <span class="citation">(<a href="raster-vector.html#ref-loecher_rgooglemaps_2015" role="doc-biblioref">Loecher and Ropkins 2015</a>)</span>.
-
 It was followed by the <strong>ggmap</strong> package that added similar ‘basemap’ tiles capabilities to <strong>ggplot2</strong> <span class="citation">(<a href="raster-vector.html#ref-kahle_ggmap_2013" role="doc-biblioref">Kahle and Wickham 2013</a>)</span>.
 Though <strong>ggmap</strong> facilitated map-making with <strong>ggplot2</strong>, its utility was limited by the need to <code>fortify</code> spatial objects, which means converting them into long data frames.
 While this works well for points it is computationally inefficient for lines and polygons, since each coordinate (vertex) is converted into a row, leading to huge data frames to represent complex geometries.
 Although geographic visualization tended to focus on vector data, raster visualization is supported in <strong>raster</strong> and received a boost with the release of <strong>rasterVis</strong>, which is described in a book on the subject of spatial and temporal data visualization <span class="citation">(<a href="raster-vector.html#ref-lamigueiro_displaying_2018" role="doc-biblioref">Lamigueiro 2018</a>)</span>.
 As of 2018 map making in R is a hot topic with dedicated packages such as <strong>tmap</strong>, <strong>leaflet</strong> and <strong>mapview</strong> all supporting the class system provided by <strong>sf</strong>, the focus of the next chapter (see Chapter <a href="#adv-map"><strong>??</strong></a> for more on visualization).</p>
 <p>Since 2018, a movement of modernizing basic R packages related to handling spatial data has continued.
-
 <strong>terra</strong> – a successor of the <strong>raster</strong> package aimed at better performance and more straightforward user interface was firstly released (see Chapter <a href="#raster-data"><strong>??</strong></a>) in 2020 <span class="citation">(<a href="raster-vector.html#ref-hijmans_terra_2021" role="doc-biblioref">Hijmans 2021</a>)</span>.
 In mid-2021, a significant change was made to the <strong>sf</strong> package by incorporating spherical geometry calculations.
 Since this change, by default, many spatial operations on data with geographic CRSs apply the C++ s2geometry library’s spherical geometry algorithms, while these types of operations on data with projected CRSs are still using GEOS.
 <!--toDo:rl-->
 <!--add reference to the section about spherical geometry in sf -->
 New ideas about spatial data representations were also being developed in this period.
-
-
 It includes the <strong>stars</strong> package, closely connected to <strong>sf</strong>, for handling raster and vector data cubes <span class="citation">(<a href="raster-vector.html#ref-pebesma_stars_2021" role="doc-biblioref">Pebesma 2021</a>)</span> and <strong>lidR</strong> for processing of airborne LiDAR (Light Detection and Ranging) point clouds <span class="citation">(<a href="raster-vector.html#ref-Roussel2020" role="doc-biblioref">Roussel et al. 2020</a>)</span>.</p>
 <p>This modernization had several reasons, including the emergence of new technologies and standard, and the impacts from spatial software development outside of the R environment <span class="citation">(<a href="raster-vector.html#ref-bivand_progress_2021" role="doc-biblioref">Bivand 2021</a>)</span>.
 The most important external factor affecting most spatial software, including R spatial packages, were the major updates, including many breaking changes to the PROJ library that had begun in 2018.
@@ -418,7 +410,6 @@ Most importantly, these changes forced the replacement of <code>proj4string</cod
 <p>
 Since 2018, the progress of spatial visualization tools in R has been related to a few factors.
 Firstly, new types of spatial plots were developed, including the <strong>rayshader</strong> package offering a combination of raytracing and multiple hill-shading methods to produce 2D and 3D data visualizations <span class="citation">(<a href="raster-vector.html#ref-morganwall_rayshader_2021" role="doc-biblioref">Morgan-Wall 2021</a>)</span>.
-
 Secondly, <strong>ggplot2</strong> gained new spatial capabilities, mostly thanks to the <strong>ggspatial</strong> package that adds some spatial visualization elements, including scale bars and north arrows <span class="citation">(<a href="raster-vector.html#ref-dunnington_ggspatial_2021" role="doc-biblioref">Dunnington 2021</a>)</span> and <strong>gganimate</strong> that enables smooth and customizable spatial animations <span class="citation">(<a href="raster-vector.html#ref-pedersen_gganimate_2020" role="doc-biblioref">Pedersen and Robinson 2020</a>)</span>.
 Thirdly, performance of visualizing large spatial dataset was improved.
 This especially relates to automatic plotting of downscaled rasters in <strong>tmap</strong> and the possibility of using high-performance interactive rendering platforms in the <strong>mapview</strong> package, such as <code>"leafgl"</code> and <code>"mapdeck"</code>.
@@ -463,7 +454,7 @@ Therefore, Bivand’s suggestion is to plan a transition to more modern tools, i
           <li><a href="https://forms.gle/nq9RmbxJyZXQgc948">Fournir un commentaire (5 min)</a></li>>-->
           <li><a href="https://geocompr.robinlovelace.net/#reproducibility">Installer la dernière version</a></li>
           <li><a href="https://github.com/Robinlovelace/geocompr/issues">Signaler un problème <i class="fas fa-question"></i></a></li>
-          <li><a href="https://discord.gg/Te3gWeDwmf">Discuter sur Discord <i class="fab fa-discord"></i></a></li>
+          <li><a href="https://discord.gg/PMztXYgNxp">Discuter sur Discord <i class="fab fa-discord"></i></a></li>
           <li><a href="https://how-to-help-ukraine-now.super.site">Support Ukraine 🇺🇦
 </a></li>
         
@@ -494,7 +485,7 @@ Therefore, Bivand’s suggestion is to plan a transition to more modern tools, i
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-05-21.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-07-16.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
