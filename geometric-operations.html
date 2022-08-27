@@ -7,7 +7,7 @@
 <title>Chapter 5 Opèrations géométriques | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="Prérequis Ce chapitre utilise les mêmes paquets que le chapitre 4 mais avec l’ajout de spDataLarge, qui a été installé dans le chapitre 2: library(sf) library(terra) library(dplyr) library(spData)...">
-<meta name="generator" content="bookdown 0.27 with bs4_book()">
+<meta name="generator" content="bookdown 0.28 with bs4_book()">
 <meta property="og:title" content="Chapter 5 Opèrations géométriques | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://geocompr.github.io/fr/geometric-operations.html">
@@ -19,10 +19,10 @@
 <meta name="twitter:image" content="https://geocompr.github.io/es/images/cover.png">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/_Lato-0.4.1/font.css" rel="stylesheet">
-<link href="libs/_Roboto%20Mono-0.4.1/font.css" rel="stylesheet">
-<link href="libs/_Montserrat-0.4.1/font.css" rel="stylesheet">
-<script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.2/font.css" rel="stylesheet">
+<link href="libs/Roboto_Mono-0.4.2/font.css" rel="stylesheet">
+<link href="libs/Montserrat-0.4.2/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.0/transition.js"></script><script src="libs/bs3compat-0.4.0/tabs.js"></script><script src="libs/bs3compat-0.4.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
@@ -164,7 +164,7 @@ Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines li
 <!-- https://bost.ocks.org/mike/simplify/ -->
 L’extrait de code suivant utilise cette fonction pour simplifier <code>us_states2163</code>.
 Le résultat n’a que 1% des sommets de l’entrée (fixée à l’aide de l’argument <code>keep</code>) mais son nombre d’objets reste intact car nous avons fixé <code>keep_shapes = TRUE</code> :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
-La simplification des objets multi-polygones peut supprimer les petits polygones internes, même si l’argument &lt;code&gt;keep_shapes&lt;/code&gt; est défini à TRUE. Pour éviter cela, vous devez définir &lt;code&gt;explode = TRUE&lt;/code&gt;. Cette option convertit tous les mutlipolygones en polygones séparés avant leur simplification.&lt;/p&gt;"><sup>20</sup></a></p>
+La simplification des objets multi-polygones peut supprimer les petits polygones internes, même si l’argument &lt;code&gt;keep_shapes&lt;/code&gt; est défini à TRUE. Pour éviter cela, vous devez définir &lt;code&gt;explode = TRUE&lt;/code&gt;. Cette option convertit tous les mutlipolygones en polygones séparés avant leur simplification.&lt;/p&gt;"><sup>22</sup></a></p>
 <div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># proportion des points à garder (0-1; par defaut 0.05)</span></span>
 <span><span class="va">us_states_simp2</span> <span class="op">=</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="va">us_states2163</span>, keep <span class="op">=</span> <span class="fl">0.01</span>,</span>
@@ -196,7 +196,7 @@ Ils peuvent être calculés à l’aide de la fonction <strong>sf</strong> <code
 Dans ce cas, les opérations dites de <em>point sur la surface</em> peuvent être utilisées pour garantir que le point se trouvera dans l’objet parent (par exemple, pour étiqueter des objets de type multipolygones irréguliers tels que des îles), comme l’illustrent les points rouges de la figure <a href="geometric-operations.html#fig:centr">5.3</a>.
 Remarquez que ces points rouges se trouvent toujours sur leurs objets parents.
 Ils ont été créés avec <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface()</a></code> comme suit :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
-Une description du fonctionnement de &lt;code&gt;st_point_on_surface()&lt;/code&gt; est fournie sur &lt;a href="https://gis.stackexchange.com/q/76498" class="uri"&gt;https://gis.stackexchange.com/q/76498&lt;/a&gt;.&lt;/p&gt;'><sup>21</sup></a></p>
+Une description du fonctionnement de &lt;code&gt;st_point_on_surface()&lt;/code&gt; est fournie sur &lt;a href="https://gis.stackexchange.com/q/76498" class="uri"&gt;https://gis.stackexchange.com/q/76498&lt;/a&gt;.&lt;/p&gt;'><sup>23</sup></a></p>
 <div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_pos</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface</a></span><span class="op">(</span><span class="va">nz</span><span class="op">)</span></span>
 <span><span class="va">seine_pos</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface</a></span><span class="op">(</span><span class="va">seine</span><span class="op">)</span></span></code></pre></div>
@@ -806,7 +806,7 @@ Dans l’exemple ci-dessous, un coin de cellule existe avec les coordonnées (0,
 <span><span class="co">#&gt; [1] 0 0</span></span></code></pre></div>
 <p>Si deux rasters ont des origines différentes, leurs cellules ne se chevauchent pas complètement, ce qui rends l’algèbre raster impossible.
 Pour changer l’origine – utilisez <code><a href="https://rdrr.io/pkg/terra/man/origin.html">origin()</a></code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
-Si les origines de deux données matricielles ne sont que marginalement éloignées, il suffit parfois d’augmenter l’argument &lt;code&gt;tolerance&lt;/code&gt; de &lt;code&gt;terra::terraOptions()&lt;/code&gt;.&lt;/p&gt;"><sup>22</sup></a>
+Si les origines de deux données matricielles ne sont que marginalement éloignées, il suffit parfois d’augmenter l’argument &lt;code&gt;tolerance&lt;/code&gt; de &lt;code&gt;terra::terraOptions()&lt;/code&gt;.&lt;/p&gt;"><sup>24</sup></a>
 La figure <a href="geometric-operations.html#fig:origin-example">5.14</a> révèle l’effet de la modification de l’origine de cette manière.</p>
 <div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># changer l'origine</span></span>
@@ -828,7 +828,7 @@ Les jeux de données raster peuvent également différer en ce qui concerne leur
 Pour faire correspondre les résolutions, on peut soit diminuer (<code><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate()</a></code>) soit augmenter (<code><a href="https://rdrr.io/pkg/terra/man/disaggregate.html">disagg()</a></code>) la résolution des rasters.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 Nous faisons ici référence à la résolution spatiale.
 En télédétection, les résolutions spectrale (bandes spectrales), temporelle (observations dans le temps de la même zone) et radiométrique (profondeur de couleur) sont également importantes.
-Consultez l’exemple &lt;code&gt;tapp()&lt;/code&gt; dans la documentation pour avoir une idée sur la façon de faire une agrégation de raster temporel.&lt;/p&gt;"><sup>23</sup></a>
+Consultez l’exemple &lt;code&gt;tapp()&lt;/code&gt; dans la documentation pour avoir une idée sur la façon de faire une agrégation de raster temporel.&lt;/p&gt;"><sup>25</sup></a>
 À titre d’exemple, nous modifions ici la résolution spatiale de <code>dem</code> (trouvé dans le paquet <strong>spDataLarge</strong>) par un facteur 5 (Figure <a href="geometric-operations.html#fig:aggregate-example">5.15</a>).
 De plus, la valeur de la cellule de sortie doit correspondre à la moyenne des cellules d’entrée (notez que l’on pourrait également utiliser d’autres fonctions, telles que <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">median()</a></code>, <code><a href="https://rdrr.io/r/base/sum.html">sum()</a></code>, etc ):</p>
 <div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
@@ -1021,7 +1021,7 @@ Pouvez-vous remarquer des différences entre les résultats de ces différentes 
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-07-16.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-08-27.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

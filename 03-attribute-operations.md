@@ -654,9 +654,14 @@ Il est également possible d'utiliser la fonction `levels()` pour récupérer et
 
 ```r
 levels(grain)[[1]] = c(levels(grain)[[1]], wetness = c("wet", "moist", "dry"))
+#> Warning: [set.cats] setting categories like this is deprecated; use a two-column
+#> data.frame instead
 levels(grain)
 #> [[1]]
-#> [1] "clay"  "silt"  "sand"  "wet"   "moist" "dry"
+#>   value category
+#> 1     0        0
+#> 2     1        1
+#> 3     2        2
 ```
 
 <div class="figure" style="text-align: center">

@@ -5,12 +5,16 @@
 ## Prérequis {-}
 
 C'est le premier chapitre pratique du livre. Il faut donc installer certains logiciels et les avoir un peu pratiqué. 
-Vous devez avoir accès à un ordinateur sur lequel est installé R (version [4.2.0](https://stat.ethz.ch/pipermail/r-announce/2022/000683.html sortie en avril 2022 ou supérieure).
+Vous devez avoir accès à un ordinateur sur lequel est installé R (version [4.2.0](https://stat.ethz.ch/pipermail/r-announce/2022/000683.html) ou supérieure).
 Nous vous recommandons vivement de ne pas vous contenter de lire le texte, mais également *d'exécuter le code* afin de renforcer vos compétences en géocomputation.
 
 Pour garder une trace de votre progression, il est utile de créer un nouveau dossier sur votre ordinateur pour enregistrer au fur et à mesure vos notes dans des scripts R, vos sorties graphiques ou autres.
 Vous pouvez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) le code source du livre en anglais à partir de [github.com/robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr) pour vous aider dans votre apprentissage.
-Nous vous recommandons vivement d'installer un environnement de développement intégré (IDE) tel que [RStudio](https://www.rstudio.com/products/rstudio/download/#download) (recommandé pour la plupart des gens) ou [VS Code](https://github.com/REditorSupport/vscode-R)) et d'utiliser des projets et des espaces de travail lorsque vous écrivez/exécutez/testerez le code R.
+Nous vous recommandons vivement d'installer un environnement de développement intégré (IDE) tel que [RStudio](https://www.rstudio.com/products/rstudio/download/#download) (recommandé pour la plupart des gens) ou [VS Code](https://github.com/REditorSupport/vscode-R))^[.
+Nous conseillons d'utiliser les [projets d'Rstudio](https://r4ds.had.co.nz/workflow-projects.html), les [espaces de travail de VS Code](https://code.visualstudio.com/docs/editor/workspaces) ou un des autres systèmes similaires pour vous organiser. 
+Un moyen rapide de le faire avec RStudio est d'utiliser le package **rstudioapi**.
+Ouvrez un nouveau projet appelé 'geocompr-learning' dans votre répertoire personnel avec la commande suivante à partir de la console R dans RStudio, par exemple : `rstudioapi::openProject("~/geocompr-learning")`.
+]
 
 Si vous ne connaissez pas R, nous vous recommandons de suivre les ressources d'introduction à R telles que [Hands on Programming with R](https://rstudio-education.github.io/hopr/starting.html) de Garrett Grolemund ou  [Introduction to R](https://cengel.github.io/R-intro/) de Claudia Engel avant de vous lancer dans ce livre.
 Organisez votre travail (par exemple, avec des projets RStudio) et donnez à vos scripts des noms judicieux tels que `02-chapter.R` pour documenter le code que vous écrivez au fur et à mesure de votre apprentissage.
@@ -34,7 +38,10 @@ install.packages("spDataLarge", repos = "https://nowosad.r-universe.dev")
 Ces systèmes d´exploitation (OS) ont une "configuration requise" décrite dans la notice du paquets.[README](https://github.com/r-spatial/sf). 
 Des instructions spécifiques pour chaque système d´exploitation sont disponibles en ligne, comme l´article *Installation de R 4.0 sur Ubuntu 20.04* sur le blog [rtask.thinkr.fr](https://rtask.thinkr.fr/installation-of-r-4-0-on-ubuntu-20-04-lts-and-tips-for-spatial-packages/).</div>\EndKnitrBlock{rmdnote}
 
-Tous les paquets nécessaires pour reproduire le contenu du livre peuvent être installés via la commande suivante : `remotes::install_github("geocompr/geocompkg")`.
+Tous les paquets nécessaires pour reproduire la première partie du livre  peuvent être installés via la commande suivante : `remotes::install_github("geocompr/geocompkg")`.
+Cette commande utilise la fonction `install_packages()` du package **remotes** pour installer le code source hébergé sur la plate-forme d'hébergement, de version et de collaboration de code GitHub.
+La commande suivante installera **toutes** les dépendances nécessaires pour reproduire l'intégralité du livre (attention : cela peut prendre plusieurs minutes) : `remotes::install_github("geocompr/geocompkg", dependencies = TRUE)`
+
 Les paquets nécessaires peuvent être "chargés" (techniquement, ils sont attachés) avec la fonction `library()` :
 
 
@@ -286,7 +293,7 @@ Il existe de nombreuses raisons (liées notamment aux avantages du modèle des e
 - amélioration des performances de représentation graphique ;
 - les objets **sf** peuvent être traités comme des tableaux de données dans la plupart des opérations ; 
 - les noms des fonctions **sf** sont relativement cohérents et intuitifs (tous commencent par `st_`) ; 
-- les fonctions **sf** peuvent être combinées à l'aide de l'opérateur `%>%` et fonctionnent bien avec la collection [tidyverse](http://tidyverse.org/) des paquets R\index{tidyverse}.  
+- les fonctions **sf** peuvent être combinées à l'aide de l'opérateur `|>` et fonctionnent bien avec la collection [tidyverse](http://tidyverse.org/) des paquets R\index{tidyverse}.  
 
 L'intégration de **sf** pour les paquets **tidyverse** est illustrée avec la fonction de lecture des données géographiques vectorisées: `read_sf()`.
 Au contraire de la fonction `st_read()` qui va retourner les attributs dans les classes de base R `data.frame` (et affiche un message de compte rendu plus complet qui dans l'extrait de code ci dessous a été omis) la fonction `read_sf()` va retourner un **tidyverse** `tibble`.
@@ -328,7 +335,7 @@ world_sf = st_as_sf(world_sp)           # de sp à sf
 ### Réalisation rapide de cartes {#basic-map}
 
 Des premiers jets de cartes peuvent être crées dans **sf** avec `plot()`.
-Par défaut, cela crée un graphique avec de multiple encarts (comme `spplot()` de **sp**), un encart pour chaque variable de l'objet, comme illustré dans le panneau de gauche de la Figure \@ref(fig:sfplot).
+Par défaut, cela crée un graphique avec de multiple encarts, un encart pour chaque variable de l'objet, comme illustré dans le panneau de gauche de la Figure \@ref(fig:sfplot).
 Une légende ou "clé" avec une couleur continue est produite si l'objet à tracer a une seule variable (voir l'encart de droite).
 Les couleurs peuvent également être définies avec l'argument `col = `, bien que cela ne permette pas de créer une palette continue ou une légende. 
 \index{map making!basic}
@@ -348,7 +355,7 @@ Les graphiques sont ajoutés en tant que couches aux images existantes en ajouta
 L'appel de la fonction `plot()` sur un objet **sf** va en réalité appeler `sf::::plot.sf()`. 
 La fonction `plot()` est une méthode générique qui se comporte différemment selon la classe de l'objet en entrée.
 ]
-Pour illustrer cela et donner un avant-goût du contenu des chapitres \@ref(attr) et \@ref(spatial-operations) sur les attributs et les opérations sur les données spatiales, l'extrait de code suivant combine des pays d'Asie :
+Pour illustrer cela et donner un avant-goût du contenu des chapitres \@ref(attr) et \@ref(spatial-operations) sur les attributs et les opérations sur les données spatiales, l'extrait de code suivant filtre et combine des pays d'Asie en un seul élément :
 
 
 ```r
@@ -398,7 +405,10 @@ Le code ci-dessus utilise la fonction `st_centroid()` pour convertir un type de 
 \index{bounding box}
 La méthode plot de **sf** possède également des arguments spécifiques aux données géographiques. `expandBB`, par exemple, peut être utilisé pour dessiner un objet `sf` dans son contexte :
 elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en suivant l'ordre : bas, gauche, haut, droite.
-Dans le programme suivant, ce paramètre est utilisé pour représenter l'Inde et ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques) :
+Dans le programme suivant, ce paramètre est utilisé pour représenter l'Inde et ses gigantesques voisins asiatiques, en mettant l'accent sur la Chine à l'est \@ref(fig:china) (voir les \exercices ci-dessous sur l'ajout de texte aux graphiques):^[
+Remarquez l'utilisation de `st_geometry(india)` pour renvoyer uniquement la géométrie associée à l'objet et empêcher tous ses attributs d'être tracés comme éléments simple de colonne (*simple feature column*, `sfc`).
+Une alternative consiste à utiliser `india[0]`, qui renvoie un objet `sf` qui ne contient aucune donnée attributaire.
+]
 
 
 ```r
@@ -412,8 +422,10 @@ plot(world_asia[0], add = TRUE)
 <p class="caption">(\#fig:china)L'Inde et ses pays voisins, exemple d'utilisation du paramètre expandBB.</p>
 </div>
 
-Notez l'utilisation de `[0]` pour ne garder que la colonne de géométrie et de `lwd` pour mettre l'accent sur l'Inde.
-La prochaine section \@ref(other-mapping-packages) présente d'autres techniques de visualisation permettant de représenter une gamme de types de géométrie.
+
+
+Notez l'utilisation de `lwd`dans le code afin de renforcer l'Inde.
+La section \@ref(other-mapping-packages) vous équipera d'autres techniques de visualisation pour représenter une gamme de types de géométrie.
 
 ### Les types de géométries {#geometry}
 
@@ -639,9 +651,9 @@ st_multipolygon(multipolygon_list)
 
 ```r
 ## COLLECTIONS DE GEOMETRIES
-gemetrycollection_list = list(st_multipoint(multipoint_matrix),
+geometrycollection_list = list(st_multipoint(multipoint_matrix),
                               st_linestring(linestring_matrix))
-st_geometrycollection(gemetrycollection_list)
+st_geometrycollection(geometrycollection_list)
 #> GEOMETRYCOLLECTION (MULTIPOINT (5 2, 1 3, 3 4, 3 2),
 #>   LINESTRING (1 5, 4 4, 4 1, 2 2, 3 2))
 ```
@@ -778,7 +790,7 @@ Lorsque **sf** est chargé (comme c'est le cas ici), le résultat de la commande
 
 
 ```r
-v_sfg_sf = sf::st_point(v, c(1, 2))
+v_sfg_sf = sf::st_point(v)
 print(v_sfg_sf) == print(v_sfg_sfh)
 #> POINT (1 1)
 #> POINT (1 1)
@@ -989,7 +1001,7 @@ my_rast
 #> max value   : 2892
 ```
 
-Des fonctions dédiées renseignent sur chaque composant : `dim()` renvoie le nombre de lignes, de colonnes et de couches ; `ncell()` le nombre de cellules (pixels) ; `res()` la résolution spatiale ; `ext()` son étendue spatiale ; et `crs()` son système de coordonnées de référence (la reprojection matricielle est traitée dans la section \@ref(reproj-ras)).
+Des fonctions dédiées renseignent sur chaque composant : `dim()` renvoie le nombre de lignes, de colonnes et de couches ; `ncell()` le nombre de cellules (pixels) ; `res()` la résolution spatiale ; `ext()` son étendue spatiale ; et `crs()` son système de coordonnées de référence (la reprojection de raster est traitée dans la section \@ref(reproj-ras)).
 `inMemory()` indique si le raster est stocké en mémoire vive ou sur disque.
 
 `help("terra-package")` renvoie une liste complète de toutes les fonctions **terra** disponibles.
@@ -1073,7 +1085,10 @@ nlyr(multi_rast)
 #> [1] 4
 ```
 
-Pour les objets raster multi-couches, les couches peuvent être sélectionnées avec `terra::subset()`^[Les opérateurs `[[` et `$` peuvent également être utilisés pour la sélection des couches] qui accepte un numéro ou un nom de couche comme second argument :
+Pour les objets raster multi-couches, les couches peuvent être sélectionnées avec `terra::subset()`^[
+Les opérateurs `[[` et `$` peuvent également être utilisés pour la sélection des couches,  par exemple avec les commandes `multi_rast$landsat_1` et `multi_rast[["landsat_1"]]`.
+]
+qui accepte un numéro ou un nom de couche comme second argument :
 
 
 ```r
