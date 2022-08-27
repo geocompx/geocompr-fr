@@ -136,7 +136,7 @@ zion_points = cbind(zion_points, elevation)
 ```
 
 ```{r pointextr, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Localisation des points utilisés pour l'extraction de la trame.", fig.asp=0.57}
-source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-pointextr.R", print.eval = TRUE)
+source("https://github.com/Robinlovelace/geocompr/raw/main/code/06-pointextr.R", print.eval = TRUE)
 ```
 
 L'extraction raster fonctionne également avec des sélecteurs de type **ligne**.
@@ -374,7 +374,7 @@ ch_raster3 = rasterize(vect(cycle_hire_osm_projected), raster_template,
 ```
 
 ```{r vector-rasterization1, echo=FALSE, fig.cap="Exemples de rastérisation de points.", warning=FALSE}
-source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-vector-rasterization1.R", print.eval = TRUE)
+source("https://github.com/Robinlovelace/geocompr/raw/main/code/06-vector-rasterization1.R", print.eval = TRUE)
 ```
 
 Un autre jeu de données basé sur les polygones et les frontières de la Californie (créé ci-dessous) illustre la rastérisation des lignes.
@@ -403,7 +403,7 @@ california_raster2 = rasterize(vect(california), raster_template2)
 ```
 
 ```{r vector-rasterization2, echo=FALSE, fig.cap="Examples of line and polygon rasterizations.", warning=FALSE}
-source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-vector-rasterization2.R", print.eval = TRUE)
+source("https://github.com/Robinlovelace/geocompr/raw/main/code/06-vector-rasterization2.R", print.eval = TRUE)
 ```
 
 ## Vectorisation spatiale
@@ -429,7 +429,7 @@ elev_point = as.points(elev) %>%
 
 
 ```{r raster-vectorization1, echo=FALSE, fig.cap="Raster and point representation of the elev object.", warning=FALSE}
-source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-raster-vectorization1.R", print.eval = TRUE)
+source("https://github.com/Robinlovelace/geocompr/raw/main/code/06-raster-vectorization1.R", print.eval = TRUE)
 ```
 
 Un autre type courant de vectorisation spatiale est la création de courbes de niveau représentant des lignes de hauteur continue ou des températures (isothermes) par exemple.
@@ -471,7 +471,7 @@ grain_poly = as.polygons(grain) %>%
 ```
 
 ```{r 06-raster-vector-40, echo=FALSE, fig.cap="Illustration de la vectorisation d'un raster (à gauche) en polygone (au centre) et de l'agrégation de polygones (à droite).", warning=FALSE, fig.asp=0.4, fig.scap="Illustration of vectorization."}
-source("https://github.com/Robinlovelace/geocompr/raw/main/code/05-raster-vectorization2.R", print.eval = TRUE)
+source("https://github.com/Robinlovelace/geocompr/raw/main/code/06-raster-vectorization2.R", print.eval = TRUE)
 ```
 
 ## Exercises
