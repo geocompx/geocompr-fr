@@ -26,4 +26,4 @@ Il est possible de:
 - améliorer la reproductibilité de ce dépôt en fournissant des services identiques à celui en anglais
 - reproduire certaines figures avec des termes anglais en français 
 
-Pour échanger il est possible de passer par Github mais aussi par le [discord](https://discord.gg/Zt8sphjkKT). 
+Pour échanger il est possible de passer par Github mais aussi par le [discord](https://discord.gg/PMztXYgNxp). 
