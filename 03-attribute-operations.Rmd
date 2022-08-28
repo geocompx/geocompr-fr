@@ -10,11 +10,13 @@ library(terra)   # paquet pour les données raster présenté dans le Chapitre 2
 library(dplyr)   # paquet du tidyverse pour la manipulation de tableaux de données
 ```
 
-- Il s'appuie également sur **spData**, qui charge des jeux de données utilisés dans les exemples de ce chapitre :
+- Il s'appuie également sur **spData**, qui charge des jeux de données utilisés dans les exemples :
 
 ```{r 03-attribute-operations-2, results='hide'}
 library(spData)  # paquet de données spatiales présenté dans le Chapitre 2
 ```
+
+- Assurez-vous également d'avoir installé le paquet **tidyr**, ou le **tidyverse** dont il fait partie, si vous souhaitez exécuter des opérations restructurant des données pour la section \@ref(vec-attr-creation).
 
 ## Introduction
 
@@ -78,7 +80,7 @@ methods(class = "sf") # liste des 12 premières méthodes possibles avec la clas
 
 ```{r 03-attribute-operations-5, eval=FALSE, echo=FALSE}
 # Une autre manière de lister les méthodes associées à la classe sf:
-attributes(methods(class = "sf"))$info %>% 
+attributes(methods(class = "sf"))$info |> 
   dplyr::filter(!visible)
 ```
 
@@ -100,7 +102,7 @@ Les objets `sf` peuvent également étendre les classes `tidyverse` pour les tab
 \index{tidyverse (package)}.
 Ainsi, **sf** permet d'utiliser toute la puissance des capacités d'analyse de données de R sur les données géographiques, que vous utilisiez les fonctions de base de R ou du tidyverse pour l'analyse des données.
 \index{tibble}
-(Voir [`Rdatatable/data.table#2273`](https://github.com/Rdatatable/data.table/issues/2273) pour une discussion sur la compatibilité entre les objets `sf` et le paquet `data.table` très rapide).
+Les objets **sf** peuvent également être utilisés avec le package de traitement de données à hautes performances **data.table** bien que, comme documenté dans cette note [`Rdatatable/data.table#2273`](https://github.com/Rdatatable/ data.table/issues/2273), ce n'est pas entièrement [compatible](https://github.com/Rdatatable/data.table/issues/5352) avec les objets `sf`.
 Avant d'utiliser ces capacités, il est utile de rappeler comment découvrir les propriétés de base des objets de données vectorielles.
 Commençons par utiliser les fonctions de base de R pour découvrir l'ensemble de données `world` du paquet **spData**.
 
@@ -130,7 +132,7 @@ La compatibilité avec le tidyverse est un avantage de **sf** par rapport à son
 
 Les méthodes de sélection de sous-ensembles de base de R incluent l'opérateur `[` et la fonction `subset()`.
 Les principales fonctions de sélection de sous-ensembles **dplyr** sont `filter()` et `slice()` pour la sélection des lignes, et `select()` pour la sélection des colonnes.
-Ces deux approches préservent les composantes spatiales des données attributaires dans les objets `sf`, tandis que l'utilisation de l'opérateur `$` ou de la fonction **dplyr** `pull()` pour retourner une seule colonne d'attribut sous forme de vecteur perdra les données d'attribut, comme nous le verrons plus loin.
+Ces deux approches préservent les composantes spatiales des données attributaires dans les objets `sf`, tandis que l'utilisation de l'opérateur `$` ou de la fonction **dplyr** `pull()` retournera une seule colonne d'attribut sous forme de vecteur et perdra les données attributaires, comme nous le verrons plus loin.
 \index{attribut!subsetting} 
 Cette section se concentre sur la sélection de sous-ensembles de tableaux de données `sf` ; pour plus de détails sur les cas de vecteurs et de tableaux de données non géographiques, nous vous recommandons de lire respectivement la section [2.7](https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Index-vectors) de An Introduction to R [@rcoreteam_introduction_2021] et le chapitre [4](https://adv-r.hadley.nz/subsetting.html) de Advanced R Programming [@wickham_advanced_2019].
 
@@ -193,7 +195,7 @@ Les fonctions clés pour les sélection dans les tableaux de données (y compris
 i = sample(nrow(world), size = 10)
 benchmark_subset = bench::mark(
   world[i, ],
-  world %>% slice(i)
+  world |> slice(i)
 )
 benchmark_subset[c("expression", "itr/sec", "mem_alloc")]
 # # October 2021 on laptop with CRAN version of dplyr:
@@ -317,9 +319,9 @@ Les *pipes* permettent un code expressif : la sortie d'une fonction précédente
 Ceci est illustré ci-dessous, dans lequel seuls les pays d'Asie sont filtrés de l'ensemble de données `world`, l'objet est ensuite sélectionné par les colonnes (`name_long` et `continent`) et les cinq premières lignes (résultat non montré).
 
 ```{r 03-attribute-operations-24}
-world7 = world %>%
-  filter(continent == "Asia") %>%
-  dplyr::select(name_long, continent) %>%
+world7 = world |>
+  filter(continent == "Asia") |>
+  dplyr::select(name_long, continent) |>
   slice(1:5)
 ```
 
@@ -334,6 +336,17 @@ world8 = slice(
     name_long, continent),
   1:5)
 ```
+
+Une autre alternative consiste à diviser les opérations en plusieurs lignes autonomes, ce qui est recommandé lors du développement de nouveaux paquets R, une approche qui a l'avantage de sauvegarder les résultats intermédiaires avec des noms distincts qui peuvent être inspectés ultérieurement à des fins de débogage (en contrepartie cette approche présente l'inconvénient d'être verbeuse et d'encombrer l'environnement global lors d'une analyse interactive) :
+
+```{r 03-attribute-operations-25-2}
+world9_filtered = filter(world, continent == "Asia")
+world9_selected = dplyr::select(world9_filtered, continent)
+world9 = slice(world9_selected, 1:5)
+```
+
+Chaque approche présente des avantages et des inconvénients, dont l'importance dépend de votre style de programmation et de vos applications.
+Pour l'analyse interactive des données, fait l'objet de ce chapitre, nous trouvons que les opérations enchainées par des *pipe* sont rapides et intuitives, surtout lorsqu'elles sont combinées avec les raccourcis [RStudio](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts-in-the-RStudio-IDE)/[VSCode](https://github.com/REditorSupport/vscode-R/wiki/Keyboard-shortcuts) pour créer des *pipe* et utiliser [l'auto-complétion](https://support.rstudio.com/hc/en-us/articles/205273297-Code-Completion-in-the-RStudio-IDE) des noms de variables.
 
 ### Agrégation sur la base des attributs de données vectorielles
 
@@ -364,11 +377,11 @@ nrow(world_agg2)
 ```
 
 L'objet `world_agg2` résultant est un objet spatial contenant 8 entités représentant les continents du monde (et les océans).
-`group_by() %>% summarize()` est l'équivalent **dplyr** de `aggregate()`: le nom de variable indiqué dans la fonction `group_by()` spécifie la variable de regroupement et les informations sur ce qui doit être résumé sont passées à la fonction `summarize()`, comme indiqué ci-dessous :
+`group_by() |> summarize()` est l'équivalent **dplyr** d' `aggregate()`: le nom de variable indiqué dans la fonction `group_by()` spécifie la variable de regroupement et les informations sur ce qui doit être résumé sont passées à la fonction `summarize()`, comme indiqué ci-dessous :
 
 ```{r 03-attribute-operations-28}
-world_agg3 = world %>%
-  group_by(continent) %>%
+world_agg3 = world |>
+  group_by(continent) |>
   summarize(pop = sum(pop, na.rm = TRUE))
 ```
 
@@ -376,25 +389,25 @@ Cette approche peut sembler plus complexe mais elle présente des avantages : fl
 Cette flexibilité est illustrée dans la commande ci-dessous, qui calcule non seulement la population mais aussi la superficie et le nombre de pays de chaque continent :
 
 ```{r 03-attribute-operations-29}
-world_agg4  = world %>% 
-  group_by(continent) %>%
+world_agg4  = world |> 
+  group_by(continent) |>
   summarize(pop = sum(pop, na.rm = TRUE), `area (sqkm)` = sum(area_km2), n = n())
 ```
 
-Dans le morceau de code précédent, `pop`, `area (sqkm)` et `n` sont des noms de colonnes dans le résultat, et `sum()` et `n()` sont les fonctions d'agrégation.
+Dans le morceau de code précédent, `pop`, `area (sqkm)` et `n` sont des noms de colonnes du résultat, et `sum()` et `n()` sont les fonctions d'agrégation.
 Ces fonctions d'agrégation renvoient des objets `sf` avec des lignes représentant les continents et des géométries contenant les multiples polygones représentant chaque masse terrestre et les îles associées (cela fonctionne grâce à l'opération géométrique 'union', comme expliqué dans la section \@ref(geometry-unions)).
 
 Combinons ce que nous avons appris jusqu'à présent sur les fonctions **dplyr**, en enchaînant plusieurs commandes pour résumer les données attributaires des pays du monde entier par continent.
-La commande suivante calcule la densité de population (avec `mutate()`), classe les continents selon le nombre de pays qu'ils contiennent (avec `dplyr::arrange()`), et ne conserve que les 3 continents les plus peuplés (avec `top_n()`), dont le résultat est présenté dans le Tableau \@ref(tab:continents)) :
+La commande suivante calcule la densité de population (avec `mutate()`), classe les continents selon le nombre de pays qu'ils contiennent (avec `dplyr::arrange()`), et ne conserve que les 3 continents les plus peuplés (avec `dplyr::slice_max()`), dont le résultat est présenté dans le Tableau \@ref(tab:continents)) :
 
 ```{r 03-attribute-operations-30}
-world_agg5 = world %>% 
-  st_drop_geometry() %>%                      # enlève la colonne géométrie pour un gain de temps
+world_agg5 = world |>
+  st_drop_geometry() |>                      # enlève la colonne géométrie pour un gain de temps
   dplyr::select(pop, continent, area_km2) %>% # sélectionne les colonnes d’intérêt  
-  group_by(continent) %>%                     # regroupe par continents et synthétise:
-  summarize(Pop = sum(pop, na.rm = TRUE), Superficie = sum(area_km2), N = n()) %>%
-  mutate(Densité = round(Pop / Superficie)) %>%     # calcule la densité de population
-  top_n(n = 3, wt = Pop) %>%                  # ne garde que les 3 plus peuplés
+  group_by(continent) |>                     # regroupe par continents et synthétise:
+  summarize(Pop = sum(pop, na.rm = TRUE), Superficie = sum(area_km2), N = n()) |>
+  mutate(Densité = round(Pop / Superficie)) |>     # calcule la densité de population
+  slice_max(Pop, n = 3) |>                  # ne garde que les 3 plus peuplés
   arrange(desc(N))                            # trie par ordre du nombre de pays
 ```
 
@@ -457,7 +470,6 @@ Cette dernière approche est présentée ci-dessous sur une version renommée de
 ```{r 03-attribute-operations-33, warning=FALSE}
 coffee_renamed = rename(coffee_data, nm = name_long)
 world_coffee2 = left_join(world, coffee_renamed, by = c(name_long = "nm"))
-
 ```
 
 ```{r 03-attribute-operations-34, eval=FALSE, echo=FALSE}
@@ -530,11 +542,8 @@ Heureusement, les tableaux de données non spatiaux avec une colonne de liste de
 ```
 
 Cette section couvre la majorité des cas d'utilisation de la jointure.
-Pour plus d'informations, nous recommandons @grolemund_r_2016, la [vignette join](https://geocompr.github.io/geocompkg/articles/join.html) dans le paquet **geocompkg** qui accompagne ce livre, et la documentation du paquet **data.table** .^[
-**data.table** est un paquet de traitement de données très  performant.
-Son application aux données géographiques est couverte dans un billet de blog hébergé à r-spatial.org/r/2017/11/13/perp-performance.html.
-]
-Un autre type de jointure est la jointure spatiale, traitée dans le chapitre suivant (section \@ref(spatial-joining)).
+Pour plus d'informations, nous recommandons la lecture du chapitre [Données relationnelles](https://r4ds.had.co.nz/relational-data.html?q=join#relational-data) dans @grolemund_r_2016, la [vignette join](https://geocompr.github.io/geocompkg/articles/join.html) dans le paquet **geocompkg** qui accompagne ce livre, et la [documentation](https://asardaes.github.io/table.express/articles/joins.html) décrivant les jointures avec **data.table** et d'autres paquets.
+Les jointures spatiales sont traitées dans le chapitre suivant (Section \@ref(spatial-joining)).
 
 ### Création d'attributs et suppression d'informations spatiales {#vec-attr-creation}
 
@@ -552,14 +561,14 @@ Alternativement, nous pouvons utiliser l'une des fonctions **dplyr** - `mutate()
 `mutate()` ajoute de nouvelles colonnes à l'avant-dernière position dans l'objet `sf` (la dernière est réservée à la géométrie) :
 
 ```{r 03-attribute-operations-43, eval=FALSE}
-world %>% 
+world |> 
   mutate(pop_dens = pop / area_km2)
 ```
 
 La différence entre `mutate()` et `transmute()` est que ce dernier supprime toutes les autres colonnes existantes (à l'exception de la colonne de géométrie collante) :
 
 ```{r 03-attribute-operations-44, eval=FALSE}
-world %>% 
+world |> 
   transmute(pop_dens = pop / area_km2)
 ```
 
@@ -568,16 +577,16 @@ Par exemple, ici nous voulons combiner les colonnes `continent` et `region_un` d
 De plus, nous pouvons définir un séparateur (ici : deux points `:`) qui définit comment les valeurs des colonnes d'entrée doivent être jointes, et si les colonnes originales doivent être supprimées (ici : `TRUE`) :
 
 ```{r 03-attribute-operations-45, eval=FALSE}
-world_unite = world %>%
-  unite("con_reg", continent:region_un, sep = ":", remove = TRUE)
+world_unite = world |>
+  tidyr::unite("con_reg", continent:region_un, sep = ":", remove = TRUE)
 ```
 
-La fonction `separate()` fait l'inverse de `unite()` : elle divise une colonne en plusieurs colonnes en utilisant soit une expression régulière, soit les positions des caractères.
-Cette fonction provient également du paquetage **tidyr**.
+L'objet `sf` résultant a une nouvelle colonne appelée `con_reg` représentant le continent et la région de chaque pays, par exemple `South America:Americas` pour l'Argentine et les autres pays d'Amérique du Sud.
+La fonction `separate()` de **tidyr** fait l'inverse de `unite()` : elle divise une colonne en plusieurs en utilisant soit une expression régulière, soit la position des caractères.
 
 ```{r 03-attribute-operations-46, eval=FALSE}
-world_separate = world_unite %>% 
-  separate(con_reg, c("continent", "region_un"), sep = ":")
+world_separate = world_unite |>
+  tidyr::separate(con_reg, c("continent", "region_un"), sep = ":")
 ```
 
 ```{r 03-attribute-operations-47, echo=FALSE, eval=FALSE}
@@ -589,7 +598,7 @@ La première remplace un ancien nom par un nouveau.
 Ici, par exemple, elle renomme la longue colonne `name_long` en un simple `name` :
 
 ```{r 03-attribute-operations-48, eval=FALSE}
-world %>% 
+world |>
   rename(name = name_long)
 ```
 
@@ -597,24 +606,23 @@ world %>%
 Ceci est illustré ci-dessous et produit le même objet `world` mais avec des noms très courts : 
 
 ```{r 03-attribute-operations-49, eval=FALSE, echo=FALSE}
-abbreviate(names(world), minlength = 1) %>% dput()
+abbreviate(names(world), minlength = 1) |> dput()
 ```
 
 ```{r 03-attribute-operations-50, eval=FALSE}
 new_names = c("i", "n", "c", "r", "s", "t", "a", "p", "l", "gP", "geom")
-world %>% 
+world_new_names = world |>
   setNames(new_names)
 ```
 
 Il est important de noter que les opérations sur les données attributaires préservent la géométrie des entités simples.
-Comme mentionné au début du chapitre, il peut être utile de supprimer la géométrie.
-Pour ce faire, vous devez la supprimer explicitement.
-Par conséquent, une approche telle que `select(world, -geom)` sera infructueuse et vous devriez plutôt utiliser `st_drop_geometry()`.^[
+Parfois, par exemple pour rendre un processus plus rapide, il peut être utile de supprimer la géométrie.
+Il faut utiliser pour cela  `st_drop_geometry()`, **et non** le faire manuellement avec des commandes telles que `select(world, -geom)`, comme montré ci-dessous . ^[
 `st_geometry(world_st) = NULL` fonctionne également pour supprimer la géométrie de `world`, mais écrase l'objet original.
 ]
 
 ```{r 03-attribute-operations-51}
-world_data = world %>% st_drop_geometry()
+world_data = world |> st_drop_geometry()
 class(world_data)
 ```
 
@@ -659,7 +667,7 @@ Chaque élément de cette liste est une couche du raster.
 Il est également possible d'utiliser la fonction `levels()` pour récupérer et ajouter de nouveaux niveaux de facteurs ou remplacer des niveaux existants 
 
 ```{r 03-attribute-operations-56}
-levels(grain)[[1]] = c(levels(grain)[[1]], wetness = c("wet", "moist", "dry"))
+levels(grain) = data.frame(value = c(0, 1, 2), wetness = c("wet", "moist", "dry"))
 levels(grain)
 ```
 
