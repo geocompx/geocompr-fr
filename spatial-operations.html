@@ -86,7 +86,7 @@
 <ul>
 <li>Ce chapitre nécessité les mêmes paquets que ceux utilisés dans le chapitre <a href="attr.html#attr">3</a>:</li>
 </ul>
-<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
@@ -95,7 +95,7 @@
 <li>Vous devrez également charger deux jeux de données pour cette section <a href="spatial-operations.html#spatial-ras">4.3</a>
 </li>
 </ul>
-<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elev</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/elev.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">grain</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/grain.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -138,7 +138,7 @@ La fonction <code><a href="https://dplyr.tidyverse.org/reference/filter.html">fi
 </p>
 <p>To demonstrate spatial subsetting, we will use the <code>nz</code> and <code>nz_height</code> datasets in the <strong>spData</strong> package, which contain geographic data on the 16 main regions and 101 highest points in New Zealand, respectively (Figure <a href="spatial-operations.html#fig:nz-subset">4.1</a>), in a projected coordinate system.
 The following code chunk creates an object representing Canterbury, then uses spatial subsetting to return all high points in the region:</p>
-<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">canterbury</span> <span class="op">=</span> <span class="va">nz</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Name</span> <span class="op">==</span> <span class="st">"Canterbury"</span><span class="op">)</span></span>
 <span><span class="va">canterbury_height</span> <span class="op">=</span> <span class="va">nz_height</span><span class="op">[</span><span class="va">canterbury</span>, <span class="op">]</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -154,7 +154,7 @@ Plus précisément, les objets utilisés pour la sélection spatiale de cette ma
 Il peut s’agir de <em>touches</em> (touche), <em>crosses</em> (croisse) ou <em>within</em> (dedans), comme nous le verrons bientôt dans la section <a href="#topological-relations"><strong>??</strong></a>.
 Le paramètre par défaut <code>st_intersects</code> est une relation topologique ‘attrape-tout’ qui retournera les éléments de la cible qui <em>touchent</em>, <em>croissent</em> ou sont <em>within</em> (dedans) l’objet source ‘sélectionnant’.
 Comme indiqué ci-dessus, d’autres opérateurs spatiaux peuvent être spécifiés avec l’argument <code>op =</code>, comme le montre la commande suivante qui renvoie l’opposé de <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects()</a></code>, les points qui ne sont pas en intersection avec <code>Canterbury</code> (voir la section <a href="#topological-relations"><strong>??</strong></a>) :</p>
-<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_height</span><span class="op">[</span><span class="va">canterbury</span>, , op <span class="op">=</span> <span class="va">st_disjoint</span><span class="op">]</span></span></code></pre></div>
 
 <div class="rmdnote">
@@ -167,7 +167,7 @@ Si vous êtes impatient d’en savoir plus sur les relations topologiques, au-de
 Si vous êtes intéressé par les détails, y compris les autres façons de faire des sélections, c’est par ici.</p>
 <p>Une autre façon d’effectuer une sélection spatiale est d’utiliser les objets retournés par les opérateurs topologiques.
 Ces objets peuvent être utiles en soi, par exemple lors de l’exploration du réseau de relations entre des régions contiguës, mais ils peuvent également être utilisés pour sélectionner comme le montre le morceau de code ci-dessous :</p>
-<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sel_sgbp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">nz_height</span>, y <span class="op">=</span> <span class="va">canterbury</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">sel_sgbp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "sgbp" "list"</span></span>
@@ -196,7 +196,7 @@ Note : une autre façon de retourner une sortie logique est de mettre <code>spar
 Note : la solution impliquant les objets <code>sgbp</code> est cependant plus généralisable, car elle fonctionne pour les opérations <em>many-to-many</em> et a des besoins en mémoire plus faibles.
 </div>
 <p>Le même résultat peut être obtenu avec la fonction de <strong>sf</strong> <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_filter()</a></code> qui a été <a href="https://github.com/r-spatial/sf/issues/1148">créée</a> pour augmenter la compatibilité entre les objets <code>sf</code> et les manipulation de données de <strong>dplyr</strong> :</p>
-<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">canterbury_height3</span> <span class="op">=</span> <span class="va">nz_height</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_filter</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">canterbury</span>, .predicate <span class="op">=</span> <span class="va">st_intersects</span><span class="op">)</span></span></code></pre></div>
 <p>A ce stade, il y a trois versions identiques (à l’exception des noms de lignes) de <code>canterbury_height</code>, une créée en utilisant l’opérateur <code>[</code>, une créée via un objet de sélection intermédiaire, et une autre utilisant la fonction de commodité de <strong>sf</strong> <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_filter()</a></code>.
@@ -225,7 +225,7 @@ FIGURE 4.2: Relations topologiques entre géométries vectorielles, inspirées d
 <p>Dans <code>sf</code>, les fonctions testant les différents types de relations topologiques sont appelées binary predicates”, comme décrit dans la vignette <em>Manipulating Simple Feature Geometries</em>, qui peut être consultée avec la commande <a href="https://r-spatial.github.io/sf/articles/sf3.html"><code>vignette("sf3")</code></a>, et dans la page d’aide <a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html"><code>?geos_binary_pred</code></a>.
 Pour voir comment les relations topologiques fonctionnent en pratique, créons un exemple simple et reproductible, en nous appuyant sur les relations illustrées dans la Figure <a href="spatial-operations.html#fig:relations">4.2</a> et en consolidant les connaissances sur la représentation des géométries vectorielles acquises dans un chapitre précédent (Section <a href="spatial-class.html#geometry">2.2.4</a>).
 Notez que pour créer des données tabulaires représentant les coordonnées (x et y) des sommets du polygone, nous utilisons la fonction R de base <code><a href="https://rdrr.io/r/base/cbind.html">cbind()</a></code> pour créer une matrice représentant les points de coordonnées, un <code>POLYGON</code>, et enfin un objet <code>sfc</code>, comme décrit au chapitre <a href="spatial-class.html#spatial-class">2</a>) :</p>
-<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">polygon_matrix</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>,   <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span></span>
@@ -233,7 +233,7 @@ Notez que pour créer des données tabulaires représentant les coordonnées (x 
 <span><span class="va">polygon_sfc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html">st_sfc</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">polygon_matrix</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Nous allons créer des géométries supplémentaires pour démontrer les relations spatiales à l’aide des commandes suivantes qui, lorsqu’elles sont tracées sur le polygone créé ci-dessus, se rapportent les unes aux autres dans l’espace, comme le montre la Figure <a href="spatial-operations.html#fig:relation-objects">4.3</a>.
 Notez l’utilisation de la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf()</a></code> et de l’argument <code>coords</code> pour convertir efficacement un tableau de données contenant des colonnes représentant des coordonnées en un objet <code>sf</code> contenant des points :</p>
-<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">line_sfc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html">st_sfc</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_linestring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.5</span><span class="op">)</span></span>
@@ -253,7 +253,7 @@ FIGURE 4.3: Points (<code>point_df</code> 1 à 3), ligne et polygones arrangés 
 <p>Une première question simple pourrait être : quels sont les points de <code>point_sf</code> en intersection avec le polygone <code>polygon_sfc</code> ?
 On peut répondre à cette question par inspection (les points 1 et 3 sont respectivement en contact et à l’intérieur du polygone).
 On peut répondre à cette question avec le prédicat spatial <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects()</a></code> comme suit:</p>
-<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects</a></span><span class="op">(</span><span class="va">point_sf</span>, <span class="va">polygon_sfc</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sparse geometry binary predicate... `intersects'</span></span>
 <span><span class="co">#&gt;  1: 1</span></span>
@@ -264,7 +264,7 @@ des résultats positifs (<code>1</code>) sont retournés pour le premier et le t
 Ce qui peut être inattendu, c’est que le résultat se présente sous la forme d’une liste de vecteurs.
 Cette sortie <em>matrice creuse</em> n’enregistre une relation que si elle existe, ce qui réduit les besoins en mémoire des opérations topologiques sur les objets avec de nombreuses entités.
 Comme nous l’avons vu dans la section précédente, une <em>matrice dense</em> composée de valeurs <code>TRUE</code> ou <code>FALSE</code> est retournée lorsque <code>sparse = FALSE</code> :</p>
-<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects</a></span><span class="op">(</span><span class="va">point_sf</span>, <span class="va">polygon_sfc</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       [,1]</span></span>
 <span><span class="co">#&gt; [1,]  TRUE</span></span>
@@ -275,12 +275,12 @@ Dans ce cas, il n’y a qu’un seul élément dans l’objet <code>y</code> <co
 <p><code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects()</a></code> renvoie <code>TRUE</code> même dans les cas où les éléments se touchent juste : <em>intersects</em> est une opération topologique “fourre-tout” qui identifie de nombreux types de relations spatiales, comme l’illustre la figure <a href="spatial-operations.html#fig:relations">4.2</a>.
 Il y a des questions plus restrictives, par exemple : quels sont les points situés à l’intérieur du polygone, et quelles sont les caractéristiques qui sont sur ou qui contiennent une frontière partagée avec <code>y</code> ?
 On peut répondre à ces questions de la manière suivante (résultats non montrés) :</p>
-<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_within</a></span><span class="op">(</span><span class="va">point_sf</span>, <span class="va">polygon_sfc</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_touches</a></span><span class="op">(</span><span class="va">point_sf</span>, <span class="va">polygon_sfc</span><span class="op">)</span></span></code></pre></div>
 <p>Notez que bien que le premier point <em>touche</em> la limite du polygone, il n’est pas à l’intérieur de celui-ci ; le troisième point est à l’intérieur du polygone mais ne touche aucune partie de sa frontière.
 L’opposé de <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects()</a></code> est <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_disjoint()</a></code>, qui retourne uniquement les objets qui n’ont aucun rapport spatial avec l’objet sélectionné (ici <code>[, 1]</code> convertit le résultat en vecteur) :</p>
-<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_disjoint</a></span><span class="op">(</span><span class="va">point_sf</span>, <span class="va">polygon_sfc</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] FALSE  TRUE FALSE</span></span></code></pre></div>
 <p>La fonction <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_is_within_distance()</a></code> détecte les éléments qui touchent <em>presque</em> l’objet de sélection. La fonction a un argument supplémentaire <code>dist</code>.
@@ -289,7 +289,7 @@ Remarquez que bien que le point 2 soit à plus de 0,2 unités de distance du som
 En effet, la distance est mesurée par rapport à l’arête la plus proche, dans ce cas la partie du polygone qui se trouve directement au-dessus du point 2 dans la figure <a href="#fig:relation-objets"><strong>??</strong></a>.
 (Vous pouvez vérifier que la distance réelle entre le point 2 et le polygone est de 0,13 avec la commande <code>st_distance(point_sf, polygon_sfc)</code>).
 Le prédicat spatial binaire “is within distance” (es à distance de) est démontré dans l’extrait de code ci-dessous, dont les résultats montrent que chaque point est à moins de 0,2 unité du polygone :</p>
-<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_is_within_distance</a></span><span class="op">(</span><span class="va">point_sf</span>, <span class="va">polygon_sfc</span>, dist <span class="op">=</span> <span class="fl">0.2</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] TRUE TRUE TRUE</span></span></code></pre></div>
 
@@ -357,7 +357,7 @@ la relation représentée sur la figure <a href="spatial-operations.html#fig:rel
 </ul>
 <p>Ces trois composants, une fois concaténés, créent la chaîne <code>212</code>, <code>FF1</code>, et <code>FF2</code>.
 C’est le même résultat que celui obtenu par la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_relate.html">st_relate()</a></code> (voir le code source de ce chapitre pour voir comment les autres géométries de la figure <a href="spatial-operations.html#fig:relations">4.2</a> ont été créées) :</p>
-<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xy2sfc</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html">st_sfc</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="fu">xy2sfc</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>,   <span class="fl">0</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fu">xy2sfc</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="fl">0.7</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span></span>
@@ -368,11 +368,11 @@ C’est le même résultat que celui obtenu par la fonction <code><a href="https
 La page d’aide <code><a href="https://r-spatial.github.io/sf/reference/st_relate.html">?st_relate</a></code> contient des définitions de fonctions pour les relations “reine” et “tour” dans lesquelles les polygones partagent une frontière ou seulement un point, respectivement.
 Les relations “reine” signifient que les relations “frontière-frontière” (la cellule de la deuxième colonne et de la deuxième ligne de la table <a href="spatial-operations.html#tab:de9emtable">4.1</a>, ou le cinquième élément de la chaîne DE-9IM) ne doivent pas être vides, ce qui correspond au <em>pattern</em> <code>F***T****</code>, tandis que pour les relations “tour”, le même élément doit être 1 (ce qui signifie une intersection linéaire).
 Ces relations sont implémentées comme suit :</p>
-<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">st_queen</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_relate.html">st_relate</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, pattern <span class="op">=</span> <span class="st">"F***T****"</span><span class="op">)</span></span>
 <span><span class="va">st_rook</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_relate.html">st_relate</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, pattern <span class="op">=</span> <span class="st">"F***1****"</span><span class="op">)</span></span></code></pre></div>
 <p>A partir de l’objet <code>x</code> créé précédemment, nous pouvons utiliser les fonctions nouvellement créées pour trouver quels éléments de la grille sont une ‘reine’ et une ‘tour’ par rapport à la case centrale de la grille comme suit :</p>
-<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grid</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_make_grid.html">st_make_grid</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">grid_sf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html">st_sf</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span></span>
 <span><span class="va">grid_sf</span><span class="op">$</span><span class="va">queens</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lengths.html">lengths</a></span><span class="op">(</span><span class="fu">st_queen</span><span class="op">(</span><span class="va">grid</span>, <span class="va">grid</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span></span>
@@ -399,7 +399,7 @@ Comme pour les données attributaires, la jointure ajoute de nouvelles colonnes 
 <p>Le processus est illustré par l’exemple suivant : imaginez que vous disposez de dix points répartis au hasard sur la surface de la Terre et que vous demandez, pour les points qui se trouvent sur la terre ferme, dans quels pays se trouvent-ils ?
 La mise en œuvre de cette idée dans un [exemple reproductible] (<a href="https://github.com/Robinlovelace/geocompr/blob/main/code/04-spatial-join.R" class="uri">https://github.com/Robinlovelace/geocompr/blob/main/code/04-spatial-join.R</a>) renforcera vos compétences en matière de traitement des données géographiques et vous montrera comment fonctionnent les jointures spatiales.
 Le point de départ consiste à créer des points dispersés de manière aléatoire sur la surface de la Terre :</p>
-<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2018</span><span class="op">)</span> <span class="co"># définir la seed pour la reproductibilité</span></span>
 <span><span class="op">(</span><span class="va">bb</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">world</span><span class="op">)</span><span class="op">)</span> <span class="co"># les limites de la terre</span></span>
 <span><span class="co">#&gt;   xmin   ymin   xmax   ymax </span></span>
@@ -415,7 +415,7 @@ Le point de départ consiste à créer des points dispersés de manière aléato
 Les jointures spatiales sont implémentées avec <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join()</a></code>, comme illustré dans l’extrait de code ci-dessous.
 La sortie est l’objet <code>random_joined</code> qui est illustré dans la Figure <a href="spatial-operations.html#fig:spatial-join">4.6</a> (en bas à gauche).
 Avant de créer l’ensemble de données jointes, nous utilisons la sélection spatiale pour créer <code>world_random</code>, qui contient uniquement les pays qui contiennent des points aléatoires, afin de vérifier que le nombre de noms de pays retournés dans l’ensemble de données jointes doit être de quatre (cf. le panneau supérieur droit de la Figure <a href="spatial-operations.html#fig:spatial-join">4.6</a>).</p>
-<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">world_random</span> <span class="op">=</span> <span class="va">world</span><span class="op">[</span><span class="va">random_points</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html">nrow</a></span><span class="op">(</span><span class="va">world_random</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
@@ -440,11 +440,11 @@ Dans de tels cas, par exemple lorsque <code>x</code> contient des polygones, don
 Les jeux de données <code>cycle_hire</code> et <code>cycle_hire_osm</code>, présent dans le paquet <strong>spData</strong>, en sont un bon exemple.
 Leur tracé montre qu’ils sont souvent étroitement liés mais qu’ils ne se touchent pas, comme le montre la figure <a href="spatial-operations.html#fig:cycle-hire">4.7</a>, dont une version de base est créée avec le code suivant ci-dessous :
 </p>
-<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">cycle_hire</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">cycle_hire_osm</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, pch <span class="op">=</span> <span class="fl">3</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p>Nous pouvons vérifier si certains points se superposent avec <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects()</a></code> :</p>
-<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_touches</a></span><span class="op">(</span><span class="va">cycle_hire</span>, <span class="va">cycle_hire_osm</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -457,7 +457,7 @@ FIGURE 4.7: La distribution spatiale des points de location de vélos à Londres
 <p>Imaginons que nous ayons besoin de joindre la variable “capacité” de <code>cycle_hire_osm</code> aux données officielles “cible” contenues dans <code>cycle_hire</code>.
 Dans ce cas, une jointure sans chevauchement est nécessaire.
 La méthode la plus simple est d’utiliser l’opérateur topologique <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_is_within_distance()</a></code>, comme démontré ci-dessous en utilisant une distance seuil de 20 m (notez que cela fonctionne avec des données projetées et non projetées).</p>
-<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sel</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_is_within_distance</a></span><span class="op">(</span><span class="va">cycle_hire</span>, <span class="va">cycle_hire_osm</span>, dist <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html">lengths</a></span><span class="op">(</span><span class="va">sel</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    Mode   FALSE    TRUE </span></span>
@@ -465,7 +465,7 @@ La méthode la plus simple est d’utiliser l’opérateur topologique <code><a 
 <p>Cela montre qu’il y a 438 des points dans l’objet cible <code>cycle_hire</code> dans la distance seuil (20 m) de <code>cycle_hire_osm</code>.
 Comment récupérer les <em>valeurs</em> associées aux points respectifs de <code>cycle_hire_osm</code> ?
 La solution est à nouveau avec <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join()</a></code>, mais avec un argument <code>dist</code> supplémentaire (fixé à 20 m en dessous) :</p>
-<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">z</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join</a></span><span class="op">(</span><span class="va">cycle_hire</span>, <span class="va">cycle_hire_osm</span>, <span class="va">st_is_within_distance</span>, dist <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html">nrow</a></span><span class="op">(</span><span class="va">cycle_hire</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 742</span></span>
@@ -474,14 +474,14 @@ La solution est à nouveau avec <code><a href="https://r-spatial.github.io/sf/re
 <p>Remarquez que le nombre de lignes dans le résultat joint est supérieur à la cible.
 Cela est dû au fait que certaines stations de location de vélos dans <code>cycle_hire</code> ont plusieurs correspondances dans <code>cycle_hire_osm</code>.
 Pour agréger les valeurs des points qui se chevauchent et renvoyer la moyenne, nous pouvons utiliser les méthodes d’agrégation apprises au chapitre <a href="attr.html#attr">3</a>, ce qui donne un objet avec le même nombre de lignes que la cible :</p>
-<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">z</span> <span class="op">=</span> <span class="va">z</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>capacity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean</a></span><span class="op">(</span><span class="va">capacity</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html">nrow</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html">nrow</a></span><span class="op">(</span><span class="va">cycle_hire</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>La capacité des stations proches peut être vérifiée en comparant les cartes de la capacité des données source <code>cycle_hire_osm</code> avec les résultats dans ce nouvel objet (cartes non montrées) :</p>
-<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">cycle_hire_osm</span><span class="op">[</span><span class="st">"capacity"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">z</span><span class="op">[</span><span class="st">"capacity"</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>Le résultat de cette jointure a utilisé une opération spatiale pour modifier les données attributaires associées aux entités simples ; la géométrie associée à chaque entité est restée inchangée.</p>
@@ -496,7 +496,7 @@ La section <a href="#vector-attribute-aggregation"><strong>??</strong></a> a mon
 </p>
 <p>Pour revenir à l’exemple de la Nouvelle-Zélande, imaginez que vous voulez connaître la hauteur moyenne des points hauts de chaque région : c’est la géométrie de la source (<code>y</code> ou <code>nz</code> dans ce cas) qui définit comment les valeurs de l’objet cible (<code>x</code> ou <code>nz_height</code>) sont regroupées.
 Ceci peut être fait en une seule ligne de code avec la méthode <code><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate()</a></code> de la base R :</p>
-<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_agg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">nz_height</span>, by <span class="op">=</span> <span class="va">nz</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code></pre></div>
 <p>Le résultat de la commande précédente est un objet <code>sf</code> ayant la même géométrie que l’objet d’agrégation (spatiale) (<code>nz</code>), ce que vous pouvez vérifier avec la commande <code>identical(st_geometry(nz), st_geometry(nz_agg))</code>.
 Le résultat de l’opération précédente est illustré dans la Figure <a href="spatial-operations.html#fig:spatial-aggregation">4.8</a>, qui montre la valeur moyenne des caractéristiques de <code>nz_height</code> dans chacune des 16 régions de la Nouvelle-Zélande.
@@ -507,7 +507,7 @@ Le même résultat peut également être généré en passant la sortie de <code
 FIGURE 4.8: Hauteur moyenne des 101 points culminants par régions de la Nouvelle-Zélande.
 </p>
 </div>
-<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_agg2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html">st_join</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">nz</span>, y <span class="op">=</span> <span class="va">nz_height</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>elevation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean</a></span><span class="op">(</span><span class="va">elevation</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -538,7 +538,7 @@ Supposons que la colonne <code>valeur</code> de <code>incongruent</code> se réf
 Comment pouvons-nous transférer les valeurs des neuf polygones spatiaux sous-jacents dans les deux polygones de <code>aggregating_zones</code> ?</p>
 <p>La méthode la plus simple est l’interpolation spatiale pondérée par la surface, qui transfère les valeurs de l’objet <code>non congruent</code> vers une nouvelle colonne dans <code>aggregating_zones</code> proportionnellement à la surface de recouvrement : plus l’intersection spatiale entre les caractéristiques d’entrée et de sortie est grande, plus la valeur correspondante est grande.
 Ceci est implémenté dans <code><a href="https://r-spatial.github.io/sf/reference/interpolate_aw.html">st_interpolate_aw()</a></code>, comme démontré dans le morceau de code ci-dessous.</p>
-<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">iv</span> <span class="op">=</span> <span class="va">incongruent</span><span class="op">[</span><span class="st">"value"</span><span class="op">]</span> <span class="co"># garde uniquement les valeurs à transférer</span></span>
 <span><span class="va">agg_aw</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/interpolate_aw.html">st_interpolate_aw</a></span><span class="op">(</span><span class="va">iv</span>, <span class="va">aggregating_zones</span>, ext <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in st_interpolate_aw.sf(iv, aggregating_zones, ext = TRUE):</span></span>
@@ -557,7 +557,7 @@ Il en va différemment pour les variables spatialement <a href="https://geodacen
 La distance entre deux objets est calculée avec la fonction <code><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance()</a></code>.
 Ceci est illustré dans l’extrait de code ci-dessous, qui trouve la distance entre le point le plus élevé de Nouvelle-Zélande et le centroïde géographique de la région de Canterbury, créé dans la section <a href="#spatial-subsetting"><strong>??</strong></a> :
 </p>
-<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_heighest</span> <span class="op">=</span> <span class="va">nz_height</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/top_n.html">top_n</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span>, wt <span class="op">=</span> <span class="va">elevation</span><span class="op">)</span></span>
 <span><span class="va">canterbury_centroid</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">canterbury</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">nz_heighest</span>, <span class="va">canterbury_centroid</span><span class="op">)</span></span>
@@ -571,7 +571,7 @@ Ceci est illustré dans l’extrait de code ci-dessous, qui trouve la distance e
 </ul>
 <p>Cette deuxième caractéristique laisse entrevoir une autre fonctionnalité utile de <code><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance()</a></code>, sa capacité à retourner des <em>matrices de distance</em> entre toutes les combinaisons de caractéristiques dans les objets <code>x</code> et <code>y</code>.
 Ceci est illustré dans la commande ci-dessous, qui trouve les distances entre les trois premières caractéristiques de <code>nz_height</code> et les régions d’Otago et de Canterbury en Nouvelle-Zélande représentées par l’objet <code>co</code>.</p>
-<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">co</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">nz</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"Canter|Otag"</span>, <span class="va">Name</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">nz_height</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="op">]</span>, <span class="va">co</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Units: [m]</span></span>
@@ -582,7 +582,7 @@ Ceci est illustré dans la commande ci-dessous, qui trouve les distances entre l
 <p>Remarquez que le distance entre les deuxième et troisième éléments de <code>nz_height</code> et le deuxième élément de <code>co</code> est de zéro.
 Cela démontre le fait que les distances entre les points et les polygones se réfèrent à la distance à <em>n’importe quelle partie du polygone</em> :
 Les deuxième et troisième points dans <code>nz_height</code> sont <em>dans</em> Otago, ce qui peut être vérifié en les traçant (résultat non montré) :</p>
-<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">co</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">nz_height</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -603,7 +603,7 @@ Pour utiliser les coordonnées pour la sélection, on peut “traduire” les co
 Une alternative est d’utiliser <code><a href="https://rdrr.io/pkg/terra/man/extract.html">terra::extract()</a></code> (attention, il existe aussi une fonction appelée <code><a href="https://rdrr.io/pkg/terra/man/extract.html">extract()</a></code> dans le <strong>tidyverse</strong>) pour extraire des valeurs.
 Les deux méthodes sont démontrées ci-dessous pour trouver la valeur de la cellule qui couvre un point situé aux coordonnées 0,1, 0,1.
 </p>
-<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">id</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/xyCellFrom.html">cellFromXY</a></span><span class="op">(</span><span class="va">elev</span>, xy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">elev</span><span class="op">[</span><span class="va">id</span><span class="op">]</span></span>
 <span><span class="co"># the same as</span></span>
@@ -612,7 +612,7 @@ Les deux méthodes sont démontrées ci-dessous pour trouver la valeur de la cel
 <!-- to update? -->
 <!-- It is convenient that both functions also accept objects of class `Spatial* Objects`. -->
 <p>Les objets raster peuvent également être sélectionnés avec un autre objet raster, comme le montre le code ci-dessous :</p>
-<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clip</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">0.9</span>, xmax <span class="op">=</span> <span class="fl">1.8</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">0.45</span>, ymax <span class="op">=</span> <span class="fl">0.45</span>,</span>
 <span>            resolution <span class="op">=</span> <span class="fl">0.3</span>, vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">elev</span><span class="op">[</span><span class="va">clip</span><span class="op">]</span></span>
@@ -628,26 +628,26 @@ FIGURE 4.10: Raster originale (à gauche). Masque raster (au milieu). Résultat 
 <p>L’exemple ci-dessus a retourné les valeurs de cellules spécifiques, mais dans de nombreux cas, ce sont des sorties spatiales qui sont nécessaires.
 Cela peut être fait en utilisant l’opérateur <code>[</code>, avec <code>drop = FALSE</code>, comme indiqué dans la section <a href="#manipulating-raster-objects"><strong>??</strong></a>, qui montre également comment les objets raster peuvent être sélectionnés par divers objets.
 Le code ci-dessous en est un exemple en retournant les deux premières cellules (de la ligne supérieure) de <code>elev</code> en tant qu’objet raster (seules les 2 premières lignes de la sortie sont montrées) :</p>
-<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elev</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>    <span class="co"># sélection spatiale par ID</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
 <span><span class="co">#&gt; dimensions  : 1, 2, 1  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
 <p>Un autre cas d’utilisation courante de sélection spatiale est celle où une image raster avec des valeurs <code>logiques</code> (ou <code>NA</code>) est utilisée pour masquer une autre image raster avec la même étendue et la même résolution, comme illustré dans la Figure <a href="spatial-operations.html#fig:raster-subset">4.10</a>.
 Dans ce cas, les fonctions <code>[</code> et <code><a href="https://rdrr.io/pkg/terra/man/mask.html">mask()</a></code> peuvent être utilisées (résultats non montrés) :</p>
-<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># créer un masque raster</span></span>
 <span><span class="va">rmask</span> <span class="op">=</span> <span class="va">elev</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/values.html">values</a></span><span class="op">(</span><span class="va">rmask</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">36</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Dans le morceau de code ci-dessus, nous avons créé un objet masque appelé <code>rmask</code> avec des valeurs assignées aléatoirement à <code>NA</code> et <code>TRUE</code>.
 Ensuite, nous voulons garder les valeurs de <code>elev</code> qui sont <code>TRUE</code> dans <code>rmask</code>.
 En d’autres termes, nous voulons masquer <code>elev</code> avec <code>rmask</code>.</p>
-<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># sélection spatiale</span></span>
 <span><span class="va">elev</span><span class="op">[</span><span class="va">rmask</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>           <span class="co"># avec l'opérateur [ </span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/mask.html">mask</a></span><span class="op">(</span><span class="va">elev</span>, <span class="va">rmask</span><span class="op">)</span>                   <span class="co"># avec mask()</span></span></code></pre></div>
 <p>L’approche ci-dessus peut également être utilisée pour remplacer certaines valeurs (par exemple, celles qui seraient fausses) par NA.</p>
-<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elev</span><span class="op">[</span><span class="va">elev</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span></span></code></pre></div>
 <p>Ces opérations sont en fait des opérations booléennes locales puisque nous comparons deux rasters par cellule.
 La sous-section suivante explore ces opérations et d’autres opérations connexes plus en détail.</p>
@@ -689,7 +689,7 @@ Les opérations <strong>locales</strong> comprennent toutes les opérations cell
 Elles ont un cas typique d’algèbre raster et comprennent l’ajout ou la soustraction de valeurs d’une image raster, l’élévation au carré et la multiplication d’images raster.
 L’algèbre raster permet également des opérations logiques telles que la recherche de toutes les cellules qui sont supérieures à une valeur spécifique (5 dans notre exemple ci-dessous).
 Le paquet <strong>terra</strong> prend en charge toutes ces opérations et bien plus encore, comme le montre la figure ci-dessous (<a href="spatial-operations.html#fig:04-local-operations">4.11</a>):</p>
-<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elev</span> <span class="op">+</span> <span class="va">elev</span></span>
 <span><span class="va">elev</span><span class="op">^</span><span class="fl">2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">elev</span><span class="op">)</span></span>
@@ -703,7 +703,7 @@ FIGURE 4.11: Exemples de différentes opérations locales de l’objet raster el
 <p>Un autre bon exemple d’opérations locales est la classification d’intervalles de valeurs numériques en groupes, comme le regroupement d’un modèle numérique d’élévation en altitudes basses (classe 1), moyennes (classe 2) et hautes (classe 3).
 En utilisant la commande <code><a href="https://rdrr.io/pkg/terra/man/classify.html">classify()</a></code>, nous devons d’abord construire une matrice de classification, où la première colonne correspond à l’extrémité inférieure et la deuxième colonne à l’extrémité supérieure de la classe.
 La troisième colonne représente la nouvelle valeur pour les plages spécifiées dans les colonnes un et deux.</p>
-<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rcl</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">12</span>, <span class="fl">24</span>, <span class="fl">2</span>, <span class="fl">24</span>, <span class="fl">36</span>, <span class="fl">3</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">rcl</span></span>
 <span><span class="co">#&gt;      [,1] [,2] [,3]</span></span>
@@ -711,7 +711,7 @@ La troisième colonne représente la nouvelle valeur pour les plages spécifiée
 <span><span class="co">#&gt; [2,]   12   24    2</span></span>
 <span><span class="co">#&gt; [3,]   24   36    3</span></span></code></pre></div>
 <p>Ici, nous affectons les valeurs du raster dans les plages 0–12, 12–24 et 24–36 et les <em>reclassons</em> pour prendre les valeurs 1, 2 et 3, respectivement.</p>
-<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">recl</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/classify.html">classify</a></span><span class="op">(</span><span class="va">elev</span>, rcl <span class="op">=</span> <span class="va">rcl</span><span class="op">)</span></span></code></pre></div>
 <p>La fonction <code><a href="https://rdrr.io/pkg/terra/man/classify.html">classify()</a></code> peut également être utilisée lorsque nous voulons réduire le nombre de classes dans nos rasters catégorisés.
 Nous effectuerons plusieurs reclassements supplémentaires dans le chapitre <a href="#location"><strong>??</strong></a>’.</p>
@@ -731,12 +731,12 @@ NDVI&amp;= \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}\\
 \end{split}
 \]</span></p>
 <p>Calculons le NDVI pour l’image satellite multispectrale du parc National de Zion.</p>
-<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multi_raster_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/landsat.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span></span>
 <span><span class="va">multi_rast</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="va">multi_raster_file</span><span class="op">)</span></span></code></pre></div>
 <p>L’objet raster comporte quatre bandes de satellite - bleu, vert, rouge et proche infrarouge (NIR).
 Notre prochaine étape va être d’implémenter la formule NDVI dans une fonction R :</p>
-<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ndvi_fun</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">nir</span>, <span class="va">red</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="op">(</span><span class="va">nir</span> <span class="op">-</span> <span class="va">red</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">nir</span> <span class="op">+</span> <span class="va">red</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -744,7 +744,7 @@ Notre prochaine étape va être d’implémenter la formule NDVI dans une foncti
 Elle peut être utilisée comme argument <code>fun</code> de <code><a href="https://rdrr.io/pkg/terra/man/lapp.html">lapp()</a></code>.
 Nous devons juste nous rappeler que notre fonction n’a besoin que de deux bandes (et non de quatre comme dans le raster original), et qu’elles doivent être dans l’ordre NIR puis <code>red</code>.
 C’est pourquoi nous sélection la grille d’entrée avec <code>multi_rast[[c(4, 3)]]</code> avant d’effectuer tout calcul.</p>
-<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ndvi_rast</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/lapp.html">lapp</a></span><span class="op">(</span><span class="va">multi_rast</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">]</span>, fun <span class="op">=</span> <span class="va">ndvi_fun</span><span class="op">)</span></span></code></pre></div>
 <p>Le résultat, présenté sur le panneau de droite de la figure <a href="spatial-operations.html#fig:04-ndvi">4.12</a>, peut être comparé à l’image RVB de la même zone (panneau de gauche de la même figure).
 Il nous permet de constater que les plus grandes valeurs de NDVI sont liées aux zones de forêt dense dans les parties nord de la zone, tandis que les valeurs les plus faibles sont liées au lac au nord et aux crêtes montagneuses enneigées.</p>
@@ -773,7 +773,7 @@ Cette opération est également appelée filtrage spatial et convolution <span c
 Nous définissons la forme de la fenêtre mobile avec une <code>matrice</code> dont les valeurs correspondent aux poids (voir le paramètre <code>w</code> dans le code ci-dessous).
 Ensuite, le paramètre <code>fun</code> nous permet de spécifier la fonction que nous souhaitons appliquer à ce voisinage.
 Ici, nous choisissons le minimum, mais toute autre fonction de résumé, y compris <code><a href="https://rdrr.io/r/base/sum.html">sum()</a></code>, <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">mean()</a></code>, ou <code><a href="https://rdrr.io/r/stats/cor.html">var()</a></code> peut être utilisée.</p>
-<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r_focal</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/focal.html">focal</a></span><span class="op">(</span><span class="va">elev</span>, w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, fun <span class="op">=</span> <span class="va">min</span><span class="op">)</span></span></code></pre></div>
 <p>Cette fonction accepte également des arguments supplémentaires, par exemple, si elle doit supprimer les NAs dans le processus (<code>na.rm = TRUE</code>) ou non (<code>na.rm = FALSE</code>).</p>
 <div class="figure" style="text-align: center">
@@ -808,7 +808,7 @@ Notre raster <code>grain</code> en est un bon exemple, comme l’illustre le pan
 Enfin, le résultat d’une opération zonale est un tableau récapitulatif groupé par zone, c’est pourquoi cette opération est également connue sous le nom de <em>statistiques zonales</em> dans le monde des SIG.
 Ceci est à l’opposé des opérations focales qui retournent un objet matriciel.</p>
 <p>Le code suivant utilise la fonction <code><a href="https://rdrr.io/pkg/terra/man/zonal.html">zonal()</a></code> pour calculer l’altitude moyenne associée à chaque classe de taille de grain.</p>
-<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">z</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/zonal.html">zonal</a></span><span class="op">(</span><span class="va">elev</span>, <span class="va">grain</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="va">z</span></span>
 <span><span class="co">#&gt;   grain elev</span></span>
@@ -861,7 +861,7 @@ Le plus simple est alors de fusionner ces scènes, c’est-à-dire les mettre c�
 Cela est possible, par exemple, avec les données numériques d’altitude (SRTM, ASTER).
 Dans l’extrait de code suivant, nous téléchargeons d’abord les données d’élévation SRTM pour l’Autriche et la Suisse (pour les codes pays, voir la fonction <strong>geodata</strong> <code>country_codes()</code>).
 Dans une seconde étape, nous fusionnons les deux rasters en un seul.</p>
-<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aut</span> <span class="op">=</span> <span class="fu">geodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/geodata/man/elevation.html">elevation_30s</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"AUT"</span>, path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ch</span> <span class="op">=</span> <span class="fu">geodata</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/geodata/man/elevation.html">elevation_30s</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"CHE"</span>, path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">aut_ch</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/merge.html">merge</a></span><span class="op">(</span><span class="va">aut</span>, <span class="va">ch</span><span class="op">)</span></span></code></pre></div>
@@ -891,7 +891,7 @@ Pour une introduction plus détaillée à la télédétection avec R, il est pos
 <h2>
 <span class="header-section-number">4.4</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-1"><i class="fas fa-link"></i></a>
 </h2>
-<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nz</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span></span>
@@ -991,7 +991,7 @@ Ensuite, calculez et visualisez la différence entre le raster créé en utilisa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-08-27.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-08-28.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
