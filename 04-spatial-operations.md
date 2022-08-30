@@ -12,14 +12,13 @@ library(dplyr)
 library(spData)
 ```
 
-- Vous devrez également charger deux jeux de  données pour cette section \@ref(spatial-ras)
+- Vous devrez également charger deux jeux de données pour cette section \@ref(spatial-ras)
 
 
 ```r
 elev = rast(system.file("raster/elev.tif", package = "spData"))
 grain = rast(system.file("raster/grain.tif", package = "spData"))
 ```
-
 
 ## Introduction
 
@@ -31,13 +30,13 @@ La jointure spatiale (section \@ref(spatial-joining)) et l'agrégation (section 
 
 Les opérations spatiales diffèrent toutefois des opérations non spatiales à plusieurs égards :
 Les jointures spatiales, par exemple, peuvent être effectuées de plusieurs manières --- y compris la mise en correspondance d'entités qui se croisent ou se trouvent à une certaine distance de l'ensemble de données cible --- alors que les jointures de table attributaire abordées dans la section \@ref(vector-attribute-joining) du chapitre précédent ne peuvent être effectuées que d'une seule manière (sauf lorsqu'on utilise des jointures floues, comme décrit dans la documentation du paquet [**fuzzyjoin**](https://cran.r-project.org/package=fuzzyjoin)).
-Le *type* de relation spatiale entre les objets doit être pris en compte lors de l'exécution des opérations spatiales, comme décrit dans la section \@ref(topological-relations), sur les relations topologiques entre les caractéristiques vectorielles.
+Les différents *types* de relations spatiales entre objets comme les superpositions/intersections   et les objets disjoints, sont décrits dans la section \@ref(topological-relations).
 \index{spatial operations}
 Un autre aspect unique des objets spatiaux est la distance : tous les objets spatiaux sont liés par l'espace et les calculs de distance peuvent être utilisés pour explorer la force de cette relation, comme décrit dans le contexte des données vectorielles à la section \@ref(relations-distance).
 
 Les opérations spatiales sur les rasters comprennent la sélection --- traité dans la section \@ref(spatial-raster-subsetting) --- et la fusion de plusieurs " tuiles " raster en un seul objet, comme le montre la section \@ref(merging-rasters).
-*L'algèbre de raster* couvre une gamme d'opérations qui modifient les valeurs des cellules, avec ou sans référence aux valeurs des cellules environnantes, ce qui est vital pour de nombreuses applications.
-Le concept d'algèbre de raster est présenté dans la section \@ref(map-algebra) ; les opérations d'algèbre de raster locales, focales et zonales sont traitées respectivement dans les sections \@ref(local-operations), \@ref(focal-operations) et \@ref(zonal-operations). Les opérations d'algèbre globales, qui génèrent des statistiques synthétiques représentant l'ensemble d'un jeu de données raster, et les calculs de distance sur les données raster, sont abordés dans la section \@ref(global-operations-and-distances).
+*L'algèbre de raster* couvre une gamme d'opérations qui modifient les valeurs des cellules, avec ou sans référence aux valeurs des cellules environnantes.
+Le concept d'algèbre de raster vital pour de nombreuses applications,  est présenté dans la section \@ref(map-algebra) ; les opérations d'algèbre de raster locales, focales et zonales sont traitées respectivement dans les sections \@ref(local-operations), \@ref(focal-operations) et \@ref(zonal-operations). Les opérations d'algèbre globales, qui génèrent des statistiques synthétiques représentant l'ensemble d'un jeu de données raster, et les calculs de distance sur les données raster, sont abordés dans la section \@ref(global-operations-and-distances).
 Dans la dernière section avant les exercices (\@ref(merging-rasters)), le processus de fusion de deux ensembles de données raster est abordé et démontré à l'aide d'un exemple reproductible.
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Il est important de noter que les opérations spatiales qui utilisent deux objets spatiaux reposent sur le fait que les deux objets ont le même système  de coordonnées de référence, un sujet qui a été introduit dans la section \@ref(crs-intro) et qui sera traité plus en profondeur dans le chapitre \@ref(reproj-geo-data).</div>\EndKnitrBlock{rmdnote}
@@ -130,10 +129,12 @@ Le même résultat peut être obtenu avec la fonction de **sf** `st_filter()` qu
 
 
 ```r
-canterbury_height3 = nz_height %>%
+canterbury_height3 = nz_height |>
   st_filter(y = canterbury, .predicate = st_intersects)
 ```
 
+<!--toDo:jn-->
+<!-- fix pipes -->
 
 
 
@@ -274,6 +275,9 @@ Vous pouvez en savoir plus à l´adresse suivante https://www.r-spatial.org/r/20
 ### Les chaines DE-9IM
 
 Les prédicats binaires présentés dans la section précédente reposent sur le modèle *Dimensionally Extended 9-Intersection Model* (DE-9IM).
+Comme le suggère son nom cryptique, ce n'est pas un sujet facile.
+Y consacrer du temps peut être utile afin d'améliorer notre compréhension des relations spatiales.
+En outre, les utilisations avancées de DE-9IM incluent la création de prédicats spatiaux personnalisés.
 Ce modèle était à l'origine intitulé " DE + 9IM " par ses inventeurs, en référence à la " dimension des intersections des limites, des intérieurs et des extérieurs de deux entités " [@clementini_comparison_1995], mais il est désormais désigné par DE-9IM [@shen_classification_2018].
 <!-- The model's workings can be demonstrated with reference to two intersecting polygons, as illustrated in Figure \@ref(fig:de-9im). -->
 
@@ -376,8 +380,8 @@ random_df = data.frame(
   x = runif(n = 10, min = bb[1], max = bb[3]),
   y = runif(n = 10, min = bb[2], max = bb[4])
 )
-random_points = random_df %>% 
-  st_as_sf(coords = c("x", "y")) %>% # définir les coordonnés
+random_points = random_df |> 
+  st_as_sf(coords = c("x", "y")) |> # définir les coordonnés
   st_set_crs("EPSG:4326") # définir le CRS
 ```
 
@@ -496,7 +500,7 @@ Le résultat de cette jointure a utilisé une opération spatiale pour modifier 
 
 Comme pour l'agrégation de données attributaires, l'agrégation de données spatiales *condense* les données : les sorties agrégées comportent moins de lignes que les entrées non agrégées.
 Les *fonctions d'agrégation* statistiques, telles que la moyenne ou la somme, résument plusieurs valeurs \index{statistiques} d'une variable et renvoient une seule valeur par *variable de regroupement*.
-La section \@ref(vector-attribute-aggregation) a montré comment `aggregate()` et `group_by() %>% summarize()` condensent les données basées sur des variables d'attributs, cette section montre comment les mêmes fonctions fonctionnent avec des objets spatiaux.
+La section \@ref(vector-attribute-aggregation) a montré comment `aggregate()` et `group_by() |> summarize()` condensent les données basées sur des variables d'attributs, cette section montre comment les mêmes fonctions fonctionnent avec des objets spatiaux.
 \index{aggregation!spatial}
 
 Pour revenir à l'exemple de la Nouvelle-Zélande, imaginez que vous voulez connaître la hauteur moyenne des points hauts de chaque région : c'est la géométrie de la source (`y` ou `nz` dans ce cas) qui définit comment les valeurs de l'objet cible (`x` ou `nz_height`) sont regroupées.
@@ -518,18 +522,19 @@ Le même résultat peut également être généré en passant la sortie de `st_j
 
 
 ```r
-nz_agg2 = st_join(x = nz, y = nz_height) %>%
-  group_by(Name) %>%
+nz_agg2 = st_join(x = nz, y = nz_height) |>
+  group_by(Name) |>
   summarize(elevation = mean(elevation, na.rm = TRUE))
 ```
 
 
 
 Les entités `nz_agg` résultants ont la même géométrie que l'objet d'agrégation `nz` mais avec une nouvelle colonne résumant les valeurs de `x` dans chaque région en utilisant la fonction `mean()`.
-D'autres fonctions peuvent, bien sûr, remplacer `mean()` comme la `median()`, `sd()` et d'autres fonctions qui retournent une seule valeur par groupe.
-Remarque : une différence entre les approches `aggregate()` et `group_by() %>% summarize()` est que la première donne des valeurs `NA` pour les noms de régions non correspondantes, tandis que la seconde préserve les noms de régions.
+D'autres fonctions peuvent, bien sûr, remplacer `mean()` comme la `median()`, `sd()` ou d'autres fonctions qui retournent une seule valeur par groupe.
+Remarque : une différence entre les approches `aggregate()` et `group_by() |> summarize()` est que la première donne des valeurs `NA` pour les noms de régions non correspondantes, tandis que la seconde préserve les noms de régions.
 L'approche "tidy" est plus flexible en termes de fonctions d'agrégation et de noms de colonnes des résultats.
 Les opérations d'agrégation créant  de nouvelles géométries sont décrites dans la section \@ref(geometry-unions). 
+
 
 ### Jointure de couches sans superposition parfaite  {#incongruent}
 
@@ -556,8 +561,8 @@ Ceci est implémenté dans `st_interpolate_aw()`, comme démontré dans le morce
 
 ```r
 iv = incongruent["value"] # garde uniquement les valeurs à transférer
-agg_aw = st_interpolate_aw(iv, aggregating_zones, ext = TRUE)
-#> Warning in st_interpolate_aw.sf(iv, aggregating_zones, ext = TRUE):
+agg_aw = st_interpolate_aw(iv, aggregating_zones, extensive = TRUE)
+#> Warning in st_interpolate_aw.sf(iv, aggregating_zones, extensive = TRUE):
 #> st_interpolate_aw assumes attributes are constant or uniform over areas of x
 agg_aw$value
 #> [1] 19.6 25.7
@@ -576,9 +581,9 @@ Ceci est illustré dans l'extrait de code ci-dessous, qui trouve la distance ent
 
 
 ```r
-nz_heighest = nz_height %>% top_n(n = 1, wt = elevation)
+nz_highest = nz_height |> slice_max(n = 1, order_by = elevation)
 canterbury_centroid = st_centroid(canterbury)
-st_distance(nz_heighest, canterbury_centroid)
+st_distance(nz_highest, canterbury_centroid)
 #> Units: [m]
 #>        [,1]
 #> [1,] 115540
@@ -725,7 +730,8 @@ L'algèbre raster (ou modélisation cartographique avec des données raster) div
 2. Les opérations *Focales* ou de voisinage.
 Le plus souvent la valeur de la cellule de sortie est le résultat d'un bloc de cellules d'entrée de 3 x 3 cellules
 3. Les opérations *Zonales* sont similaires aux opérations focales, mais la grille de pixels environnante sur laquelle les nouvelles valeurs sont calculées peut avoir des tailles et des formes irrégulières.
-4. Les opérations *Globales* ou par-raster ; cela signifie que la cellule de sortie dérive potentiellement sa valeur d'un ou de plusieurs rasters entiers.
+4. Les opérations *Globales* ou par-raster. 
+Ici la cellule de sortie dérive potentiellement sa valeur d'un ou de plusieurs rasters entiers.
 
 Cette typologie classe les opérations d'algèbre raster en fonction du nombre de cellules utilisées pour chaque étape de traitement des pixels et du type de sortie.
 Par souci d'exhaustivité, nous devons mentionner que les opérations sur des rasters peuvent également être classées par discipline, comme le terrain, l'analyse hydrologique ou la classification des images.
