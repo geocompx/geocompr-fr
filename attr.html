@@ -67,7 +67,7 @@
 <li><a class="" href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></li>
 <li><a class="active" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
 <li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
-<li><a class="" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
+<li><a class="" href="geometry-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
 <li><a class="" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
 </ul>
 
@@ -94,7 +94,7 @@
 <li>Il s’appuie également sur <strong>spData</strong>, qui charge des jeux de données utilisés dans les exemples :</li>
 </ul>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span>  <span class="co"># paquet de données spatiales présenté dans le Chapitre 2</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span>  <span class="co"># paquet de données spatiales présenté dans le Chapitre 2</span></span></code></pre></div>
 <ul>
 <li>Assurez-vous également d’avoir installé le paquet <strong>tidyr</strong>, ou le <strong>tidyverse</strong> dont il fait partie, si vous souhaitez exécuter des opérations restructurant des données pour la section <a href="attr.html#vec-attr-creation">3.2.5</a>.</li>
 </ul>
@@ -430,7 +430,7 @@ Le résultat des jointures de données peut être un objet <code>sf</code> ou <c
 Le type le plus courant de jointure attributaures sur des données spatiales prend un objet <code>sf</code> comme premier argument et lui ajoute des colonnes à partir d’un <code>data.frame</code> spécifié comme second argument.
 </p>
 <p>Pour découvrir les jointures, nous allons combiner les données sur la production de café avec l’ensemble de données <code>world</code>.
-Les données sur le café sont dans un tableau de données appelé <code>coffee_data</code> du paquet <strong>spData</strong> (voir <code><a href="https://nowosad.github.io/spData/reference/coffee_data.html">?coffee_data</a></code> pour plus de détails).
+Les données sur le café sont dans un tableau de données appelé <code>coffee_data</code> du paquet <strong>spData</strong> (voir <code><a href="https://jakubnowosad.com/spData/reference/coffee_data.html">?coffee_data</a></code> pour plus de détails).
 Il comporte 3 colonnes :
 <code>name_long</code> nomme les principales nations productrices de café et <code>coffee_production_2016</code> et <code>coffee_production_2017</code> contiennent les valeurs estimées de la production de café en unités de sacs de 60 kg pour chaque année.
 Une “jointure gauche” (<em>left join</em>), qui préserve le premier ensemble de données, fusionne <code>world</code> avec <code>coffee_data</code> :</p>
@@ -712,17 +712,17 @@ détaché, et n’est donc pas recommandé.
 <span class="header-section-number">3.4</span> Exercices<a class="anchor" aria-label="anchor" href="#exercices"><i class="fas fa-link"></i></a>
 </h2>
 <p>Pour ces exercices, nous allons utiliser les jeux de données <code>us_states</code> et <code>us_states_df</code> du paquetage <strong>spData</strong>.
-Vous devez avoir chargé ce paquet, ainsi que les autres paquets utilisés dans le chapitre sur les opérations d’attributs (<strong>sf</strong>, <strong>dplyr</strong>, <strong>terra</strong>) avec des commandes telles que <code><a href="https://nowosad.github.io/spData/">library(spData)</a></code> avant de tenter ces exercices :</p>
+Vous devez avoir chargé ce paquet, ainsi que les autres paquets utilisés dans le chapitre sur les opérations d’attributs (<strong>sf</strong>, <strong>dplyr</strong>, <strong>terra</strong>) avec des commandes telles que <code><a href="https://jakubnowosad.com/spData/">library(spData)</a></code> avant de tenter ces exercices :</p>
 <div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">us_states</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">us_states_df</span><span class="op">)</span></span></code></pre></div>
 <p><code>us_states</code> est un objet spatial (de classe <code>sf</code>), contenant la géométrie et quelques attributs (dont le nom, la région, la superficie et la population) des états des États-Unis contigus.
 <code>us_states_df</code> est un tableau de données (de classe <code>data.frame</code>) contenant le nom et des variables supplémentaires (dont le revenu médian et le niveau de pauvreté, pour les années 2010 et 2015) des états américains, y compris l’Alaska, Hawaii et Porto Rico.
-Les données proviennent du <em>United States Census Bureau</em>, et sont documentées dans <code><a href="https://nowosad.github.io/spData/reference/us_states.html">?us_states</a></code> et <code><a href="https://nowosad.github.io/spData/reference/us_states_df.html">?us_states_df</a></code>.</p>
+Les données proviennent du <em>United States Census Bureau</em>, et sont documentées dans <code><a href="https://jakubnowosad.com/spData/reference/us_states.html">?us_states</a></code> et <code><a href="https://jakubnowosad.com/spData/reference/us_states_df.html">?us_states_df</a></code>.</p>
 <p>E1. Créez un nouvel objet appelé <code>us_states_name</code> qui ne contient que la colonne <code>NAME</code> de l’objet <code>us_states</code> en utilisant la syntaxe de base de R (<code>[</code>) ou du tidyverse (<code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>).
 Quelle est la classe du nouvel objet et qu’est-ce qui le rend géographique ?</p>
 <p>E2. Sélectionnez les colonnes de l’objet <code>us_states</code> qui contiennent des données sur la population.
@@ -819,7 +819,7 @@ Sélectionnez les valeurs des cellules de chaque coin.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-08-30.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-09-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

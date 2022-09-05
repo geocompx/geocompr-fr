@@ -67,7 +67,7 @@
 <li><a class="" href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></li>
 <li><a class="" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
 <li><a class="active" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
-<li><a class="" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
+<li><a class="" href="geometry-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
 <li><a class="" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
 </ul>
 
@@ -90,7 +90,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Vous devrez également charger deux jeux de données pour cette section <a href="spatial-operations.html#spatial-ras">4.3</a>
 </li>
@@ -842,11 +842,11 @@ Les calculs de visibilité et de bassin visuel appartiennent également à la fa
 <span class="header-section-number">4.3.7</span> Les contreparties de l’algèbre raster dans le traitement vectoriel<a class="anchor" aria-label="anchor" href="#les-contreparties-de-lalg%C3%A8bre-raster-dans-le-traitement-vectoriel"><i class="fas fa-link"></i></a>
 </h3>
 <p>De nombreuses opérations d’algèbre raster ont une contrepartie dans le traitement vectoriel <span class="citation">(<a href="raster-vector.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
-Le calcul d’une distance raster (opération globale) en ne considérant qu’une distance maximale (opération focale logique) est l’équivalent d’une opération de mise en mémoire tampon vectorielle (section <a href="geometric-operations.html#clipping">5.2.5</a>).
+Le calcul d’une distance raster (opération globale) en ne considérant qu’une distance maximale (opération focale logique) est l’équivalent d’une opération de mise en mémoire tampon vectorielle (section <a href="geometry-operations.html#clipping">5.2.5</a>).
 Le reclassement de données raster (fonction locale ou zonale selon l’entrée) est équivalent à la dissolution de données vectorielles (section <a href="#spatial-joining"><strong>??</strong></a>).
 La superposition de deux données matricielles (opération locale), dont l’une contient des valeurs <code>NULL</code> ou <code>NA</code> représentant un masque, est similaire au découpage vectoriel (Section `<span class="citation">(<a href="#ref-ref" role="doc-biblioref"><strong>ref?</strong></a>)</span>(clipping)).
 L’intersection de deux couches est tout à fait similaire au détourage spatial (section <a href="#spatial-subsetting"><strong>??</strong></a>).
-La différence est que ces deux couches (vectorielles ou matricielles) partagent simplement une zone de chevauchement (voir la figure <a href="geometric-operations.html#fig:venn-clip">5.8</a> pour un exemple).
+La différence est que ces deux couches (vectorielles ou matricielles) partagent simplement une zone de chevauchement (voir la figure <a href="geometry-operations.html#fig:venn-clip">5.8</a> pour un exemple).
 Cependant, faites attention à la formulation.
 Parfois, les mêmes mots ont des significations légèrement différentes pour les modèles de données rasters et vectorielles.
 Dans le cas des données vectorielles, l’agrégation consiste à dissoudre les polygones, tandis que dans le cas des données rasters, elle consiste à augmenter la résolution.
@@ -937,7 +937,7 @@ Ensuite, calculez et visualisez la différence entre le raster créé en utilisa
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></div>
-<div class="next"><a href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></div>
+<div class="next"><a href="geometry-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <h2>Note: La Seconde Edition est en construction 🏗</h2>
     <!--<p>C'est le moment idéal pour tester les paquets en cours de développement et fournir vos commentaires</p>
@@ -997,7 +997,7 @@ Ensuite, calculez et visualisez la différence entre le raster créé en utilisa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-08-30.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-09-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

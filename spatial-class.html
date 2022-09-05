@@ -67,7 +67,7 @@
 <li><a class="active" href="spatial-class.html"><span class="header-section-number">2</span> La donnée géographique dans R</a></li>
 <li><a class="" href="attr.html"><span class="header-section-number">3</span> Opérations sur les tables attributaires</a></li>
 <li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
-<li><a class="" href="geometric-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
+<li><a class="" href="geometry-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
 <li><a class="" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
 </ul>
 
@@ -121,7 +121,7 @@ La commande suivante installera <strong>toutes</strong> les dépendances nécess
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span>      <span class="co"># classes et fonctions pour les données rasters</span></span></code></pre></div>
 <p>Les autres paquets installés contiennent des données qui seront utilisées dans le livre:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://nowosad.github.io/spData/">spData</a></span><span class="op">)</span>        <span class="co"># chargement de données geographiques</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span>        <span class="co"># chargement de données geographiques</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Nowosad/spData">spDataLarge</a></span><span class="op">)</span>   <span class="co"># chargement de données geographiques plus volumineuses</span></span></code></pre></div>
 </div>
 <div id="intro-spatial-class" class="section level2" number="2.1">
@@ -186,7 +186,7 @@ FIGURE 2.1: Représentation de données vectorielles (ponctuelles) dans laquelle
 <a href="https://proj.org/">PROJ</a>, une puissante bibliothèque pour les transformations de systèmes de coordonnées, qui sous-tend le chapitre <a href="#reproj-geo-data"><strong>??</strong></a>
 </li>
 <li>
-<a href="https://libgeos.org/">GEOS</a>, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre <a href="geometric-operations.html#geometric-operations">5</a>
+<a href="https://libgeos.org/">GEOS</a>, un moteur de géométrie euclidienne pour les opérations telles que le calcul des tampons et des centroïdes sur les données avec un SCR projeté, couvert dans le chapitre <a href="#geometric-operations"><strong>??</strong></a>
 </li>
 <li>
 <a href="https://s2geometry.io/">S2</a>, un moteur de géométrie sphérique écrit en C++ développé par Google, via le paquet <a href="https://r-spatial.github.io/s2/"><strong>s2</strong></a>, couvert dans la section <a href="spatial-class.html#s2">2.2.9</a> ci-dessous et dans le chapitre <a href="#reproj-geo-data"><strong>??</strong></a>.
@@ -198,7 +198,7 @@ Aujourd’hui, nous considérons que c’est un acquis, cependant, c’est grâc
 <p>Une fonctionnalité intéressante de <strong>sf</strong> est que vous pouvez changer le moteur de géométrie par défaut utilisé sur les données non projetées : “Désactiver” S2 peut être fait avec la commande <code>sf::sf_use_s2(FALSE)</code>, ce qui signifie que le moteur de géométrie euclidienne GEOS sera utilisé par défaut pour toutes les opérations de géométrie, y compris celles sur les données non projetées.
 Comme nous le verrons dans la Section <a href="spatial-class.html#s2">2.2.9</a>, la géométrie euclidienne, ou plane, est basée sur un espace à 2 dimensions.
 Les moteurs de géométrie euclidienne tels que GEOS supposent des coordonnées “plates” (projetées), tandis que les moteurs de géométrie sphérique tels que S2 supposent des coordonnées non projetées (lon/lat).</p>
-<p>Cette section présente les classes <strong>sf</strong> en préparation des chapitres suivants (les chapitres <a href="geometric-operations.html#geometric-operations">5</a> et <a href="#read-write"><strong>??</strong></a> couvrent respectivement l’interface GEOS et GDAL)</p>
+<p>Cette section présente les classes <strong>sf</strong> en préparation des chapitres suivants (les chapitres <a href="#geometric-operations"><strong>??</strong></a> et <a href="#read-write"><strong>??</strong></a> couvrent respectivement l’interface GEOS et GDAL)</p>
 <div id="une-introduction-aux-simple-features" class="section level3" number="2.2.1">
 <h3>
 <span class="header-section-number">2.2.1</span> Une introduction aux <em>Simple Features</em><a class="anchor" aria-label="anchor" href="#une-introduction-aux-simple-features"><i class="fas fa-link"></i></a>
@@ -404,7 +404,7 @@ Une version non projetée de cette figure peut être créée avec les commandes 
 FIGURE 2.5: Pays coloriés par continent et leur population en 2015 (cercles proportionnels à la population).
 </p>
 </div>
-<p>Le code ci-dessus utilise la fonction <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid()</a></code> pour convertir un type de géométrie (polygones) en un autre (points) (voir chapitre <a href="geometric-operations.html#geometric-operations">5</a>), dont la représentation varie en fonction de l’argument <code>cex</code>.</p>
+<p>Le code ci-dessus utilise la fonction <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid()</a></code> pour convertir un type de géométrie (polygones) en un autre (points) (voir chapitre <a href="#geometric-operations"><strong>??</strong></a>), dont la représentation varie en fonction de l’argument <code>cex</code>.</p>
 <p>
 La méthode plot de <strong>sf</strong> possède également des arguments spécifiques aux données géographiques. <code>expandBB</code>, par exemple, peut être utilisé pour dessiner un objet <code>sf</code> dans son contexte :
 elle prend un vecteur de quatre nombres qui étend la boîte de délimitation de la carte par rapport à zéro en suivant l’ordre : bas, gauche, haut, droite.
@@ -758,7 +758,7 @@ Si vous prévoyez d’effectuer des calculs ou des opérations géométriques à
 <code class="sourceCode R"><span><span class="va">df_sf</span> <span class="op">=</span> <span class="fu">sfheaders</span><span class="fu">::</span><span class="fu"><a href="https://dcooley.github.io/sfheaders/reference/sf_polygon.html">sf_polygon</a></span><span class="op">(</span>obj <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">df_sf</span><span class="op">)</span> <span class="op">=</span> <span class="st">"EPSG:4326"</span></span></code></pre></div>
 <p><strong>sfheaders</strong> est aussi une bonne option pour “déconstruire” et “reconstruire” les objets <code>sf</code>, c’est-à-dire convertir les colonnes géométriques en tableaux de données contenant les coordonnées de chaque sommet (vertex) et les identifiants de chaque éléments géométriques (et d’éventuels géométrie multiples).
-Il est rapide et fiable pour “passer” des colonnes géométriques vers différents types, un sujet traité dans le chapitre <a href="geometric-operations.html#geometric-operations">5</a>.
+Il est rapide et fiable pour “passer” des colonnes géométriques vers différents types, un sujet traité dans le chapitre <a href="#geometric-operations"><strong>??</strong></a>.
 Des tests, dans la <a href="https://dcooley.github.io/sfheaders/articles/examples.html#performance">documentation</a> du paquet et dans le code de test développé pour ce livre, montrent qu’il est beaucoup plus rapide que le paquet <code>sf</code> pour de telles opérations.</p>
 </div>
 <div id="s2" class="section level3" number="2.2.9">
@@ -1212,7 +1212,7 @@ Quel type d’information pouvez-vous en tirer ?</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-08-30.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-09-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

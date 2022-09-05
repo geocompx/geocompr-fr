@@ -1,4 +1,4 @@
-# Opèrations géométriques {#geometric-operations}
+# Opèrations géométriques {#geometry-operations}
 
 ## Prérequis {-}
 
@@ -28,7 +28,8 @@ La section \@ref(geo-ras) couvre les transformations géométriques sur les obje
 Il s'agit de modifier la taille et le nombre des pixels, et de leur attribuer de nouvelles valeurs.
 Elle enseigne comment modifier la résolution (également appelée agrégation et désagrégation), l'étendue et l'origine d'un objet matriciel.
 Ces opérations sont particulièrement utiles si l'on souhaite aligner des rasters provenant de sources diverses.
-Les objets rasters alignés partagent une correspondance biunivoque entre les pixels, ce qui permet de les traiter à l'aide d'opérations d'algèbre raster, décrites dans la section \@ref(map-algebra). La dernière section \@ref(raster-vector) relie les objets vectoriels et rasters. 
+Les objets rasters alignés partagent une correspondance biunivoque entre les pixels, ce qui permet de les traiter à l'aide d'opérations d'algèbre raster, décrites dans la section \@ref(map-algebra). 
+L'interaction entre les objets raster et vectoriels est traitée au chapitre  \@ref(raster-vector). 
 Elle montre comment les valeurs matricielles peuvent être "masquées" et "extraites" par des géométries vectorielles.
 Il est important de noter qu'elle montre comment " polygoniser " les données raster et " rastériser " les veceurs, ce qui rend les deux modèles de données plus interchangeables.
 
@@ -76,13 +77,9 @@ Comme nous le montrons dans le chapitre \@ref(reproj-geo-data), GEOS suppose que
 Par conséquent, la première étape consiste à projeter les données dans un CRS projeté adéquat, tel que le US National Atlas Equal Area (epsg = 2163) (à gauche sur la figure \@ref(fig:us-simp)) :
 
 
-
-
-
 ```r
 us_states2163 = st_transform(us_states, "EPSG:2163")
-us_states2163 = us_states2163 %>% 
-  mutate(AREA = as.numeric(AREA)) 
+us_states2163 = us_states2163
 ```
 
 `st_simplify()` works equally well with projected polygons:
@@ -109,11 +106,25 @@ us_states_simp2 = rmapshaper::ms_simplify(us_states2163, keep = 0.01,
                                           keep_shapes = TRUE)
 ```
 
-Enfin, la comparaison visuelle de l'ensemble de données originales et des deux versions simplifiées montre des différences entre les sorties des algorithmes de Douglas-Peucker (`st_simplify`) et de Visvalingam (`ms_simplify`) (Figure \@ref(fig:us-simp)) :
+
+Une alternative à la simplification est le lissage des limites des géométries des polygones et des linéaires (*linestring*). Elle est implémenté dans le package **smoothr**. 
+Le lissage interpole les arêtes des géométries et n'entraîne pas nécessairement une réduction du nombre de sommets, mais il peut être particulièrement utile lorsque l'on travaille avec des géométries qui résultent de la vectorisation spatiale d'un raster (un sujet traité dans le chapitre \@ref(raster-vector).
+**smoothr** implémente trois techniques de lissage : une régression à noyau gaussien, l'algorithme de découpage en coins de Chaikin et l'interpolation par splines, qui sont tous décrits dans la vignette du paquetage et dans [website](https://strimas.com/smoothr/). 
+Notez que, comme pour `st_simplify()`, les algorithmes de lissage ne préservent pas la 'topologie'.
+La fonction phare de **smoothr** est `smooth()`, où l'argument `method` spécifie la technique de lissage à utiliser.
+Vous trouverez ci-dessous un exemple d'utilisation de la régression à noyau gaussien pour lisser les frontières des états américains en utilisant `method=ksmooth`.
+L'argument `smoothness` contrôle la largeur de bande de la gaussienne qui est utilisée pour lisser la géométrie et a une valeur par défaut de 1.
+
+
+```r
+us_states_simp3 = smoothr::smooth(us_states2163, method = 'ksmooth', smoothness = 6)
+```
+
+Enfin, la comparaison visuelle de l'ensemble de données originales et des deux versions simplifiées montre des différences entre les sorties des algorithmes de Douglas-Peucker (`st_simplify`), de Visvalingam (`ms_simplify`) et de régression à noyau gaussien (`smooth(method=ksmooth)`) (Figure \@ref(fig:us-simp)) :
 
 <div class="figure" style="text-align: center">
-<img src="05-geometry-operations_files/figure-html/us-simp-1.png" alt="Simplification des polygones, comparant la géométrie originale des États-Unis continentaux avec des versions simplifiées, générées avec les fonctions des paquets sf (au centre) et rmapshaper (à droite)." width="100%" />
-<p class="caption">(\#fig:us-simp)Simplification des polygones, comparant la géométrie originale des États-Unis continentaux avec des versions simplifiées, générées avec les fonctions des paquets sf (au centre) et rmapshaper (à droite).</p>
+<img src="05-geometry-operations_files/figure-html/us-simp-1.png" alt="Simplification des polygones, comparant la géométrie originale des États-Unis continentaux avec des versions simplifiées, générées avec les fonctions des paquets sf (haut à droite) et rmapshaper (bas à gauche) et smoothr (bas à droite)." width="100%" />
+<p class="caption">(\#fig:us-simp)Simplification des polygones, comparant la géométrie originale des États-Unis continentaux avec des versions simplifiées, générées avec les fonctions des paquets sf (haut à droite) et rmapshaper (bas à gauche) et smoothr (bas à droite).</p>
 </div>
 
 ### Centroïdes
@@ -378,7 +389,8 @@ Cela est démontré dans le code ci-dessous dans lequel 49 `us_states` sont agr�
 ```r
 regions = aggregate(x = us_states[, "total_pop_15"], by = list(us_states$REGION),
                     FUN = sum, na.rm = TRUE)
-regions2 = us_states %>% group_by(REGION) %>%
+regions2 = us_states |>
+  group_by(REGION) |>
   summarize(pop = sum(total_pop_15, na.rm = TRUE))
 ```
 
@@ -414,7 +426,7 @@ texas_union = st_union(us_west_union, texas)
 \index{vector!geometry casting} 
 La transformation d'un type de géométrie en un autre (*casting*)  est une opération puissante.
 Elle est implémentée dans la fonction `st_cast()` du package **sf**.
-Il est important de noter que la fonction `st_cast()` se comporte différemment selon qu'il s'agit d'un objet géométrique simple (`sfg`), d'une colonne géométrique simple (`sfc`) ou d'un objet simple.
+Il est important de noter que la fonction `st_cast()` se comporte différemment selon qu'il s'agit d'un objet géométrique simple (`sfg`), d'une entité avec une colonne géométrique simple (`sfc`) ou d'un objet entité simple.
 
 Créons un multipoint pour illustrer le fonctionnement des transformations de type géométrique sur des objets de géométrie simple (`sfg`) :
 
@@ -423,7 +435,7 @@ Créons un multipoint pour illustrer le fonctionnement des transformations de ty
 multipoint = st_multipoint(matrix(c(1, 3, 5, 1, 3, 1), ncol = 2))
 ```
 
-Dans ce cas, `st_cast()` peut être utile pour transformer le nouvel objet en *linestring* (ligne) ou en polygone (Figure \@ref(fig:single-cast)) :
+Dans ce cas, `st_cast()` peut être utile pour transformer le nouvel objet en *linestring* (linéaire) ou en polygone (Figure \@ref(fig:single-cast)) :
 
 
 ```r
@@ -452,20 +464,20 @@ all.equal(multipoint, multipoint_3)
 #> [1] TRUE
 ```
 
-\BeginKnitrBlock{rmdnote}<div class="rmdnote">Pour les géométries d´entités simples (`sfg`), `st_cast` permet également de transformer des géométries de non-multi-types vers des multi-types (par exemple, `POINT` vers `MULTIPOINT`) et de multi-types vers des non-multi-types.
+\BeginKnitrBlock{rmdnote}<div class="rmdnote">Pour les entités de géométries simples (`sfg`), `st_cast` permet également de transformer des géométries de non-multi-types vers des multi-types (par exemple, `POINT` vers `MULTIPOINT`) et de multi-types vers des non-multi-types.
 Toutefois, dans le deuxième groupe de cas, seul le premier élément de l´ancien objet est conservé.</div>\EndKnitrBlock{rmdnote}
 
 
 
-La transformation en différent types géométrique des colonnes géométriques d'entités simples (`sfc`) et des objets d'entités simples fonctionnent de la même manière que pour les géométries simples (`sfg`) dans la plupart des cas. 
+La transformation en différent types géométrique des d'entités de type simple colonne  (`sfc`) et des objets d'entités simples fonctionnent de la même manière que pour les entités de géométries simples (`sfg`) dans la plupart des cas. 
 Une différence importante est la conversion des multi-types en non-multi-types.
 À la suite de ce processus, les multi-objets, `sf` ou `sfg` sont divisés en plusieurs non-multi-objets.
 
 Le tableau \@ref(tab:sfs-st-cast) montre les transformations de type géométrique possibles sur les objets d'entités simples.
 Les géométries d'entités simples (représentées par la première colonne du tableau) peuvent être transformées en plusieurs types de géométrie, représentés par les colonnes du tableau \@ref(tab:sfs-st-cast)
-Plusieurs des transformations ne sont pas possibles, par exemple, vous ne pouvez pas convertir un point unique en un multilinestring ou un polygone (ainsi les cellules `[1, 4:5]` dans le tableau sont NA).
-Certaines transformations divisent l'objet d'entrée: on passe d'un élément unique en un objet à éléments multiples.
-Lorsqu'une géométrie multipoint constituée de cinq paires de coordonnées est transformée en géométrie "POINT", par exemple, la sortie contiendra cinq entités.
+Plusieurs des transformations ne sont pas possibles, par exemple, vous ne pouvez pas convertir un point unique en un multilinéaire (*multilinestring*) ou un polygone (ainsi les cellules `[1, 4:5]` dans le tableau sont NA).
+Certaines transformations divisent un seul élément en plusieurs sous-éléments, en "étendant" les objets `sf` (en ajoutant de nouvelles lignes avec des valeurs d'attributs dupliquées).
+Par exemple, lorsqu'une géométrie multipoint composée de cinq paires de coordonnées est transformée en une géométrie "POINT", la sortie contiendra cinq entités.
 
 <table>
 <caption>(\#tab:sfs-st-cast)Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d'entrée par ligne et type de sortie par colonne</caption>
@@ -567,7 +579,7 @@ Essayons d'appliquer des transformations de type géométrique sur un nouvel obj
 multilinestring_list = list(matrix(c(1, 4, 5, 3), ncol = 2), 
                             matrix(c(4, 4, 4, 1), ncol = 2),
                             matrix(c(2, 4, 2, 2), ncol = 2))
-multilinestring = st_multilinestring((multilinestring_list))
+multilinestring = st_multilinestring(multilinestring_list)
 multilinestring_sf = st_sf(geom = st_sfc(multilinestring))
 multilinestring_sf
 #> Simple feature collection with 1 feature and 0 fields
@@ -643,7 +655,6 @@ Par exemple, dans le chapitre \@ref(location) nous définissons les zones métro
 La trame d'habitants d'origine a cependant une résolution de 1 km^2^, c'est pourquoi nous allons diminuer (agréger) la résolution d'un facteur 20 (voir le chapitre \@ref(define-metropolitan-areas)).
 Une autre raison d'agréger une image matricielle est simplement de réduire le temps d'exécution ou d'économiser de l'espace disque.
 Bien entendu, cela n'est possible que si la tâche à accomplir permet une résolution plus grossière.
-Parfois, une résolution plus grossière est suffisante!
 
 ### Intersections géométriques
 
@@ -704,7 +715,7 @@ elev_3 = elev + elev_2
 Cependant, nous pouvons aligner l'étendue de deux rasters avec `extend()`. 
 Au lieu d'indiquer à la fonction le nombre de lignes ou de colonnes à ajouter (comme nous l'avons fait précédemment), nous lui permettons de le déterminer en utilisant un autre objet raster.
 Ici, nous étendons l'objet `elev` à l'étendue de `elev_2`. 
-Les lignes et colonnes nouvellement ajoutées reçoivent  `NA`.
+Les lignes et colonnes nouvellement ajoutées prennent la valeur  `NA`.
 
 
 ```r
@@ -802,11 +813,11 @@ Il existe plusieurs méthodes pour estimer les valeurs d'un raster avec différe
 Ces méthodes comprennent :
 
 - Plus proche voisin - attribue la valeur de la cellule la plus proche du raster original à la cellule du raster cible.
-Cette méthode est rapide et convient généralement aux raster de catégories.
-- Interpolation bilinéaire - affecte une moyenne pondérée des quatre cellules les plus proches de l'image originale à la cellule de l'image cible (Figure \@ref(fig:bilinear)). La méthode la plus rapide pour les rasters continus
+Cette méthode est rapide et convient généralement aux réechantillonnage de raster de catégories.
+- Interpolation bilinéaire - affecte une moyenne pondérée des quatre cellules les plus proches de l'image originale à la cellule de l'image cible (Figure \@ref(fig:bilinear)). Il s'agit de la méthode la plus rapide pour les rasters continus
 - Interpolation cubique - utilise les valeurs des 16 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie, en appliquant des fonctions polynomiales du troisième ordre. Elle est aussi utilisée pour les raster continus. Elle permet d'obtenir une surface plus lissée que l'interpolation bilinéaire, mais elle est également plus exigeante en termes de calcul.
 - Interpolation par spline cubique - utilise également les valeurs des 16 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie, mais applique des splines cubiques (fonctions polynomiales du troisième ordre par morceaux) pour obtenir les résultats. Elle est utilisée pour les trames continues
-- Rééchantillonnage par fenêtré de Lanczos - utilise les valeurs des 36 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie. Il est tilisé pour les raster continues^ [Une explication plus détaillée de cette méthode peut être trouvée sur https://gis.stackexchange.com/a/14361/20955.
+- Rééchantillonnage par fenêtré de Lanczos - utilise les valeurs des 36 cellules les plus proches de la trame d'origine pour déterminer la valeur de la cellule de sortie. Il est utilisé pour les raster continues^[Une explication plus détaillée de cette méthode peut être trouvée sur https://gis.stackexchange.com/a/14361/20955.
 ]
 
 Les explications ci-dessus mettent en évidence le fait que seul le rééchantillonnage par *voisin le plus proche* est adapté aux rasters contenant des catégories, alors que toutes les méthodes peuvent être utilisées (avec des résultats différents) pour les matrices continues.
@@ -839,14 +850,13 @@ La figure \@ref(fig:resampl) montre une comparaison de différentes méthodes de
 <p class="caption">(\#fig:resampl)Comparaison visuelle du raster d'entré et de cinq méthodes de rééchantillonnage différentes.</p>
 </div>
 
+La fonction `resample()` dispose également de quelques méthodes de rééchantillonnage supplémentaires, dont `sum`, `min`, `q1`, `med`, `q3`, `max`, `average`, `mode`, et `rms`.
+Elles calculent toutes une statistique donnée en se basant sur les valeurs de toutes les cellules de la grille (hors `NA`).
+Par exemple, `sum` est utile lorsque chaque cellule de raster représente une variable étendue dans l'espace (par exemple, le nombre de personnes).
+En utilisant `sum`, le raster ré-échantillonné devrait avoir le même nombre total de personnes que le raster original.
+
 Comme vous le verrez dans la section \@ref(reproj-ras), la reprojection de raster est un cas particulier de rééchantillonnage lorsque notre raster cible a un CRS différent de la trame d'origine.
 
-<!--jn:toDo-->
-<!-- decide -->
-<!-- should we mention gdalUtils or gdalUtilities? -->
-<!-- gdalUtils - https://cran.r-project.org/web/packages/gdalUtils/index.html - we mentioned it in geocompr 1; however it seems abandoned -->
-<!-- gdalUtilities - https://cran.r-project.org/web/packages/gdalUtilities/index.html -->
-<!-- also - add some reference to GDAL functions! -->
 \index{GDAL}
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">La plupart des opérations géométriques dans **terra** sont conviviales, plutôt rapides, et fonctionnent sur de grands objets rasters.
 Cependant, il peut y avoir des cas où **terra** n´est pas le plus performant, que ce soit pour des objets rasters étendus ou pour de nombreux fichiers rasters, et où des alternatives doivent être envisagées.

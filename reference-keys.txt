@@ -126,7 +126,7 @@ opérations-globales-et-distances
 les-contreparties-de-lalgèbre-raster-dans-le-traitement-vectoriel
 fusionner-des-rasters
 exercises-1
-geometric-operations
+geometry-operations
 introduction-2
 geo-vec
 simplification
