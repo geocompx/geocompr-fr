@@ -353,7 +353,7 @@ La ligne de code suivante crée un tampon autour des données *projetées* d'exa
 london_buff_projected = st_buffer(london_proj, 1e5)
 ```
 
-The geometries of the three `london_buff*` objects that *have* a specified CRS created above (`london_buff_s2`, `london_buff_lonlat` and `london_buff_projected`) created in the preceding code chunks are illustrated in Figure \@ref(fig:crs-buf).
+Les géométries des trois objets `london_buff*` qui *ont* un CRS spécifié créé ci-dessus (`london_buff_s2`, `london_buff_lonlat` et `london_buff_projected`) créés dans les extraits de code précédents sont illustrées dans la Figure  \@ref(fig:crs-buf).
 
 ```{r crs-buf-old, include=FALSE, eval=FALSE}
 uk = rnaturalearth::ne_countries(scale = 50) |> 
@@ -372,7 +372,7 @@ plot(london_proj, add = TRUE)
 plot(st_geometry(uk), add = TRUE, border = "gray", lwd = 3)
 ```
 
-```{r crs-buf, fig.cap="Buffers around London showing results created with the S2 spherical geometry engine on lon/lat data (left), projected data (middle) and lon/lat data without using spherical geometry (right). The left plot illustrates the result of buffering unprojected data with sf, which calls Google's S2 spherical geometry engine by default with max cells set to 1000 (thin line). The thick 'blocky' line illustrates the result of the same operation with max cells set to 100.", fig.scap="Buffers around London with a geographic and projected CRS.", echo=FALSE, fig.asp=0.39, fig.width = 8}
+```{r crs-buf, fig.cap="Tampons autour de Londres montrant les résultats créés avec le moteur de géométrie sphérique S2 sur des données long/lat (à gauche), des données projetées (au milieu) et des données long/lat sans utiliser la géométrie sphérique (à droite). Le graphique de gauche illustre le résultat des tampons sur des données non projetées avec sf, qui appelle le moteur de géométrie sphérique S2 de Google par défaut avec des cellules maximales fixées à 1000 (ligne fine). La ligne épaisse "en bloc" illustre le résultat de la même opération avec des cellules maximales fixées à 100.", fig.scap="Tampons autour de Londres avec un CRS géographique et projeté.", echo=FALSE, fig.asp=0.39, fig.width = 8}
 uk = rnaturalearth::ne_countries(scale = 50) %>% 
   st_as_sf() %>% 
   filter(grepl(pattern = "United Kingdom|Ire", x = name_long))
@@ -406,79 +406,79 @@ tm3 = tm_shape(london_buff_lonlat, bbox = st_bbox(london_buff_s2_100_cells)) +
 tmap_arrange(tm1, tm2, tm3, nrow = 1)
 ```
 
-It is clear from Figure \@ref(fig:crs-buf) that buffers based on `s2` and properly projected CRSs are not 'squashed', meaning that every part of the buffer boundary is equidistant to London.
-The results that are generated from lon/lat CRSs when `s2` is *not* used, either because the input lacks a CRS or because `sf_use_s2()` is turned off, are heavily distorted, with the result elongated in the north-south axis, highlighting the dangers of using algorithms that assume projected data on lon/lat inputs (as GEOS does).
-The results generated using S2 are also distorted, however, although less dramatically.
-Both buffer boundaries in Figure \@ref(fig:crs-buf) (left) are jagged, although this may only be apparent or relevant when for the thick boundary representing a buffer created with the `s2` argument `max_cells` set to 100.
+La figure \@ref(fig:crs-buf) montre clairement que les tampons basés sur `s2` et les CRS correctement projetés ne sont pas "écrasés", ce qui signifie que chaque partie de la limite du tampon est bien équidistante de Londres.
+Les résultats générés à partir des CRS long/lat lorsque `s2` n'est *pas* utilisé, soit parce que l'entrée ne comporte pas de CRS, soit parce que `sf_use_s2()` est désactivé, sont fortement déformés, avec un résultat allongé sur l'axe nord-sud, ce qui met en évidence les dangers de l'utilisation d'algorithmes qui supposent des données projetées sur les entrées long/lat (comme le fait GEOS).
+Les résultats générés à l'aide de S2 sont toutefois également faussés, mais de façon moins spectaculaire.
+Les deux bordures des tampons dans la Figure \@ref(fig:crs-buf) (gauche) sont irrégulières, ce n'est cependant apparent ou pertinent que pour la limite épaisse représentant un tampon créé avec l'argument `s2` `max_cells` fixé à 100.
 <!--toDo:rl-->
 <!--jn: maybe it is worth to emphasize that the differences are due to the use of S2 vs GEOS-->
 <!--jn: you mention S2 a lot in this section, but not GEOS...-->
-The lesson is that results obtained from lon/lat data via S2 will be different from results obtained from using projected data.
-The difference between S2 derived buffers and GEOS derived buffers on projected data reduce as the value of `max_cells` increases: the 'right' value for this argument may depend on many factors and the default value 1000 is a reasonable default.
-When choosing `max_cells` values, speed of computation should be balanced against resolution of results, in many.
-In situations where curved boundaries are advantageous, transforming to a projected CRS before buffering (or performing other geometry operations) may be appropriate.
+La leçon à tirer est que les résultats obtenus à partir de données long/lat via S2 seront différents des résultats obtenus en utilisant des données projetées.
+La différence entre les tampons dérivés de S2 et les tampons dérivés de GEOS sur des données projetées diminue lorsque la valeur de `max_cells` augmente : la 'bonne' valeur pour cet argument peut dépendre de nombreux facteurs et la valeur par défaut 1000 est une valeur raisonnable.
+Choisir `max_cells`dépend d'un compromis entre la vitesse de calcul et la résolution des résultats.
+Dans les situations où les limites courbes sont avantageuses, la transformation en un CRS projeté avant la production du tampon (ou l'exécution d'autres opérations géométriques) peut être appropriée.
 
-The importance of CRSs (primarily whether they are projected or geographic) and the impacts of **sf**'s default setting to use S2 for buffers on lon/lat data is clear from the example above.
-The subsequent sections go into more depth, exploring which CRS to use when projected CRSs *are* needed and the details of reprojecting vector and raster objects.
+L'importance des CRS (principalement qu'ils soient projetés ou géographiques) et les impacts du paramètre par défaut de **sf** d'utiliser S2 pour les tampons sur les données long/lat ont été explicités dans l'exemple ci-dessus.
+Les sections suivantes vont plus en profondeur, explorant quel CRS utiliser lorsque des CRS projetés *sont* nécessaires et les détails de la reprojection des objets vectoriels et des rasters.
 
-## When to reproject? {#whenproject}
+## Quand reprojeter ? {#whenproject}
 
 \index{CRS!reprojection} 
-The previous section showed how to set the CRS manually, with `st_set_crs(london, "EPSG:4326")`.
-In real world applications, however, CRSs are usually set automatically when data is read-in.
-In many projects the main CRS-related task is to *transform* objects, from one CRS into another.
-But when should data be transformed? 
-And into which CRS?
-There are no clear-cut answers to these questions and CRS selection always involves trade-offs [@maling_coordinate_1992].
-However, there are some general principles provided in this section that can help you decide. 
+La section précédente a montré comment définir manuellement le CRS, avec `st_set_crs(london, "EPSG:4326")`.
+Dans les applications réelles, cependant, les CRS sont généralement définis automatiquement lorsque les données sont lues.
+Dans de nombreux projets, la principale tâche liée aux CRS consiste à *transformer* les objets, d'un CRS à un autre.
+Mais quand les données doivent-elles être transformées ? 
+Et dans quel CRS ?
+Il n'existe pas de réponses parfaites à ces questions et le choix d'un CRS implique toujours des compromis [@maling_coordinate_1992].
+Cependant, certains principes généraux présentés dans cette section peuvent vous aider à prendre une décision. 
 
-First it's worth considering *when to transform*.
+Tout d'abord, il convient de se demander *quand transformer*.
 <!--toDo:rl-->
 <!--not longer valid-->
-In some cases transformation to a projected CRS is essential, such as when using geometric functions such as `st_buffer()`, as Figure \@ref(fig:crs-buf) showed.
-Conversely, publishing data online with the **leaflet** package may require a geographic CRS.
-Another case is when two objects with different CRSs must be compared or combined, as shown when we try to find the distance between two objects with different CRSs:
+Dans certains cas, la transformation en un CRS projeté est essentielle, notamment lors de l'utilisation de fonctions géométriques telles que `st_buffer()`, comme l'a montré la figure \@ref(fig:crs-buf).
+À l'inverse, la publication de données en ligne avec le package **leaflet** peut nécessiter un CRS géographique.
+Un autre cas est celui où deux objets avec des CRS différents doivent être comparés ou combinés, comme on peut le voir lorsque l'on essaie de trouver la distance entre deux objets avec des CRS différents :
 
 ```{r 06-reproj-9, eval=FALSE}
 st_distance(london_geo, london_proj)
 # > Error: st_crs(x) == st_crs(y) is not TRUE
 ```
 
-To make the `london` and `london_proj` objects geographically comparable one of them must be transformed into the CRS of the other.
-But which CRS to use?
-The answer depends on context: many projects, especially those involving web mapping, require outputs in EPSG:4326, in which case it is worth transforming the projected object.
-If, however, the project requires planar geometry operations rather than spherical geometry operations engine (e.g. to create buffers with smooth edges), it may be worth transforming data with a geographic CRS into an equivalent object with a projected CRS, such as the British National Grid (EPSG:27700).
-That is the subject of Section \@ref(reproj-vec-geom).
+Pour rendre les objets `london` et `london_proj` géographiquement comparables, l'un d'entre eux doit être transformé dans le CRS de l'autre.
+Mais quel CRS utiliser ?
+La réponse dépend du contexte : de nombreux projets, notamment ceux qui impliquent une cartographie web, nécessitent des sorties en EPSG:4326, auquel cas il convient de transformer l'objet projeté.
+En revanche, si le projet nécessite des opérations de géométrie planaire plutôt qu'un moteur d'opérations de géométrie sphérique (par exemple pour créer des tampons aux bords lisses), il peut être intéressant de transformer les données avec un CRS géographique en un objet équivalent avec un CRS projeté, tel que le British National Grid (EPSG:27700).
+C'est le sujet de la section \@ref(reproj-vec-geom).
 
-## Which CRS to use? {#which-crs}
+## Quel CRS utiliser ? {#which-crs}
 
 \index{CRS!reprojection} 
 \index{projection!World Geodetic System}
-The question of *which CRS* is tricky, and there is rarely a 'right' answer:
-"There exist no all-purpose projections, all involve distortion when far from the center of the specified frame" [@bivand_applied_2013].
-Additionally, you should not be attached just to one projection for every task.
-It is possible to use one projection for some part of the analysis, another projection for a different part, and even some other for visualization.
-Always try to pick the CRS that serves your goal best!
+La question de savoir *quel CRS* est délicate, et il y a rarement une "bonne" réponse :
+"Il n'existe pas de projections polyvalentes, toutes impliquent une distorsion lorsqu'elles sont éloignées du centre du cadre spécifié" [@bivand_applied_2013].
+De plus, vous ne devez pas vous attacher à une seule projection pour toutes les tâches.
+Il est possible d'utiliser une projection pour une partie de l'analyse, une autre projection pour une autre partie, et même une autre pour la visualisation.
+Essayez toujours de choisir le CRS qui sert le mieux votre objectif.
 
-When selecting **geographic CRSs**, the answer is often [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System#A_new_World_Geodetic_System:_WGS_84).
-It is used not only for web mapping, but also because GPS datasets and thousands of raster and vector datasets are provided in this CRS by default.
-WGS84 is the most common CRS in the world, so it is worth knowing its EPSG code: 4326.
-This 'magic number' can be used to convert objects with unusual projected CRSs into something that is widely understood.
+Lors du choix d'un de **CRS géographique**, celui ci se porte souvent [WGS84] (https://en.wikipedia.org/wiki/World_Geodetic_System#A_new_World_Geodetic_System:_WGS_84).
+Il est utilisé non seulement pour la cartographie Web, mais aussi parce que les jeux de données GPS et des milliers de jeux de données rasters et vectorielles sont fournis par défaut dans celui ci.
+WGS84 est le CRS le plus répandu dans le monde, il est donc utile de connaître son code EPSG : 4326.
+Ce "chiffre magique" peut être utilisé pour convertir des objets avec des CRS projetés inhabituels en quelque chose de largement compréhensible.
 
-What about when a **projected CRS** is required?
-In some cases, it is not something that we are free to decide:
-"often the choice of projection is made by a public mapping agency" [@bivand_applied_2013].
-This means that when working with local data sources, it is likely preferable to work with the CRS in which the data was provided, to ensure compatibility, even if the official CRS is not the most accurate.
-The example of London was easy to answer because (a) the British National Grid (with its associated EPSG code 27700) is well known and (b) the original dataset (`london`) already had that CRS.
+Qu'en est-il lorsqu'un **CRS projeté** est nécessaire ?
+Dans certains cas, ce n'est pas quelque chose que nous sommes libres de décider :
+" souvent le choix de la projection est fait par une agence publique de cartographie " [@bivand_applied_2013].
+Cela signifie que lorsque l'on travaille avec des sources de données locales, il est probablement préférable de travailler avec le CRS dans lequel les données ont été fournies, afin de garantir la compatibilité, même si le CRS officiel n'est pas le plus précis.
+L'exemple de Londres était simple car (a) le British National Grid (avec son code EPSG 27700 associé) est bien connu et (b) le jeu de données original (`london`) avait déjà ce CRS.
 
 \index{UTM} 
-A commonly used default is Universal Transverse Mercator ([UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system)), a set of CRSs that divides the Earth into 60 longitudinal wedges and 20 latitudinal segments.
-The transverse Mercator projection used by UTM CRSs is conformal but distorts areas and distances with increasing severity with distance from the center of the UTM zone.
-Documentation from the GIS software Manifold therefore suggests restricting the longitudinal extent of projects using UTM zones to 6 degrees from the central meridian (source: [manifold.net](http://www.manifold.net/doc/mfd9/universal_transverse_mercator_projection.htm)).
-Therefore, we recommend using UTM only when your focus is on preserving angles for relatively small area!
+Un standard couramment utilisé est la projection universelle transverse de Mercator ([UTM](https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system)), un ensemble de CRS qui divise la Terre en 60 fuseaux longitudinaux et 20 segments latitudinaux.
+La projection transversale de Mercator utilisée par les CRS UTM est conforme mais déforme les zones et les distances avec une sévérité croissante en fonction de la distance par rapport au centre de la zone UTM.
+La documentation du logiciel SIG Manifold suggère donc de limiter l'étendue longitudinale des projets utilisant les zones UTM à 6 degrés du méridien central (source : [manifold.net](http://www.manifold.net/doc/mfd9/universal_transverse_mercator_projection.htm)).
+Par conséquent, nous recommandons d'utiliser l'UTM uniquement lorsque votre objectif est de préserver les angles pour une zone relativement petite !
 
-Almost every place on Earth has a UTM code, such as "60H" which refers to northern New Zealand where R was invented.
-UTM EPSG codes run sequentially from 32601 to 32660 for northern hemisphere locations and from 32701 to 32760 for southern hemisphere locations.
+Presque tous les endroits de la Terre ont un code UTM, tel que "60H" qui fait référence au nord de la Nouvelle-Zélande où R a été inventé.
+Les codes UTM EPSG vont séquentiellement de 32601 à 32660 pour les lieux de l'hémisphère nord et de 32701 à 32760 pour les lieux de l'hémisphère sud.
 
 ```{r 06-reproj-12, eval=FALSE, echo=FALSE}
 utm_nums_n = 32601:32660
@@ -488,15 +488,15 @@ crs_data[grep(utm_nums_n[1], crs_data$code), ] # zone 1N
 crs_data[grep(utm_nums_n[60], crs_data$code), ] # zone 60N
 crs_data[grep(utm_nums_s[1], crs_data$code), ] 
 crs_data[grep(utm_nums_s[60], crs_data$code), ] 
-crs_data[grep("UTM zone 60N", crs_data$note), ] # many
-crs_data[grep("UTM zone 60S", crs_data$note), ] # many
-crs_data[grep("UTM zone 60S", crs_data$note), ] # many
+crs_data[grep("UTM zone 60N", crs_data$note), ] # nombreux
+crs_data[grep("UTM zone 60S", crs_data$note), ] # nombreux
+crs_data[grep("UTM zone 60S", crs_data$note), ] # nombreux
 crs_utm = crs_data[grepl("utm", crs_data$prj4), ] # 1066
 crs_utm_zone = crs_utm[grepl("zone=", crs_utm$prj4), ]
 crs_utm_south = crs_utm[grepl("south", crs_utm$prj4), ]
 ```
 
-To show how the system works, let's create a function, `lonlat2UTM()` to calculate the EPSG code associated with any point on the planet as [follows](https://stackoverflow.com/a/9188972/): 
+Pour montrer comment le système fonctionne, créons une fonction, `lonlat2UTM()` pour calculer le code EPSG associé à n'importe quel point de la planète comme [suit](https://stackoverflow.com/a/9188972/) :
 
 ```{r 06-reproj-13}
 lonlat2UTM = function(lonlat) {
@@ -509,7 +509,7 @@ lonlat2UTM = function(lonlat) {
 }
 ```
 
-The following command uses this function to identify the UTM zone and associated EPSG code for Auckland and London:
+La commande suivante utilise cette fonction pour identifier la zone UTM et le code EPSG associé pour Auckland et Londres :
 
 ```{r 06-reproj-14, echo=FALSE, eval=FALSE}
 stplanr::geo_code("Auckland")
@@ -520,10 +520,10 @@ lonlat2UTM(c(174.7, -36.9))
 lonlat2UTM(st_coordinates(london))
 ```
 
-Currently, we also have tools helping us to select a proper CRS, which includes the **crssuggest** package<!--add ref or docs-->.
-The main function in this package, `suggest_crs()`, takes a spatial object with geographic CRS and returns a list of possible projected CRSs that could be used for the given area.^[This package also allows to figure out the true CRS of the data without any CRS information attached.]
-Another helpful tool is a webpage https://jjimenezshaw.github.io/crs-explorer/ that lists CRSs based on selected location and type.
-Important note: while these tools are helpful in many situations, you need to be aware of the properties of the recommended CRS before you apply it.
+Actuellement, nous disposons également d'outils nous aidant à sélectionner un CRS approprié, comme le paquet **crssuggest**<!--add ref or docs-->.
+La fonction principale de ce paquet, `suggest_crs()`, prend un objet spatial avec un CRS géographique et renvoie une liste de CRS projetés possibles qui pourraient être utilisés pour la zone donnée.^ [Ce paquet permet également de déterminer le véritable CRS des données sans aucune information sur le CRS].
+Un autre outil utile est une page Web https://jjimenezshaw.github.io/crs-explorer/ qui répertorie les CRS en fonction du lieu et du type sélectionnés.
+Remarque importante : bien que ces outils soient utiles dans de nombreuses situations, vous devez connaître les propriétés du CRS recommandé avant de l'appliquer.
 
 \index{CRS!custom} 
 In cases where an appropriate CRS is not immediately clear, the choice of CRS should depend on the properties that are most important to preserve in the subsequent maps and analysis.
