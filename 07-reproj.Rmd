@@ -628,9 +628,9 @@ st_crs(cycle_hire_osm_projected)
 #> ...
 ```
 
-The resulting object has a new CRS with an EPSG code 27700.
-But how to find out more details about this EPSG code, or any code?
-One option is to search for it online, 
+L'objet résultant a un nouveau CRS avec un code EPSG 27700.
+Mais comment trouver plus de détails sur ce code EPSG, ou sur n'importe quel code ?
+L'une des possibilités est de le rechercher en ligne, 
 
 ```{r 06-reproj-19}
 crs_lnd_new = st_crs("EPSG:27700")
@@ -646,27 +646,27 @@ L'impression d'un objet spatial dans la console renvoie automatiquement ses coor
 Pour y accéder et le modifier explicitement, utilisez la fonction `st_crs`, par exemple, `st_crs(cycle_hire_osm)`.
 ```
 
-## Reprojecting raster geometries {#reproj-ras}
+## Reprojection de rasters {#reproj-ras}
 
 \index{raster!reprojection} 
 \index{raster!warping} 
 \index{raster!transformation} 
 \index{raster!resampling} 
-The projection concepts described in the previous section apply equally to rasters.
-However, there are important differences in reprojection of vectors and rasters:
-transforming a vector object involves changing the coordinates of every vertex but this does not apply to raster data.
-Rasters are composed of rectangular cells of the same size (expressed by map units, such as degrees or meters), so it is usually impracticable to transform coordinates of pixels separately.
-Raster reprojection involves creating a new raster object, often with a different number of columns and rows than the original.
-The attributes must subsequently be re-estimated, allowing the new pixels to be 'filled' with appropriate values.
-In other words, raster reprojection can be thought of as two separate spatial operations: a vector reprojection of the raster extent to another CRS (Section \@ref(reproj-vec-geom)), and computation of new pixel values through resampling (Section \@ref(resampling)).
-Thus in most cases when both raster and vector data are used, it is better to avoid reprojecting rasters and reproject vectors instead.
+Les concepts de projection décrits dans la section précédente s'appliquent également aux rasters.
+Cependant, il existe des différences importantes dans la reprojection des vecteurs et des rasters :
+La transformation d'un objet vectoriel implique la modification des coordonnées de chaque sommet, mais cela ne s'applique pas aux rasters.
+Les rasters sont composées de cellules rectangulaires de même taille (exprimées par des unités cartographiques, comme les degrés ou les mètres), il est donc généralement impossible de transformer les coordonnées des pixels séparément.
+La reprojection de rasters implique la création d'un nouvel objet raster, souvent avec un nombre de colonnes et de lignes différent de celui de l'original.
+Les attributs doivent ensuite être réestimés, ce qui permet de "remplir" les nouveaux pixels avec les valeurs appropriées.
+En d'autres termes, la reprojection matricielle peut être considérée comme deux opérations spatiales distinctes : une reprojection vectorielle de l'étendue matricielle vers un autre CRS (section \@ref(reproj-vec-geom)), et le calcul de nouvelles valeurs de pixels par rééchantillonnage (section \@ref(resampling)).
+Ainsi, dans la plupart des cas où des données rasters et vectorielles sont utilisées, il est préférable d'éviter de reprojeter des données rasters et de reprojeter des vecteurs à la place.
 
 ```{block2 06-reproj-35a, type='rmdnote'}
-Reprojection of the regular rasters is also known as warping. 
-Additionally, there is a second similar operation called "transformation".
-Instead of resampling all of the values, it leaves all values intact but recomputes new coordinates for every raster cell, changing the grid geometry.
-For example, it could convert the input raster (a regular grid) into a curvilinear grid.
-The transformation operation can be performed in R using [the **stars** package](https://r-spatial.github.io/stars/articles/stars5.html).
+La reprojection des rasters est également appelée "déformation" (*warping*). 
+En outre, il existe une deuxième opération similaire appelée "transformation".
+Au lieu de rééchantillonner toutes les valeurs, elle laisse toutes les valeurs intactes mais recalcule de nouvelles coordonnées pour chaque cellule du raster, modifiant ainsi uniquement la géométrie de la grille.
+Par exemple, elle peut convertir la grille d'entrée (une grille régulière) en une grille curviligne.
+L'opération de transformation peut être effectuée dans R en utilisant [le paquet **stars**] (https://r-spatial.github.io/stars/articles/stars5.html).
 ```
 
 ```{r, include=FALSE}
@@ -686,13 +686,13 @@ plot(con_raster_ea)
 plot(con_poly_ea, col = NA, add = TRUE, lwd = 4)
 ```
 
-The raster reprojection process is done with `project()` from the **terra** package.
-Like the `st_transform()` function demonstrated in the previous section, `project()` takes a geographic object (a raster dataset in this case) and some CRS representation as the second argument.
-On a side note -- the second argument can also be an existing raster object with a different CRS.
+Le processus de reprojection matricielle est effectué avec `project()` du paquetage **terra**.
+Comme la fonction `st_transform()` démontrée dans la section précédente, `project()` prend un objet géographique (un jeu de données raster dans ce cas) et une représentation CRS comme second argument.
+Le second argument peut aussi être un raster existant avec un CRS différent.
 
-Let's take a look at two examples of raster transformation: using categorical and continuous data.
-Land cover data are usually represented by categorical maps.
-The `nlcd.tif` file provides information for a small area in Utah, USA obtained from [National Land Cover Database 2011](https://www.mrlc.gov/data/nlcd-2011-land-cover-conus) in the NAD83 / UTM zone 12N CRS, as shown in the output of the code chunk below (only first line of output shown):
+Examinons deux exemples de transformation de raster : l'un sur des données catégorielles et un autre sur des données continues.
+Les données d'occupation du sol sont généralement représentées par des cartes catégorielles.
+Le fichier `nlcd.tif` fournit des informations pour une petite zone de l'Utah, aux Etats-Unis, obtenues à partir de [National Land Cover Database 2011](https://www.mrlc.gov/data/nlcd-2011-land-cover-conus) dans le NAD83 / UTM zone 12N CRS, comme le montre la sortie du code ci-dessous (seulement la première ligne de la sortie est affichée) :
 
 ```{r 06-reproj-29, results='hide'}
 cat_raster = rast(system.file("raster/nlcd.tif", package = "spDataLarge"))
@@ -701,23 +701,23 @@ crs(cat_raster)
 #> ...
 ```
 
-In this region, 8 land cover classes were distinguished (a full list of NLCD2011 land cover classes can be found at [mrlc.gov](https://www.mrlc.gov/data/legends/national-land-cover-database-2011-nlcd2011-legend)):
+Dans cette région, 8 classes d'occupation du sol ont été distinguées (une liste complète des classes d'occupation du sol de NLCD2011 peut être consultée à l'adresse suivante [mrlc.gov](https://www.mrlc.gov/data/legends/national-land-cover-database-2011-nlcd2011-legend)):
 
 ```{r 06-reproj-30}
 unique(cat_raster)
 ```
 
-When reprojecting categorical rasters, the estimated values must be the same as those of the original.
-This could be done using the nearest neighbor method (`near`), which sets each new cell value to the value of the nearest cell (center) of the input raster.
-An example is reprojecting `cat_raster` to WGS84, a geographic CRS well suited for web mapping.
-The first step is to obtain the PROJ definition of this CRS, which can be done, for example using the [http://spatialreference.org](http://spatialreference.org/ref/epsg/wgs-84/) webpage. 
-The final step is to reproject the raster with the `project()` function which, in the case of categorical data, uses the nearest neighbor method (`near`):
+Lors de la reprojection de rasters avec des valeurs de type catégorielles, les valeurs estimées doivent être les mêmes que celles de l'original. doivent être les mêmes que celles de l'original.
+Cela peut être fait en utilisant la méthode du plus proche voisin (`near`), qui fixe chaque nouvelle valeur de cellule à la valeur de la cellule la plus proche (via son centre) du raster d'entrée.
+Un exemple est la reprojection de `cat_raster` en WGS84, un CRS géographique bien adapté à la cartographie web.
+La première étape est d'obtenir la définition PROJ de ce CRS, ce qui peut être fait, par exemple en utilisant la page web [http://spatialreference.org](http://spatialreference.org/ref/epsg/wgs-84/). 
+La dernière étape consiste à reprojeter le raster avec la fonction `project()` qui, dans le cas de données catégorielles, utilise la méthode du plus proche voisin (`near`) :
 
 ```{r 06-reproj-31}
 cat_raster_wgs84 = project(cat_raster, "EPSG:4326", method = "near")
 ```
 
-Many properties of the new object differ from the previous one, including the number of columns and rows (and therefore number of cells), resolution (transformed from meters into degrees), and extent, as illustrated in Table \@ref(tab:catraster) (note that the number of categories increases from 8 to 9 because of the addition of `NA` values, not because a new category has been created --- the land cover classes are preserved).
+De nombreuses propriétés du nouvel objet diffèrent de l'ancien, notamment le nombre de colonnes et de lignes (et donc le nombre de cellules), la résolution (transformée de mètres en degrés) et l'étendue, comme l'illustre le tableau \@ref(tab:catraster) (notez que le nombre de catégories passe de 8 à 9 en raison de l'ajout des valeurs `NA`, et non parce qu'une nouvelle catégorie a été créée --- les classes d'occupation du sol sont préservées).
 
 ```{r catraster, echo=FALSE}
 tibble(
@@ -729,29 +729,29 @@ tibble(
                                              na.rm = TRUE)),
   unique_categories = c(length(unique(values(cat_raster))),
                         length(unique(values(cat_raster_wgs84))))) |>
-  knitr::kable(caption = paste("Key attributes in the original ('cat\\_raster')", 
-                               "and projected ('cat\\_raster\\_wgs84')", 
-                               "categorical raster datasets."),
-               caption.short = paste("Key attributes in the original and", 
-                                     "projected raster datasets"),
+  knitr::kable(caption = paste("Attributs présent dans l'original ('cat\\_raster')", 
+                               "et reprojecté ('cat\\_raster\\_wgs84')", 
+                               " des jeux de données categoriels."),
+               caption.short = paste("Attributs dans les jeux de données rasters originaux", 
+                                     "et projetés"),
                digits = 4, booktabs = TRUE)
 ```
 
-Reprojecting numeric rasters (with `numeric` or in this case `integer` values) follows an almost identical procedure.
-This is demonstrated below with `srtm.tif` in **spDataLarge** from [the Shuttle Radar Topography Mission (SRTM)](https://www2.jpl.nasa.gov/srtm/), which represents height in meters above sea level (elevation) with the WGS84 CRS:
+La reprojection de rasters avec des valeurs numérique (avec des valeurs `décimales` ou dans ce cas `entières`) suit une procédure presque identique.
+Ceci est démontré ci-dessous avec `srtm.tif` dans **spDataLarge** de [la Shuttle Radar Topography Mission (SRTM)](https://www2.jpl.nasa.gov/srtm/), qui représente la hauteur en mètres au-dessus du niveau de la mer (élévation) avec le WGS84 CRS :
 
 ```{r 06-reproj-32}
 con_raster = rast(system.file("raster/srtm.tif", package = "spDataLarge"))
 crs(con_raster)
 ```
 
-We will reproject this dataset into a projected CRS, but *not* with the nearest neighbor method which is appropriate for categorical data.
-Instead, we will use the bilinear method which computes the output cell value based on the four nearest cells in the original raster.^[
-Other methods mentioned in Section \@ref(resampling) also can be used here.
+Nous allons reprojeter ce jeu de données dans un CRS projeté, mais cette fois ci avec une autre méthode que celle des plus proche voisins qui est appropriée pour les données catégorielles.
+Nous utiliserons plutôt la méthode bilinéaire qui calcule la valeur de la cellule de sortie sur la base des quatre cellules les plus proches dans le raster d'origine.^[
+D'autres méthodes mentionnées dans la Section  \@ref(resampling) peuvent également être utilisées ici.
 ]
-The values in the projected dataset are the distance-weighted average of the values from these four cells:
-the closer the input cell is to the center of the output cell, the greater its weight.
-The following commands create a text string representing WGS 84 / UTM zone 12N, and reproject the raster into this CRS, using the `bilinear` method:
+Les valeurs du jeu de données projeté sont la moyenne pondérée par la distance des valeurs de ces quatre cellules :
+plus la cellule d'entrée est proche du centre de la cellule de sortie, plus son poids est élevé.
+Les commandes suivantes créent une chaîne de caractères représentant la zone WGS 84 / UTM 12N, et reprojettent le raster dans ce CRS, en utilisant la méthode `bilinéaire` :
 
 ```{r 06-reproj-34}
 con_raster_ea = project(con_raster, "EPSG:32612", method = "bilinear")
