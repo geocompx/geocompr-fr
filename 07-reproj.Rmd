@@ -731,7 +731,7 @@ tibble(
                         length(unique(values(cat_raster_wgs84))))) |>
   knitr::kable(caption = paste("Attributs présent dans l'original ('cat\\_raster')", 
                                "et reprojecté ('cat\\_raster\\_wgs84')", 
-                               " des jeux de données categoriels."),
+                               " pour des jeux de données categoriels."),
                caption.short = paste("Attributs dans les jeux de données rasters originaux", 
                                      "et projetés"),
                digits = 4, booktabs = TRUE)
@@ -758,11 +758,11 @@ con_raster_ea = project(con_raster, "EPSG:32612", method = "bilinear")
 crs(con_raster_ea)
 ```
 
-Raster reprojection on numeric variables also leads to small changes to values and spatial properties, such as the number of cells, resolution, and extent.
-These changes are demonstrated in Table \@ref(tab:rastercrs)^[
-Another minor change, that is not represented in Table \@ref(tab:rastercrs), is that the class of the values in the new projected raster dataset is `numeric`.
-This is because the `bilinear` method works with continuous data and the results are rarely coerced into whole integer values.
-This can have implications for file sizes when raster datasets are saved.
+La reprojection raster sur les variables numériques entraîne également des modifications des valeurs et des propriétés spatiales, telles que le nombre de cellules, la résolution et l'étendue.
+Ces changements sont illustrés dans le tableau \@ref(tab:rastercrs)^[
+Un autre changement mineur, non représenté dans la Table \@ref(tab:rastercrs), est que la classe des valeurs dans le nouveau jeu de données raster projetées est `numérique`.
+Cela s'explique par le fait que la méthode `bilinear` travaille avec des données continues et que les résultats sont rarement convertis en valeurs entières.
+Cela peut avoir des conséquences sur la taille des fichiers lorsque les données matricielles sont enregistrées.
 ]:
 
 ```{r rastercrs, echo=FALSE}
@@ -775,37 +775,37 @@ tibble(
                                              na.rm = TRUE)),
   mean = c(mean(values(con_raster)), mean(values(con_raster_ea), 
                                           na.rm = TRUE))) |>
-  knitr::kable(caption = paste("Key attributes in the original ('con\\_raster')", 
-                               "and projected ('con\\_raster\\_ea') continuous raster", 
-                               "datasets."),
+  knitr::kable(caption = paste("Attributs présent dans l'original ('con\\_raster')", 
+                               "et reprojeté ('con\\_raster\\_ea') pour un raster avec des", 
+                               "valeurs continues."),
                caption.short = paste("Key attributes in the original and", 
                                      "projected raster datasets"),
                digits = 4, booktabs = TRUE)
 ```
 
 ```{block2 06-reproj-35, type='rmdnote'}
-Of course, the limitations of 2D Earth projections apply as much to vector as to raster data.
-At best we can comply with two out of three spatial properties (distance, area, direction).
-Therefore, the task at hand determines which projection to choose. 
-For instance, if we are interested in a density (points per grid cell or inhabitants per grid cell) we should use an equal-area projection (see also Chapter \@ref(location)).
+Bien entendu, les limites des projections terrestres 2D s´appliquent aussi bien aux données vectorielles qu´aux données rasters.
+Au mieux, nous pouvons respecter deux propriétés spatiales sur trois (distance, surface, direction).
+Par conséquent, c´est la tâche à accomplir qui détermine la projection à choisir. 
+Par exemple, si nous nous intéressons à une densité (points par cellule de grille ou habitants par cellule de grille), nous devons utiliser une projection de surface égale (voir également le chapitre \@ref(location)).
 ```
 
-## Custom map projections {#mapproj}
+## Projections cartographiques personnalisées {#mapproj}
 
-Established CRSs captured by `AUTHORITY:CODE` identifiers such as `EPSG:4326` are well suited for many applications.
-However, it is desirable to use alternative projections or to create custom CRSs in some cases.
-Section \@ref(which-crs) mentioned reasons for using custom CRSs, and provided several possible approaches.
-Here, we show how to apply these ideas in R.
+Les CRSs définis par les identifiants `AUTHORITY:CODE` tels que `EPSG:4326` sont bien adaptés à de nombreuses applications.
+Cependant, il est souhaitable d'utiliser d'autres projections ou de créer des CRS personnalisés dans certains cas.
+La section \@ref(which-crs) a mentionné les raisons d'utiliser des CRS personnalisés et a fourni plusieurs approches possibles.
+Nous montrons ici comment appliquer ces idées dans R.
 
-One is to take an existing WKT definition of a CRS, modify some of its elements, and then use the new definition for reprojecting.
-This can be done for spatial vectors with `st_crs()$wkt` and `st_transform()`, and for spatial rasters with `crs()` and `project()`, as demonstrated in the following example which transforms the `zion` object to a custom azimuthal equidistant (AEQD) CRS.
+L'une d'elles consiste à prendre une définition WKT existante d'un CRS, à modifier certains de ses éléments, puis à utiliser la nouvelle définition pour la reprojection.
+Ceci peut être fait pour les vecteurs spatiaux avec `st_crs()$wkt` et `st_transform()`, et pour les rasters avec `crs()` et `project()`, comme le montre l'exemple suivant qui transforme l'objet `zion` en un CRS azimutal équidistant (AEQD) personnalisé.
 
 ```{r}
 zion = read_sf(system.file("vector/zion.gpkg", package = "spDataLarge"))
 ```
 
-Using a custom AEQD CRS requires knowing the coordinates of the center point of a dataset in degrees (geographic CRS).
-In our case, this information can be extracted by calculating a centroid of the `zion` area and transforming it into WGS84.
+L'utilisation d'un CRS AEQD personnalisé nécessite de connaître les coordonnées du point central d'un ensemble de données en degrés (CRS géographique).
+Dans notre cas, cette information peut être extraite en calculant un centroïde de la zone `sion` et en le transformant en WGS84.
 
 ```{r, warning=FALSE}
 zion_centr = st_centroid(zion)
@@ -813,8 +813,8 @@ zion_centr_wgs84 = st_transform(zion_centr, "EPSG:4326")
 st_as_text(st_geometry(zion_centr_wgs84))
 ```
 
-Next, we can use the newly obtained values to update the WKT definition of the azimuthal equidistant (AEQD) CRS seen below.
-Notice that we modified just two values below -- `"Central_Meridian"` to the longitude and `"Latitude_Of_Origin"` to the latitude of our centroid.
+Ensuite, nous pouvons utiliser les nouvelles valeurs obtenues pour mettre à jour la définition WKT du CRS azimutal équidistant (AEQD) vue ci-dessous.
+Remarquez que nous avons modifié seulement deux valeurs ci-dessous -- `"Central_Meridian"` pour la nouvelle longitude et `"Latitude_Of_Origin"` pour la latitude de notre centroïde.
 
 ```{r}
 my_wkt = 'PROJCS["Custom_AEQD",
@@ -829,29 +829,29 @@ my_wkt = 'PROJCS["Custom_AEQD",
  UNIT["Meter",1.0]]'
 ```
 
-This approach's last step is to transform our original object (`zion`) to our new custom CRS (`zion_aeqd`).
+La dernière étape de cette approche consiste à transformer notre objet original (`zion`) en notre nouveau SRC personnalisé (`zion_aeqd`).
 
 ```{r}
 zion_aeqd = st_transform(zion, my_wkt)
 ```
 
-Custom projections can also be made interactively, for example, using the [Projection Wizard](https://projectionwizard.org/#) web application [@savric_projection_2016].
-This website allows you to select a spatial extent of your data and a distortion property, and returns a list of possible projections.
-The list also contains WKT definitions of the projections that you can copy and use for reprojections.
-See @opengeospatialconsortium_wellknown_2019 for details on creating custom CRS definitions with WKT strings.
+Les projections personnalisées peuvent également être réalisées de manière interactive, par exemple à l'aide de l'application web [Projection Wizard](https://projectionwizard.org/#) [@savric_projection_2016].
+Ce site Web vous permet de sélectionner une étendue spatiale de vos données et une propriété de distorsion, et renvoie une liste de projections possibles.
+La liste contient également des définitions WKT des projections que vous pouvez copier et utiliser pour des reprojections.
+Voir @opengeospatialconsortium_wellknown_2019 pour plus de détails sur la création de définitions CRS personnalisées avec des chaînes WKT.
 
 \index{CRS!proj-string}
-PROJ strings can also be used to create custom projections, accepting the limitations inherent to projections, especially of geometries covering large geographic areas, mentioned in Section \@ref(crs-in-r).
-Many projections have been developed and can be set with the `+proj=` element of PROJ strings, with dozens of projects described in detail on the [PROJ website](https://proj.org/operations/projections/index.html) alone. 
+Les chaînes PROJ peuvent également être utilisées pour créer des projections personnalisées, en acceptant les limitations inhérentes aux projections, notamment des géométries couvrant de grandes zones géographiques, mentionnées dans la section \@ref(crs-in-r).
+De nombreuses projections ont été développées et peuvent être définies à l'aide de l'élément `+proj=` des chaînes PROJ. Des dizaines de projets sont décrits en détail rien que sur le [site PROJ](https://proj.org/operations/projections/index.html). 
 
-When mapping the world while preserving area relationships the Mollweide projection, illustrated in Figure \@ref(fig:mollproj), is a popular and often sensible choice [@jenny_guide_2017].
-To use this projection, we need to specify it using the proj-string element, `"+proj=moll"`, in the `st_transform` function:
+Lorsqu'il s'agit de cartographier le monde tout en préservant les relations entre surfaces, la projection de Mollweide, illustrée dans la figure \@ref(fig:mollproj), est un choix populaire et souvent judicieux [@jenny_guide_2017].
+Pour utiliser cette projection, nous devons la spécifier en utilisant l'élément proj-string, `"+proj=moll"`, dans la fonction `st_transform` :
 
 ```{r 06-reproj-22}
 world_mollweide = st_transform(world, crs = "+proj=moll")
 ```
 
-```{r mollproj, fig.cap="Mollweide projection of the world.", warning=FALSE, message=FALSE, echo=FALSE}
+```{r mollproj, fig.cap="Représentation du monde avec la projection de Mollweide.", warning=FALSE, message=FALSE, echo=FALSE}
 library(tmap)
 world_mollweide_gr = st_graticule(lat = c(-89.9, seq(-80, 80, 20), 89.9)) |>
   st_transform(crs = "+proj=moll")
@@ -861,11 +861,11 @@ tm_shape(world_mollweide_gr) +
   tm_borders(col = "black") 
 ```
 
-It is often desirable to minimize distortion for all spatial properties (area, direction, distance) when mapping the world.
-One of the most popular projections to achieve this is [Winkel tripel](http://www.winkel.org/other/Winkel%20Tripel%20Projections.htm), illustrated in Figure \@ref(fig:wintriproj).^[
-This projection is used, among others, by the National Geographic Society.
+Il est souvent souhaitable de minimiser la distorsion pour toutes les propriétés spatiales (surface, direction, distance) lors de la cartographie du monde.
+L'une des projections les plus populaires permettant d'atteindre cet objectif est celle de [Winkel tripel](http://www.winkel.org/other/Winkel%20Tripel%20Projections.htm), illustrée sur la figure \@ref(fig:wintriproj).^[
+Cette projection est utilisée, entre autres, par la National Geographic Society.
 ]
-The result was created with the following command:
+Le résultat a été créé avec la commande suivante :
 
 ```{r 06-reproj-23}
 world_wintri = st_transform(world, crs = "+proj=wintri")
@@ -885,7 +885,7 @@ plot(world_tpers_complete["pop"])
 ```
 
 
-```{r wintriproj, fig.cap="Winkel tripel projection of the world.", echo=FALSE}
+```{r wintriproj, fig.cap="Repréentation du monde avec la projection Winkel tripel.", echo=FALSE}
 world_wintri_gr = st_graticule(lat = c(-89.9, seq(-80, 80, 20), 89.9)) |>
   st_transform(crs = "+proj=wintri")
 library(tmap)
@@ -897,11 +897,11 @@ tm_shape(world_wintri_gr) + tm_lines(col = "gray") +
 <!--check if the following block is still correct-->
 
 ```{block2 06-reproj-24, type='rmdnote', echo=FALSE}
-The three main functions for transformation of simple features coordinates are `sf::st_transform()`, `sf::sf_project()`, and `lwgeom::st_transform_proj()`.
-`st_transform()` uses the GDAL interface to PROJ, while `sf_project()` (which works with two-column numeric matrices, representing points) and `lwgeom::st_transform_proj()` use PROJ directly.
-`st_tranform()` is appropriate for most situations, and provides a set of the most often used parameters and well-defined transformations.
-`sf_project()` may be suited for point transformations when speed is important.
-`st_transform_proj()` allows for greater customization of a projection, which includes cases when some of the PROJ parameters (e.g., `+over`) or projection (`+proj=wintri`) is not available in `st_transform()`.
+Les trois fonctions principales pour la transformation des coordonnées d´entités simples sont `sf::st_transform()`, `sf::sf_project()`, et `lwgeom::st_transform_proj()`.
+`st_transform()` utilise l´interface GDAL de PROJ, alors que `sf_project()` (qui travaille avec des matrices numériques à deux colonnes, représentant des points) et `lwgeom::st_transform_proj()` utilisent directement PROJ.
+`st_tranform()` est approprié pour la plupart des situations, et fournit un ensemble de paramètres les plus souvent utilisés et des transformations bien définies.
+`sf_project()` peut convenir pour des transformations ponctuelles lorsque la vitesse est importante.
+`st_transform_proj()` permet une plus grande personnalisation d´une projection, ce qui inclut les cas où certains des paramètres PROJ (par exemple, `+over`) ou la projection (`+proj=wintri`) ne sont pas disponibles dans `st_transform()`.
 ```
 
 ```{r 06-reproj-25, eval=FALSE, echo=FALSE}
@@ -912,15 +912,15 @@ mat_projected = sf_project(from = st_crs(4326)$proj4string, to = st_crs(27700)$p
 plot(mat_projected)
 ```
 
-Moreover, proj-string parameters can be modified in most CRS definitions, for example the center of the projection can be adjusted using the `+lon_0` and `+lat_0` parameters.
-The below code transforms the coordinates to the Lambert azimuthal equal-area projection centered on the longitude and latitude of New York City (Figure \@ref(fig:laeaproj2)).
+De plus, les paramètres proj-string peuvent être modifiés dans la plupart des définitions CRS, par exemple le centre de la projection peut être ajusté en utilisant les paramètres `+lon_0` et `+lat_0`.
+Le code ci-dessous transforme les coordonnées en une projection de Lambert azimutale à aire égale centrée sur la longitude et la latitude de la ville de New York (Figure \@ref(fig:laeaproj2)).
 
 ```{r 06-reproj-27}
 world_laea2 = st_transform(world,
                            crs = "+proj=laea +x_0=0 +y_0=0 +lon_0=-74 +lat_0=40")
 ```
 
-```{r laeaproj2, fig.cap="Lambert azimuthal equal-area projection of the world centered on New York City.", fig.scap="Lambert azimuthal equal-area projection centered on New York City.", warning=FALSE, echo=FALSE}
+```{r laeaproj2, fig.cap="Projection azimutale Lambert du monde centrée sur la ville de New York", fig.scap="Projection azimutale Lambert à aire égale centrée sur la ville de New York.", warning=FALSE, echo=FALSE}
 # Currently fails, see https://github.com/Robinlovelace/geocompr/issues/460
 world_laea2_g = st_graticule(ndiscr = 10000) |>
   st_transform("+proj=laea +x_0=0 +y_0=0 +lon_0=-74 +lat_0=40.1 +ellps=WGS84 +no_defs") |>
@@ -930,7 +930,7 @@ tm_shape(world_laea2_g) + tm_lines(col = "gray") +
 # knitr::include_graphics("https://user-images.githubusercontent.com/1825120/72223267-c79a4780-3564-11ea-9d7e-9644523e349b.png")
 ```
 
-More information on CRS modifications can be found in the [Using PROJ](https://proj.org/usage/index.html) documentation.
+Vous trouverez de plus amples informations sur les modifications de CRS dans la documentation [Using PROJ](https://proj.org/usage/index.html).
 
 <!--toDo:jn-->
 <!--revise the last paragraph-->

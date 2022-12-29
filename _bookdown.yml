@@ -7,7 +7,7 @@ rmd_files:
     - "04-spatial-operations.Rmd"
     - "05-geometry-operations.Rmd"
     - "06-raster-vector.Rmd"
-    # - "07-reproj.Rmd"
+    - "07-reproj.Rmd"
     # - "08-read-write-plot.Rmd"
     # - "09-mapping.Rmd"
     # - "10-gis.Rmd"
