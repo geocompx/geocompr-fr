@@ -372,7 +372,7 @@ plot(london_proj, add = TRUE)
 plot(st_geometry(uk), add = TRUE, border = "gray", lwd = 3)
 ```
 
-```{r crs-buf, fig.cap="Tampons autour de Londres montrant les résultats créés avec le moteur de géométrie sphérique S2 sur des données long/lat (à gauche), des données projetées (au milieu) et des données long/lat sans utiliser la géométrie sphérique (à droite). Le graphique de gauche illustre le résultat des tampons sur des données non projetées avec sf, qui appelle le moteur de géométrie sphérique S2 de Google par défaut avec des cellules maximales fixées à 1000 (ligne fine). La ligne épaisse "en bloc" illustre le résultat de la même opération avec des cellules maximales fixées à 100.", fig.scap="Tampons autour de Londres avec un CRS géographique et projeté.", echo=FALSE, fig.asp=0.39, fig.width = 8}
+```{r crs-buf, fig.cap="Tampons autour de Londres montrant les résultats créés avec le moteur de géométrie sphérique S2 sur des données long/lat (à gauche), des données projetées (au milieu) et des données long/lat sans utiliser la géométrie sphérique (à droite). Le graphique de gauche illustre le résultat des tampons sur des données non projetées avec sf, qui appelle le moteur de géométrie sphérique S2 de Google par défaut avec des cellules maximales fixées à 1000 (ligne fine). La ligne épaisse en 'bloc' illustre le résultat de la même opération avec des cellules maximales fixées à 100.", fig.scap="Tampons autour de Londres avec un CRS géographique et projeté.", echo=FALSE, fig.asp=0.39, fig.width = 8}
 uk = rnaturalearth::ne_countries(scale = 50) %>% 
   st_as_sf() %>% 
   filter(grepl(pattern = "United Kingdom|Ire", x = name_long))

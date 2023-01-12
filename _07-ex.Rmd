@@ -5,11 +5,11 @@ library(terra)
 library(spData)
 ```
 
-E1. Create a new object called `nz_wgs` by transforming `nz` object into the WGS84 CRS.
+E1. Créez un nouvel objet appelé `nz_wgs` en transformant l'objet `nz` avec le CRS WGS84.
 
-- Create an object of class `crs` for both and use this to query their CRSs.
-- With reference to the bounding box of each object, what units does each CRS use?
-- Remove the CRS from `nz_wgs` and plot the result: what is wrong with this map of New Zealand and why?
+- Créez un objet de la classe `crs` pour les deux et utilisez-le pour interroger leurs CRS respectifs.
+- En se référant au rectangle de délimitation de chaque objet, quelles unités chaque CRS utilise-t-il ?
+- Retirez le CRS de `nz_wgs` et tracez le résultat : qu'est-ce qui ne va pas avec cette carte de la Nouvelle-Zélande et pourquoi ?
 
 ```{r 07-ex-e1}
 st_crs(nz)
@@ -26,28 +26,28 @@ par(mfrow = c(1, 3))
 plot(st_geometry(nz))
 plot(st_geometry(nz_wgs))
 plot(st_geometry(nz_wgs_NULL_crs))
-# answer: it is fatter in the East-West direction
-# because New Zealand is close to the South Pole and meridians converge there
+# réponse: il est plus gras dans le sens est-ouest
+# parce que la Nouvelle-Zélande est proche du pôle Sud et que les méridiens y convergent.
 plot(st_geometry(nz_27700))
 par(mfrow = c(1, 1))
 ```
 
-E2. Transform the `world` dataset to the transverse Mercator projection (`"+proj=tmerc"`) and plot the result.
-What has changed and why?
-Try to transform it back into WGS 84 and plot the new object.
-Why does the new object differ from the original one?
+E2. Transformez le jeu de données `world` en projection transversale de Mercator (`"+proj=tmerc"`) et tracez le résultat.
+Qu'est-ce qui a changé et pourquoi ?
+Essayez de le retransformer en WGS 84 et tracez le nouvel objet.
+Pourquoi le nouvel objet est-il différent de l'objet original ?
 
 ```{r 07-ex-e2}
-# see https://github.com/r-spatial/sf/issues/509
+# cf. https://github.com/r-spatial/sf/issues/509
 world_tmerc = st_transform(world, "+proj=tmerc")
 plot(st_geometry(world_tmerc))
 world_4326 = st_transform(world_tmerc, "EPSG:4326")
 plot(st_geometry(world_4326))
 ```
 
-E3. Transform the continuous raster (`con_raster`) into NAD83 / UTM zone 12N using the nearest neighbor interpolation method.
-What has changed?
-How does it influence the results?
+E3. Transformez le raster de valeurs continues (`con_raster`) en NAD83 / zone UTM 12N en utilisant la méthode d'interpolation du plus proche voisin.
+Qu'est-ce qui a changé ?
+Comment cela influence-t-il les résultats ?
 
 ```{r 07-ex-e3}
 con_raster = rast(system.file("raster/srtm.tif", package = "spDataLarge"))
@@ -58,9 +58,9 @@ plot(con_raster)
 plot(con_raster_utm12n)
 ```
 
-E4. Transform the categorical raster (`cat_raster`) into WGS 84 using the bilinear interpolation method.
-What has changed?
-How does it influence the results?
+E4. Transformer le raster avec de catégories (`cat_raster`) en WGS 84 en utilisant la méthode d'interpolation bilinéaire.
+Qu'est-ce qui a changé ?
+Comment cela influence-t-il les résultats ?
 
 ```{r 07-ex-e4}
 cat_raster = rast(system.file("raster/nlcd.tif", package = "spDataLarge"))
