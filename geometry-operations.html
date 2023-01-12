@@ -7,7 +7,7 @@
 <title>Chapter 5 Opèrations géométriques | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="Prérequis Ce chapitre utilise les mêmes paquets que le chapitre 4 mais avec l’ajout de spDataLarge, qui a été installé dans le chapitre 2: library(sf) library(terra) library(dplyr) library(spData)...">
-<meta name="generator" content="bookdown 0.28 with bs4_book()">
+<meta name="generator" content="bookdown 0.31 with bs4_book()">
 <meta property="og:title" content="Chapter 5 Opèrations géométriques | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://geocompr.github.io/fr/geometry-operations.html">
@@ -19,11 +19,11 @@
 <meta name="twitter:image" content="https://geocompr.github.io/es/images/cover.png">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.2/font.css" rel="stylesheet">
-<link href="libs/Roboto_Mono-0.4.2/font.css" rel="stylesheet">
-<link href="libs/Montserrat-0.4.2/font.css" rel="stylesheet">
-<script src="libs/bs3compat-0.4.0/transition.js"></script><script src="libs/bs3compat-0.4.0/tabs.js"></script><script src="libs/bs3compat-0.4.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.4/font.css" rel="stylesheet">
+<link href="libs/Roboto_Mono-0.4.4/font.css" rel="stylesheet">
+<link href="libs/Montserrat-0.4.4/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.4.2/transition.js"></script><script src="libs/bs3compat-0.4.2/tabs.js"></script><script src="libs/bs3compat-0.4.2/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.6.0/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
 <script src="libs/leaflet-binding-2.1.1/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -69,6 +69,7 @@
 <li><a class="" href="spatial-operations.html"><span class="header-section-number">4</span> Géotraitements</a></li>
 <li><a class="active" href="geometry-operations.html"><span class="header-section-number">5</span> Opèrations géométriques</a></li>
 <li><a class="" href="raster-vector.html"><span class="header-section-number">6</span> Interactions raster-vecteur</a></li>
+<li><a class="" href="reproj-geo-data.html"><span class="header-section-number">7</span> Reprojeté des données geographiques</a></li>
 </ul>
 
         <div class="book-extra">
@@ -129,7 +130,7 @@ La simplification est un processus de généralisation des objets vectoriels (li
 Une autre raison de simplifier les objets est de réduire la quantité de mémoire, d’espace disque et de bande passante qu’ils consomment :
 il peut être judicieux de simplifier des géométries complexes avant de les publier sous forme de cartes interactives.
 Le paquet <strong>sf</strong> fournit <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code>, qui utilise l’implémentation GEOS de l’algorithme de Douglas-Peucker pour réduire le nombre de sommets.
-<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> utilise la <code>dTolerance</code> pour contrôler le niveau de généralisation des unités de la carte <span class="citation">(voir <a href="raster-vector.html#ref-douglas_algorithms_1973" role="doc-biblioref">Douglas and Peucker 1973</a> pour plus de détails)</span>.
+<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> utilise la <code>dTolerance</code> pour contrôler le niveau de généralisation des unités de la carte <span class="citation">(voir <a href="reproj-geo-data.html#ref-douglas_algorithms_1973" role="doc-biblioref">Douglas and Peucker 1973</a> pour plus de détails)</span>.
 La figure <a href="geometry-operations.html#fig:seine-simp">5.1</a> illustre la simplification d’une géométrie <code>LINESTRING</code> représentant la Seine et ses affluents.
 La géométrie simplifiée a été créée par la commande suivante :</p>
 <div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
@@ -149,7 +150,7 @@ Le résultat étant visuellement plus simple (Figure <a href="geometry-operation
 <span><span class="co">#&gt; 9112 bytes</span></span></code></pre></div>
 <p>La simplification est également applicable aux polygones.
 Ceci est illustré par l’utilisation de <code>us_states</code>, représentant les États-Unis contigus.
-Comme nous le montrons dans le chapitre <a href="#reproj-geo-data"><strong>??</strong></a>, GEOS suppose que les données sont dans un CRS projeté et cela pourrait conduire à des résultats inattendus lors de l’utilisation d’un CRS géographique.
+Comme nous le montrons dans le chapitre <a href="reproj-geo-data.html#reproj-geo-data">7</a>, GEOS suppose que les données sont dans un CRS projeté et cela pourrait conduire à des résultats inattendus lors de l’utilisation d’un CRS géographique.
 Par conséquent, la première étape consiste à projeter les données dans un CRS projeté adéquat, tel que le US National Atlas Equal Area (epsg = 2163) (à gauche sur la figure <a href="geometry-operations.html#fig:us-simp">5.2</a>) :</p>
 <div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us_states2163</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">us_states</span>, <span class="st">"EPSG:2163"</span><span class="op">)</span></span>
@@ -160,7 +161,7 @@ Par conséquent, la première étape consiste à projeter les données dans un C
 <p>Une limitation de <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> est qu’il simplifie les objets sur une base géométrique.
 Cela signifie que la “topologie” est perdue, ce qui donne lieu à des polygones se superposant ou séparés par des vides, comme le montre la figure <a href="geometry-operations.html#fig:us-simp">5.2</a> (panneau du milieu).
 <code>ms_simplify()</code> de <strong>rmapshaper</strong> fournit une alternative qui surmonte ce problème.
-Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines limitations de l’algorithme de Douglas-Peucker <span class="citation">(<a href="raster-vector.html#ref-visvalingam_line_1993" role="doc-biblioref">Visvalingam and Whyatt 1993</a>)</span>.
+Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines limitations de l’algorithme de Douglas-Peucker <span class="citation">(<a href="reproj-geo-data.html#ref-visvalingam_line_1993" role="doc-biblioref">Visvalingam and Whyatt 1993</a>)</span>.
 <!-- https://bost.ocks.org/mike/simplify/ -->
 L’extrait de code suivant utilise cette fonction pour simplifier <code>us_states2163</code>.
 Le résultat n’a que 1% des sommets de l’entrée (fixée à l’aide de l’argument <code>keep</code>) mais son nombre d’objets reste intact car nous avons fixé <code>keep_shapes = TRUE</code> :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
@@ -343,7 +344,7 @@ Cela peut être fait en utilisant la fonction <code><a href="https://r-spatial.g
 FIGURE 5.7: Cercles superposés avec une couleur grise pour indiquer l’intersection entre eux
 </p>
 </div>
-<p>Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant <code>x</code> et <code>y</code>, inspiré de la <a href="http://r4ds.had.co.nz/transform.html#logical-operators">Figure 5.1</a> du livre <em>R for Data Science</em> <span class="citation">(<a href="raster-vector.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.</p>
+<p>Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant <code>x</code> et <code>y</code>, inspiré de la <a href="http://r4ds.had.co.nz/transform.html#logical-operators">Figure 5.1</a> du livre <em>R for Data Science</em> <span class="citation">(<a href="reproj-geo-data.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.</p>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:venn-clip"></span>
 <img src="05-geometry-operations_files/figure-html/venn-clip-1.png" alt="Équivalents spatiaux des opérateurs logiques." width="100%"><p class="caption">
@@ -737,7 +738,7 @@ FIGURE 5.12: Exemples de transformation de type de géométrie entre MULTILINEST
 </h2>
 <p>
 Les opérations géométriques sur des raster comprennent le décalage, le retournement, la mise en miroir, la mise à l’échelle, la rotation ou la déformation des images.
-Ces opérations sont nécessaires pour une variété d’applications, y compris le géoréférencement, utilisé pour permettre aux images d’être superposées sur une carte précise avec un CRS connu <span class="citation">(<a href="raster-vector.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
+Ces opérations sont nécessaires pour une variété d’applications, y compris le géoréférencement, utilisé pour permettre aux images d’être superposées sur une carte précise avec un CRS connu <span class="citation">(<a href="reproj-geo-data.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
 Il existe une variété de techniques de géoréférencement, notamment :</p>
 <ul>
 <li>Géorectification basée sur des <a href="https://www.qgistutorials.com/en/docs/3/georeferencing_basics.html">points de contrôle au sol</a> connus</li>
@@ -747,7 +748,7 @@ Il existe une variété de techniques de géoréférencement, notamment :</p>
 <p>R est plutôt inadapté pour les deux premiers points car ceux-ci nécessitent souvent une intervention manuelle, c’est pourquoi ils sont généralement réalisés à l’aide d’un logiciel SIG dédié (voir également le chapitre : <a href="#gis"><strong>??</strong></a>).
 En revanche, l’alignement de plusieurs images est possible dans R et cette section montre entre autres comment le faire.
 Cela implique souvent de modifier l’étendue, la résolution et l’origine d’une image.
-Une projection correspondante est bien sûr également nécessaire, mais elle est déjà traitée dans la section <a href="#reproj-ras"><strong>??</strong></a>.</p>
+Une projection correspondante est bien sûr également nécessaire, mais elle est déjà traitée dans la section <a href="reproj-geo-data.html#reproj-ras">7.8</a>.</p>
 <p>Dans tous les cas, il existe d’autres raisons d’effectuer une opération géométrique sur une seule image raster.
 Par exemple, dans le chapitre <a href="#location"><strong>??</strong></a> nous définissons les zones métropolitaines en Allemagne comme des pixels de 20 km<sup>2</sup> avec plus de 500.000 habitants.
 La trame d’habitants d’origine a cependant une résolution de 1 km<sup>2</sup>, c’est pourquoi nous allons diminuer (agréger) la résolution d’un facteur 20 (voir le chapitre <a href="#define-metropolitan-areas"><strong>??</strong></a>).
@@ -772,7 +773,7 @@ Ceci retournera un objet raster contenant les cellules dont les points médians 
 <span><span class="co">#&gt; resolution  : 0.5, 0.5  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 1, 1.5, -0.5, 0.5  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
-<span><span class="co">#&gt; source      : memory </span></span>
+<span><span class="co">#&gt; source(s)   : memory</span></span>
 <span><span class="co">#&gt; name        : elev </span></span>
 <span><span class="co">#&gt; min value   :   18 </span></span>
 <span><span class="co">#&gt; max value   :   24</span></span></code></pre></div>
@@ -912,7 +913,7 @@ FIGURE 5.17: Comparaison visuelle du raster d’entré et de cinq méthodes de r
 Elles calculent toutes une statistique donnée en se basant sur les valeurs de toutes les cellules de la grille (hors <code>NA</code>).
 Par exemple, <code>sum</code> est utile lorsque chaque cellule de raster représente une variable étendue dans l’espace (par exemple, le nombre de personnes).
 En utilisant <code>sum</code>, le raster ré-échantillonné devrait avoir le même nombre total de personnes que le raster original.</p>
-<p>Comme vous le verrez dans la section <a href="#reproj-ras"><strong>??</strong></a>, la reprojection de raster est un cas particulier de rééchantillonnage lorsque notre raster cible a un CRS différent de la trame d’origine.</p>
+<p>Comme vous le verrez dans la section <a href="reproj-geo-data.html#reproj-ras">7.8</a>, la reprojection de raster est un cas particulier de rééchantillonnage lorsque notre raster cible a un CRS différent de la trame d’origine.</p>
 
 <div class="rmdnote">
 <p>La plupart des opérations géométriques dans <strong>terra</strong> sont conviviales, plutôt rapides, et fonctionnent sur de grands objets rasters.
@@ -1029,7 +1030,7 @@ Pouvez-vous remarquer des différences entre les résultats de ces différentes 
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2022-09-06.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2023-01-12.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
