@@ -440,7 +440,7 @@ b9sf$domain_a = rep(rep(domains, 3), each = 2)
 b9sf$domain_b = rep(rep(domains, each = 3), each = 2)
 b9sf = rbind(b9sf, ii, bi, ei, ib, bb, eb, ie, be, ee)
 b9sf$domain_a = ordered(b9sf$domain_a, levels = c("Intérieur", "Limite", "Extérieur"))
-b9sf$domain_b = ordered(b9sf$domain_b, levels = c("Interieur", "Limite", "Exterieur"))
+b9sf$domain_b = ordered(b9sf$domain_b, levels = c("Intérieur", "Limite", "Extérieur"))
 b9sf = b9sf %>% 
   mutate(alpha = case_when(
    Object == "x" ~ 0.1, 
