@@ -15,9 +15,9 @@ link-citations: yes
 colorlinks: yes
 graphics: yes
 description: "Geocomputation avec R s´adresse aux personnes qui souhaitent analyser, visualiser et modéliser des données géographiques à l´aide de logiciels open source. Il est basé sur R, un langage de programmation statistique qui possède de puissantes capacités de traitement de données, de visualisation et de traitement géospatial. Ce livre vous donne les connaissances et les compétences nécessaires pour aborder un large éventail de questions qui se manifestent dans les données géographiques, notamment celles qui ont des implications scientifiques, sociales et environnementales. Ce livre intéressera des personnes de tous horizons, en particulier les utilisateurs de systèmes d´information géographique (SIG) désireux d´appliquer leurs connaissances spécifiques à un domaine dans un puissant langage open source pour la science des données, et les utilisateurs de R désireux d'étendre leurs compétences au traitement des données spatiales."
-github-repo: "geocompr/fr"
-cover-image: "https://geocompr.github.io/es/images/cover.png"
-url: https://geocompr.github.io/fr/
+github-repo: "geocompx/geocompr-fr"
+cover-image: "https://r.geocompx.org/images/cover.png"
+url: https://r.geocompx.org/fr/
 ---
 
 
