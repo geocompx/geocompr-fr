@@ -20,6 +20,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_book
-          destination_dir: fr
+          #destination_dir: fr
           publish_branch: gh-pages
           commit_message: 'Deploy commit: ${{ github.event.head_commit.message }}'
