@@ -406,7 +406,7 @@ world_agg5 = world |>
   dplyr::select(pop, continent, area_km2) %>% # sélectionne les colonnes d’intérêt  
   group_by(continent) |>                     # regroupe par continents et synthétise:
   summarize(Pop = sum(pop, na.rm = TRUE), Superficie = sum(area_km2), N = n()) |>
-  mutate(Densité = round(Pop / Superficie)) |>     # calcule la densité de population
+  mutate(`Densité` = round(Pop / Superficie)) |>     # calcule la densité de population
   slice_max(Pop, n = 3) |>                  # ne garde que les 3 plus peuplés
   arrange(desc(N))                            # trie par ordre du nombre de pays
 ```
