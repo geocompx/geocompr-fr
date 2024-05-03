@@ -279,7 +279,7 @@ knitr::include_graphics("figures/07-s2geos.png")
 
 Pour démontrer l'importance des CRS, nous allons créer un tampon de 100 km autour de l'objet `london` de la section précédente.
 Nous allons également créer un tampon délibérément défectueux avec une "distance" de 1 degré, ce qui est à peu près équivalent à 100 km (1 degré est environ 111 km à l'équateur).
-Avant de plonger dans le code, il peut être utile de jeter un coup d'œil à la figure \@ref(fig:crs-buf) pour avoir une idée des résultats que vous devriez être en mesure de reproduire en suivant les ligne de code ci-dessous.
+Avant de plonger dans le code, il peut être utile de jeter un coup d'œil à la figure \@ref(fig:) pour avoir une idée des résultats que vous devriez être en mesure de reproduire en suivant les ligne de code ci-dessous.
 
 La première étape consiste à créer trois tampons autour des objets `london` et `london_geo` créés ci-dessus avec des distances de 1 degré et 100 km (ou 100 000 m, ce qui peut être exprimé par `1e5` en notation scientifique) à partir du centre de Londres:
 
@@ -308,7 +308,7 @@ La distance entre deux lignes de longitude, appelées méridiens, est d'environ 
 Cette distance se réduit à zéro aux pôles.
 À la latitude de Londres, par exemple, les méridiens sont distants de moins de 70 km (défi : exécutez le code qui vérifie cela).
 <!-- `geosphere::distGeo(c(0, 51.5), c(1, 51.5))` -->
-Les lignes de latitude, en revanche, sont équidistantes les unes des autres quelle que soit la latitude : elles sont toujours distantes d'environ 111 km, y compris à l'équateur et près des pôles (voir les figures \@ref(fig:crs-buf) à \@ref(fig:wintriproj)
+Les lignes de latitude, en revanche, sont équidistantes les unes des autres quelle que soit la latitude : elles sont toujours distantes d'environ 111 km, y compris à l'équateur et près des pôles (voir les figures \@ref(fig:) à \@ref(fig:wintriproj)
 ```
 
 N'interprétez pas l'avertissement concernant le CRS géographique (`longitude/latitude`) comme "le CRS ne devrait pas être défini" : il devrait presque toujours l'être!
@@ -353,9 +353,9 @@ La ligne de code suivante crée un tampon autour des données *projetées* d'exa
 london_buff_projected = st_buffer(london_proj, 1e5)
 ```
 
-Les géométries des trois objets `london_buff*` qui *ont* un CRS spécifié créé ci-dessus (`london_buff_s2`, `london_buff_lonlat` et `london_buff_projected`) créés dans les extraits de code précédents sont illustrées dans la Figure  \@ref(fig:crs-buf).
+Les géométries des trois objets `london_buff*` qui *ont* un CRS spécifié créé ci-dessus (`london_buff_s2`, `london_buff_lonlat` et `london_buff_projected`) créés dans les extraits de code précédents sont illustrées dans la Figure  \@ref(fig:).
 
-```{r crs-buf-old, include=FALSE, eval=FALSE}
+```{r -old, include=FALSE, eval=FALSE}
 uk = rnaturalearth::ne_countries(scale = 50) |> 
   st_as_sf() |> 
   filter(grepl(pattern = "United Kingdom|Ire", x = name_long))
@@ -373,9 +373,9 @@ plot(st_geometry(uk), add = TRUE, border = "gray", lwd = 3)
 ```
 
 ```{r crs-buf, fig.cap="Tampons autour de Londres montrant les résultats créés avec le moteur de géométrie sphérique S2 sur des données long/lat (à gauche), des données projetées (au milieu) et des données long/lat sans utiliser la géométrie sphérique (à droite). Le graphique de gauche illustre le résultat des tampons sur des données non projetées avec sf, qui appelle le moteur de géométrie sphérique S2 de Google par défaut avec des cellules maximales fixées à 1000 (ligne fine). La ligne épaisse en 'bloc' illustre le résultat de la même opération avec des cellules maximales fixées à 100.", fig.scap="Tampons autour de Londres avec un CRS géographique et projeté.", echo=FALSE, fig.asp=0.39, fig.width = 8}
-uk = rnaturalearth::ne_countries(scale = 50) %>% 
-  st_as_sf() %>% 
+uk = rnaturalearth::ne_countries(scale = 50, returnclass = "sf") |> 
   filter(grepl(pattern = "United Kingdom|Ire", x = name_long))
+
 library(tmap)
 tm1 = tm_shape(london_buff_s2, bbox = st_bbox(london_buff_s2_100_cells)) + 
   tm_graticules(lwd = 0.2) +
@@ -383,7 +383,7 @@ tm1 = tm_shape(london_buff_s2, bbox = st_bbox(london_buff_s2_100_cells)) +
   tm_shape(london_buff_s2_100_cells) +
   tm_borders(col = "black", lwd = 1.5) +
   tm_shape(uk) +
-  tm_polygons(lty = 3, alpha = 0.2, col = "#567D46") +
+  tm_polygons(lty = 3, fill_alpha = 0.2, fill = "#567D46") +
   tm_shape(london_proj) +
   tm_symbols()
 
@@ -391,7 +391,7 @@ tm2 = tm_shape(london_buff_projected, bbox = st_bbox(london_buff_s2_100_cells)) 
   tm_grid(lwd = 0.2) +
   tm_borders(col = "black", lwd = 0.5) + 
   tm_shape(uk) +
-  tm_polygons(lty = 3, alpha = 0.2, col = "#567D46") +
+  tm_polygons(lty = 3, fill_alpha = 0.2, fill = "#567D46") +
   tm_shape(london_proj) +
   tm_symbols()
 
@@ -399,7 +399,7 @@ tm3 = tm_shape(london_buff_lonlat, bbox = st_bbox(london_buff_s2_100_cells)) +
   tm_graticules(lwd = 0.2) +
   tm_borders(col = "black", lwd = 0.5) + 
   tm_shape(uk) +
-  tm_polygons(lty = 3, alpha = 0.2, col = "#567D46") +
+  tm_polygons(lty = 3, fill_alpha = 0.2, fill = "#567D46") +
   tm_shape(london_proj) +
   tm_symbols()
 
