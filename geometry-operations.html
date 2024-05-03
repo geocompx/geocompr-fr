@@ -8,7 +8,7 @@
 <title>Chapter 5 Opèrations géométriques | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="Prérequis Ce chapitre utilise les mêmes paquets que le chapitre 4 mais avec l’ajout de spDataLarge, qui a été installé dans le chapitre 2: library(sf) library(terra) library(dplyr) library(spData)...">
-<meta name="generator" content="bookdown 0.31 with bs4_book()">
+<meta name="generator" content="bookdown 0.39 with bs4_book()">
 <meta property="og:title" content="Chapter 5 Opèrations géométriques | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://r.geocompx.org/fr/geometry-operations.html">
@@ -20,14 +20,15 @@
 <meta name="twitter:image" content="https://r.geocompx.org/images/cover.png">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.4/font.css" rel="stylesheet">
-<link href="libs/Roboto_Mono-0.4.4/font.css" rel="stylesheet">
-<link href="libs/Montserrat-0.4.4/font.css" rel="stylesheet">
-<script src="libs/bs3compat-0.4.2/transition.js"></script><script src="libs/bs3compat-0.4.2/tabs.js"></script><script src="libs/bs3compat-0.4.2/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.6.0/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.9/font.css" rel="stylesheet">
+<link href="libs/Roboto_Mono-0.4.9/font.css" rel="stylesheet">
+<link href="libs/Montserrat-0.4.9/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.7.0/transition.js"></script><script src="libs/bs3compat-0.7.0/tabs.js"></script><script src="libs/bs3compat-0.7.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<script src="libs/leaflet-binding-2.2.2/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
 <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -88,9 +89,9 @@
 <ul>
 <li>Ce chapitre utilise les mêmes paquets que le chapitre <a href="spatial-operations.html#spatial-operations">4</a> mais avec l’ajout de <strong>spDataLarge</strong>, qui a été installé dans le chapitre <a href="spatial-class.html#spatial-class">2</a>:</li>
 </ul>
-<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Nowosad/spData">spDataLarge</a></span><span class="op">)</span></span></code></pre></div>
@@ -131,10 +132,10 @@ La simplification est un processus de généralisation des objets vectoriels (li
 Une autre raison de simplifier les objets est de réduire la quantité de mémoire, d’espace disque et de bande passante qu’ils consomment :
 il peut être judicieux de simplifier des géométries complexes avant de les publier sous forme de cartes interactives.
 Le paquet <strong>sf</strong> fournit <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code>, qui utilise l’implémentation GEOS de l’algorithme de Douglas-Peucker pour réduire le nombre de sommets.
-<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> utilise la <code>dTolerance</code> pour contrôler le niveau de généralisation des unités de la carte <span class="citation">(voir <a href="reproj-geo-data.html#ref-douglas_algorithms_1973" role="doc-biblioref">Douglas and Peucker 1973</a> pour plus de détails)</span>.
+<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> utilise la <code>dTolerance</code> pour contrôler le niveau de généralisation des unités de la carte <span class="citation">(voir <a href="reproj-geo-data.html#ref-douglas_algorithms_1973">Douglas and Peucker 1973</a> pour plus de détails)</span>.
 La figure <a href="geometry-operations.html#fig:seine-simp">5.1</a> illustre la simplification d’une géométrie <code>LINESTRING</code> représentant la Seine et ses affluents.
 La géométrie simplifiée a été créée par la commande suivante :</p>
-<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seine_simp</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify</a></span><span class="op">(</span><span class="va">seine</span>, dTolerance <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span>  <span class="co"># 2000 m</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:seine-simp"></span>
@@ -144,7 +145,7 @@ FIGURE 5.1: Comparaison de la géométrie originale et simplifiée de la Seine.
 </div>
 <p>L’objet <code>seine_simp</code> résultant est une copie de l’objet original <code>seine</code> mais avec moins de vertices.
 Le résultat étant visuellement plus simple (Figure <a href="geometry-operations.html#fig:seine-simp">5.1</a>, à droite) et consommant moins de mémoire que l’objet original, comme vérifié ci-dessous :</p>
-<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span><span class="op">(</span><span class="va">seine</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 18096 bytes</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html">object.size</a></span><span class="op">(</span><span class="va">seine_simp</span><span class="op">)</span></span>
@@ -153,21 +154,21 @@ Le résultat étant visuellement plus simple (Figure <a href="geometry-operation
 Ceci est illustré par l’utilisation de <code>us_states</code>, représentant les États-Unis contigus.
 Comme nous le montrons dans le chapitre <a href="reproj-geo-data.html#reproj-geo-data">7</a>, GEOS suppose que les données sont dans un CRS projeté et cela pourrait conduire à des résultats inattendus lors de l’utilisation d’un CRS géographique.
 Par conséquent, la première étape consiste à projeter les données dans un CRS projeté adéquat, tel que le US National Atlas Equal Area (epsg = 2163) (à gauche sur la figure <a href="geometry-operations.html#fig:us-simp">5.2</a>) :</p>
-<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us_states2163</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">us_states</span>, <span class="st">"EPSG:2163"</span><span class="op">)</span></span>
 <span><span class="va">us_states2163</span> <span class="op">=</span> <span class="va">us_states2163</span></span></code></pre></div>
 <p><code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> works equally well with projected polygons:</p>
-<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us_states_simp1</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify</a></span><span class="op">(</span><span class="va">us_states2163</span>, dTolerance <span class="op">=</span> <span class="fl">100000</span><span class="op">)</span>  <span class="co"># 100 km</span></span></code></pre></div>
 <p>Une limitation de <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_simplify()</a></code> est qu’il simplifie les objets sur une base géométrique.
 Cela signifie que la “topologie” est perdue, ce qui donne lieu à des polygones se superposant ou séparés par des vides, comme le montre la figure <a href="geometry-operations.html#fig:us-simp">5.2</a> (panneau du milieu).
 <code>ms_simplify()</code> de <strong>rmapshaper</strong> fournit une alternative qui surmonte ce problème.
-Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines limitations de l’algorithme de Douglas-Peucker <span class="citation">(<a href="reproj-geo-data.html#ref-visvalingam_line_1993" role="doc-biblioref">Visvalingam and Whyatt 1993</a>)</span>.
+Par défaut, il utilise l’algorithme de Visvalingam, qui surmonte certaines limitations de l’algorithme de Douglas-Peucker <span class="citation">(<a href="reproj-geo-data.html#ref-visvalingam_line_1993">Visvalingam and Whyatt 1993</a>)</span>.
 <!-- https://bost.ocks.org/mike/simplify/ -->
 L’extrait de code suivant utilise cette fonction pour simplifier <code>us_states2163</code>.
 Le résultat n’a que 1% des sommets de l’entrée (fixée à l’aide de l’argument <code>keep</code>) mais son nombre d’objets reste intact car nous avons fixé <code>keep_shapes = TRUE</code> :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 La simplification des objets multi-polygones peut supprimer les petits polygones internes, même si l’argument &lt;code&gt;keep_shapes&lt;/code&gt; est défini à TRUE. Pour éviter cela, vous devez définir &lt;code&gt;explode = TRUE&lt;/code&gt;. Cette option convertit tous les mutlipolygones en polygones séparés avant leur simplification.&lt;/p&gt;"><sup>21</sup></a></p>
-<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># proportion des points à garder (0-1; par defaut 0.05)</span></span>
 <span><span class="va">us_states_simp2</span> <span class="op">=</span> <span class="fu">rmapshaper</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rmapshaper/man/ms_simplify.html">ms_simplify</a></span><span class="op">(</span><span class="va">us_states2163</span>, keep <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>                                          keep_shapes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -178,7 +179,7 @@ Notez que, comme pour <code><a href="https://r-spatial.github.io/sf/reference/ge
 La fonction phare de <strong>smoothr</strong> est <code><a href="https://rdrr.io/r/stats/smooth.html">smooth()</a></code>, où l’argument <code>method</code> spécifie la technique de lissage à utiliser.
 Vous trouverez ci-dessous un exemple d’utilisation de la régression à noyau gaussien pour lisser les frontières des états américains en utilisant <code>method=ksmooth</code>.
 L’argument <code>smoothness</code> contrôle la largeur de bande de la gaussienne qui est utilisée pour lisser la géométrie et a une valeur par défaut de 1.</p>
-<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us_states_simp3</span> <span class="op">=</span> <span class="fu">smoothr</span><span class="fu">::</span><span class="fu"><a href="https://strimas.com/smoothr/reference/smooth.html">smooth</a></span><span class="op">(</span><span class="va">us_states2163</span>, method <span class="op">=</span> <span class="st">'ksmooth'</span>, smoothness <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <p>Enfin, la comparaison visuelle de l’ensemble de données originales et des deux versions simplifiées montre des différences entre les sorties des algorithmes de Douglas-Peucker (<code>st_simplify</code>), de Visvalingam (<code>ms_simplify</code>) et de régression à noyau gaussien (<code>smooth(method=ksmooth)</code>) (Figure <a href="geometry-operations.html#fig:us-simp">5.2</a>) :</p>
 <div class="figure" style="text-align: center">
@@ -200,7 +201,7 @@ Toutes créent des représentations par un point unique d’objets vectoriels pl
 Ce type d’opération (souvent jute appelé “centroïde”) représente le centre de masse d’un objet spatial (pensez à une assiette en équilibre sur votre doigt).
 Les centroïdes géographiques ont de nombreuses utilisations, par exemple pour créer une représentation ponctuelle simple de géométries complexes, ou pour estimer les distances entre polygones.
 Ils peuvent être calculés à l’aide de la fonction <strong>sf</strong> <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid()</a></code>, comme le montre le code ci-dessous, qui génère les centroïdes géographiques de régions de Nouvelle-Zélande et d’affluents de la Seine, illustrés par des points noirs sur la figure <a href="geometry-operations.html#fig:centr">5.3</a>.</p>
-<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_centroid</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">nz</span><span class="op">)</span></span>
 <span><span class="va">seine_centroid</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">seine</span><span class="op">)</span></span></code></pre></div>
 <p>Parfois, le centroïde géographique se trouve en dehors des limites de l’objet parent (pensez à un beignet).
@@ -208,7 +209,7 @@ Dans ce cas, les opérations dites de <em>point sur la surface</em> peuvent êtr
 Remarquez que ces points rouges se trouvent toujours sur leurs objets parents.
 Ils ont été créés avec <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface()</a></code> comme suit :<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
 Une description du fonctionnement de &lt;code&gt;st_point_on_surface()&lt;/code&gt; est fournie sur &lt;a href="https://gis.stackexchange.com/q/76498" class="uri"&gt;https://gis.stackexchange.com/q/76498&lt;/a&gt;.&lt;/p&gt;'><sup>22</sup></a></p>
-<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_pos</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface</a></span><span class="op">(</span><span class="va">nz</span><span class="op">)</span></span>
 <span><span class="va">seine_pos</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface</a></span><span class="op">(</span><span class="va">seine</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -233,9 +234,13 @@ Quels groupes démographiques se trouvent à une distance de déplacement de ce 
 Il est possible de répondre à ce genre de questions et de les visualiser en créant des tampons autour des entités géographiques d’intérêt.</p>
 <p>La figure <a href="geometry-operations.html#fig:buffs">5.4</a> illustre des buffers de différentes tailles (5 et 50 km) entourant la Seine et ses affluents.
 Les commandes ci-dessous, utilisées pour créer ces buffers, montrent que la commande <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer()</a></code> nécessite au moins deux arguments : une géométrie d’entrée et une distance, fournie dans les unités du SRC (dans ce cas, les mètres) :</p>
-<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seine_buff_5km</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">seine</span>, dist <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span>
 <span><span class="va">seine_buff_50km</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">seine</span>, dist <span class="op">=</span> <span class="fl">50000</span><span class="op">)</span></span></code></pre></div>
+<pre><code>#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:buffs"></span>
 <img src="05-geometry-operations_files/figure-html/buffs-1.png" alt="Tampons de 5 km autour du jeu de données de la Seine  (à gauche) et de 50 km (à droite). Notez les couleurs, qui reflètent le fait qu'un tampon est créé par élément géométrique." width="75%"><p class="caption">
@@ -261,12 +266,12 @@ En outre, il est possible d’utiliser n’importe quelle combinaison de celles-
 Les applications affines sont une partie essentielle de la géocomputation.
 Par exemple, le décalage est nécessaire pour le placement d’étiquettes, la mise à l’échelle est utilisée dans les cartogrammes de zones non contiguës (voir la section <a href="#other-mapping-packages"><strong>??</strong></a>), et de nombreuses transformations affines sont appliquées lors de la reprojection ou de l’amélioration de la géométrie créée à partir d’une carte déformée ou mal projetée.
 Le paquet <strong>sf</strong> implémente la transformation affine pour les objets des classes <code>sfg</code> et <code>sfc</code>.</p>
-<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_sfc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">nz</span><span class="op">)</span></span></code></pre></div>
 <p>Le décalage déplace chaque point de la même distance en unités cartographiques.
 Cela peut être fait en ajoutant un vecteur numérique à un objet vectoriel.
 Par exemple, le code ci-dessous déplace toutes les coordonnées y de 100 000 mètres vers le nord, mais laisse les coordonnées x intactes (panneau gauche de la figure <a href="geometry-operations.html#fig:affine-trans">5.5</a>).</p>
-<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_shift</span> <span class="op">=</span> <span class="va">nz_sfc</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">100000</span><span class="op">)</span></span></code></pre></div>
 <p>La mise à l’échelle agrandit ou rétrécit les objets par un facteur.
 Elle peut être appliquée de manière globale ou locale.
@@ -277,7 +282,7 @@ Dans l’exemple ci-dessous, chaque géométrie est réduite d’un facteur deux
 Pour cela, chaque objet est d’abord décalé de manière à ce que son centre ait les coordonnées <code>0, 0</code> (<code>(nz_sfc - nz_centroid_sfc)</code>).
 Ensuite, les tailles des géométries sont réduites de moitié (<code>* 0.5</code>).
 Enfin, le centroïde de chaque objet est ramené aux coordonnées des données d’entrée (<code>+ nz_centroid_sfc</code>).</p>
-<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_centroid_sfc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">nz_sfc</span><span class="op">)</span></span>
 <span><span class="va">nz_scale</span> <span class="op">=</span> <span class="op">(</span><span class="va">nz_sfc</span> <span class="op">-</span> <span class="va">nz_centroid_sfc</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="va">nz_centroid_sfc</span></span></code></pre></div>
 <p>La rotation de coordonnées bidimensionnelles nécessite une matrice de rotation :</p>
@@ -290,7 +295,7 @@ R =
 \]</span></p>
 <p>Elle fait tourner les points dans le sens des aiguilles d’une montre.
 La matrice de rotation peut être implémentée dans R comme suit :</p>
-<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rotation</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">a</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">r</span> <span class="op">=</span> <span class="va">a</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">/</span> <span class="fl">180</span> <span class="co">#degrées en radians</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">cos</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">cos</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -298,7 +303,7 @@ La matrice de rotation peut être implémentée dans R comme suit :</p>
 <p>La fonction <code>rotation</code> accepte un argument <code>a</code> - un angle de rotation en degrés.
 La rotation peut être effectuée autour de points sélectionnés, comme les centroïdes (panneau de droite de la figure <a href="geometry-operations.html#fig:affine-trans">5.5</a>).
 Voir <code><a href="https://r-spatial.github.io/sf/articles/sf3.html">vignette("sf3")</a></code> pour plus d’exemples.</p>
-<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_rotate</span> <span class="op">=</span> <span class="op">(</span><span class="va">nz_sfc</span> <span class="op">-</span> <span class="va">nz_centroid_sfc</span><span class="op">)</span> <span class="op">*</span> <span class="fu">rotation</span><span class="op">(</span><span class="fl">30</span><span class="op">)</span> <span class="op">+</span> <span class="va">nz_centroid_sfc</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:affine-trans"></span>
@@ -307,7 +312,7 @@ FIGURE 5.5: Illustrations des transformations affines : décalage, échelle et r
 </p>
 </div>
 <p>Enfin, les géométries nouvellement créées peuvent remplacer les anciennes avec la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_set_geometry()</a></code> :</p>
-<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nz_scale_sf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_set_geometry</a></span><span class="op">(</span><span class="va">nz</span>, <span class="va">nz_scale</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div id="clipping" class="section level3" number="5.2.5">
@@ -320,11 +325,11 @@ Le découpage spatial est une forme de sélection spatiale qui implique des chan
 les lignes, les polygones et leurs équivalents “multi”.
 Pour illustrer le concept, nous allons commencer par un exemple simple :
 deux cercles superposés dont le point central est distant d’une unité et dont le rayon est de un (Figure <a href="geometry-operations.html#fig:points">5.6</a>).</p>
-<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html">st_sfc</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># créer 2 points</span></span>
 <span><span class="va">b</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">b</span>, dist <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># convertir les points en cercles</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">b</span>, border <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/text.html">text</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span>, y <span class="op">=</span> <span class="fl">1</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, cex <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="co"># ajout du texte</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">b</span>, border <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/text.html">text</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span>, y <span class="op">=</span> <span class="fl">1</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, cex <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="co"># ajout du texte</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:points"></span>
 <img src="05-geometry-operations_files/figure-html/points-1.png" alt="cercles superposés." width="100%"><p class="caption">
@@ -333,19 +338,19 @@ FIGURE 5.6: cercles superposés.
 </div>
 <p>Imaginez que vous voulez sélectionner non pas un cercle ou l’autre, mais l’espace couvert par les deux <code>x</code> <em>et</em> <code>y</code>.
 Cela peut être fait en utilisant la fonction <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection()</a></code>, illustrée en utilisant des objets nommés <code>x</code> et <code>y</code> qui représentent les cercles de gauche et de droite (Figure <a href="geometry-operations.html#fig:circle-intersection">5.7</a>).</p>
-<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="va">b</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="va">b</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="va">x_and_y</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">b</span>, border <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html">plot</a></span><span class="op">(</span><span class="va">x_and_y</span>, col <span class="op">=</span> <span class="st">"lightgrey"</span>, border <span class="op">=</span> <span class="st">"grey"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># surface intersectée</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">b</span>, border <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x_and_y</span>, col <span class="op">=</span> <span class="st">"lightgrey"</span>, border <span class="op">=</span> <span class="st">"grey"</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># surface intersectée</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:circle-intersection"></span>
 <img src="05-geometry-operations_files/figure-html/circle-intersection-1.png" alt="Cercles superposés avec une couleur grise pour indiquer l'intersection entre eux" width="100%"><p class="caption">
 FIGURE 5.7: Cercles superposés avec une couleur grise pour indiquer l’intersection entre eux
 </p>
 </div>
-<p>Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant <code>x</code> et <code>y</code>, inspiré de la <a href="http://r4ds.had.co.nz/transform.html#logical-operators">Figure 5.1</a> du livre <em>R for Data Science</em> <span class="citation">(<a href="reproj-geo-data.html#ref-grolemund_r_2016" role="doc-biblioref">Grolemund and Wickham 2016</a>)</span>.</p>
+<p>Le passage de code suivant montre comment cela fonctionne pour toutes les combinaisons du diagramme de Venn représentant <code>x</code> et <code>y</code>, inspiré de la <a href="http://r4ds.had.co.nz/transform.html#logical-operators">Figure 5.1</a> du livre <em>R for Data Science</em> <span class="citation">(<a href="reproj-geo-data.html#ref-grolemund_r_2016">Grolemund and Wickham 2016</a>)</span>.</p>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:venn-clip"></span>
 <img src="05-geometry-operations_files/figure-html/venn-clip-1.png" alt="Équivalents spatiaux des opérateurs logiques." width="100%"><p class="caption">
@@ -367,7 +372,7 @@ Certains points seront à l’intérieur d’un seul cercle, d’autres à l’i
 FIGURE 5.9: Points distribués de manière aléatoire dans le cadre englobant les cercles x et y. Les points qui croisent les deux objets x et y sont mis en évidence.
 </p>
 </div>
-<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bb</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">box</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html">st_as_sfc</a></span><span class="op">(</span><span class="va">bb</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2017</span><span class="op">)</span></span>
@@ -376,7 +381,7 @@ FIGURE 5.9: Points distribués de manière aléatoire dans le cadre englobant le
 <p>Le code ci-dessous montre trois façons d’obtenir le même résultat.
 Nous pouvons utiliser directement l’intersection <code>index{vecteur!intersection} de</code>x<code>et</code>y<code>(représentée par</code>x_et_y<code>dans l'extrait de code précédent) comme objet de sélection, comme le montre la première ligne du morceau de code ci-dessous. Nous pouvons également trouver l'intersection entre les points d'entrée représentés par</code>p<code>et l'objet de sélection et de découpage</code>x_et_y<code>, comme le montre la deuxième ligne du code ci-dessous. Cette deuxième approche renvoie les entités qui ont une intersection partielle avec</code>x_and_y<code>mais avec des géométries modifiées pour les entités dont les surfaces recoupent celle de l'objet de sélection. La troisième approche consiste à créer un objet de sélection en utilisant le prédicat spatial binaire</code>st_intersects()`, introduit dans le chapitre précédent.
 Les résultats sont identiques (à l’exception de différences superficielles dans les noms d’attributs), mais l’implémentation diffère substantiellement :</p>
-<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_xy1</span> <span class="op">=</span> <span class="va">p</span><span class="op">[</span><span class="va">x_and_y</span><span class="op">]</span></span>
 <span><span class="va">p_xy2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">x_and_y</span><span class="op">)</span></span>
 <span><span class="va">sel_p_xy</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">x</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span></span>
@@ -393,12 +398,13 @@ Nous reviendrons sur la question du choix entre différentes implémentations d�
 <p>
 Comme nous l’avons vu dans la section <a href="#vector-attribute-aggregation"><strong>??</strong></a>, l’agrégation spatiale peut dissoudre silencieusement les géométries des polygones se touchant dans le même groupe.
 Cela est démontré dans le code ci-dessous dans lequel 49 <code>us_states</code> sont agrégés en 4 régions à l’aide des fonctions de R base et du <strong>tidyverse</strong> (voir les résultats dans la figure <a href="geometry-operations.html#fig:us-regions">5.10</a>) :</p>
-<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">regions</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">us_states</span><span class="op">[</span>, <span class="st">"total_pop_15"</span><span class="op">]</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">us_states</span><span class="op">$</span><span class="va">REGION</span><span class="op">)</span>,</span>
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">regions</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/aggregate.html">aggregate</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">us_states</span><span class="op">[</span>, <span class="st">"total_pop_15"</span><span class="op">]</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">us_states</span><span class="op">$</span><span class="va">REGION</span><span class="op">)</span>,</span>
 <span>                    FUN <span class="op">=</span> <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">regions2</span> <span class="op">=</span> <span class="va">us_states</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">REGION</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span>pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">total_pop_15</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>#&gt; [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:us-regions"></span>
 <img src="05-geometry-operations_files/figure-html/us-regions-1.png" alt="Agrégation spatiale sur des polygones contigus, illustrée par l'agrégation de la population des États américains en régions, la population étant représentée par une couleur. Notez que l'opération dissout automatiquement les frontières entre les états." width="100%"><p class="caption">
@@ -406,13 +412,13 @@ FIGURE 5.10: Agrégation spatiale sur des polygones contigus, illustrée par l�
 </p>
 </div>
 <p>Que se passe-t-il au niveau des géométries ?
-En coulisses, <code><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate()</a></code> et <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> combinent les géométries et dissolvent les frontières entre elles en utilisant <code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union()</a></code>.
+En coulisses, <code><a href="https://rspatial.github.io/terra/reference/aggregate.html">aggregate()</a></code> et <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> combinent les géométries et dissolvent les frontières entre elles en utilisant <code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union()</a></code>.
 Ceci est démontré par le code ci-dessous qui crée une union des Etats-Unis de l’Ouest :</p>
-<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us_west</span> <span class="op">=</span> <span class="va">us_states</span><span class="op">[</span><span class="va">us_states</span><span class="op">$</span><span class="va">REGION</span> <span class="op">==</span> <span class="st">"West"</span>, <span class="op">]</span></span>
 <span><span class="va">us_west_union</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union</a></span><span class="op">(</span><span class="va">us_west</span><span class="op">)</span></span></code></pre></div>
 <p>La fonction peut prendre deux géométries et les unir, comme le montre ll code ci-dessous qui crée un bloc occidental uni incorporant le Texas (défi : reproduire et représenter le résultat) :</p>
-<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">texas</span> <span class="op">=</span> <span class="va">us_states</span><span class="op">[</span><span class="va">us_states</span><span class="op">$</span><span class="va">NAME</span> <span class="op">==</span> <span class="st">"Texas"</span>, <span class="op">]</span></span>
 <span><span class="va">texas_union</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union</a></span><span class="op">(</span><span class="va">us_west_union</span>, <span class="va">texas</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -425,12 +431,14 @@ La transformation d’un type de géométrie en un autre (<em>casting</em>) est 
 Elle est implémentée dans la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> du package <strong>sf</strong>.
 Il est important de noter que la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> se comporte différemment selon qu’il s’agit d’un objet géométrique simple (<code>sfg</code>), d’une entité avec une colonne géométrique simple (<code>sfc</code>) ou d’un objet entité simple.</p>
 <p>Créons un multipoint pour illustrer le fonctionnement des transformations de type géométrique sur des objets de géométrie simple (<code>sfg</code>) :</p>
-<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multipoint</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html">st_multipoint</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Dans ce cas, <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> peut être utile pour transformer le nouvel objet en <em>linestring</em> (linéaire) ou en polygone (Figure <a href="geometry-operations.html#fig:single-cast">5.11</a>) :</p>
-<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">linestring</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="st">"LINESTRING"</span><span class="op">)</span></span>
 <span><span class="va">polyg</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="st">"POLYGON"</span><span class="op">)</span></span></code></pre></div>
+<pre><code>#&gt; -- tmap v3 code detected --
+#&gt; [v3-&gt;v4] polygons(): use 'fill' for the fill color of polygons/symbols (instead of 'col'), and 'col' for the outlines (instead of 'border.col')</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:single-cast"></span>
 <img src="05-geometry-operations_files/figure-html/single-cast-1.png" alt="Exemples de lignes et de polygones créés à partir d'une géométrie multipoint" width="100%"><p class="caption">
@@ -441,12 +449,12 @@ FIGURE 5.11: Exemples de lignes et de polygones créés à partir d’une géom�
 Cela permet d’effectuer des opérations spatiales telles que la longueur du chemin parcouru.
 La conversion de multipoint ou de <em>linestring</em> en polygone est souvent utilisée pour calculer une surface, par exemple à partir de l’ensemble des mesures GPS prises autour d’un lac ou des coins d’un terrain à bâtir.</p>
 <p>Le processus de transformation peut également être inversé en utilisant <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> :</p>
-<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multipoint_2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">linestring</span>, <span class="st">"MULTIPOINT"</span><span class="op">)</span></span>
 <span><span class="va">multipoint_3</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">polyg</span>, <span class="st">"MULTIPOINT"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="va">multipoint_2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="va">multipoint_2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="va">multipoint_3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">multipoint</span>, <span class="va">multipoint_3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 
 <div class="rmdnote">
@@ -463,225 +471,94 @@ Certaines transformations divisent un seul élément en plusieurs sous-élément
 Par exemple, lorsqu’une géométrie multipoint composée de cinq paires de coordonnées est transformée en une géométrie “POINT”, la sortie contiendra cinq entités.</p>
 <div class="inline-table"><table class="table table-sm">
 <caption>
-<span id="tab:sfs-st-cast">TABLE 5.1: </span>Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d’entrée par ligne et type de sortie par colonne
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-POI
-</th>
-<th style="text-align:right;">
-MPOI
-</th>
-<th style="text-align:right;">
-LIN
-</th>
-<th style="text-align:right;">
-MLIN
-</th>
-<th style="text-align:right;">
-POL
-</th>
-<th style="text-align:right;">
-MPOL
-</th>
-<th style="text-align:right;">
-GC
-</th>
+<span id="tab:sfs-st-cast">TABLE 5.1: </span>Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d’entrée par ligne et type de sortie par colonne</caption>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">POI</th>
+<th align="right">MPOI</th>
+<th align="right">LIN</th>
+<th align="right">MLIN</th>
+<th align="right">POL</th>
+<th align="right">MPOL</th>
+<th align="right">GC</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-POI(1)
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
+<tr class="odd">
+<td align="left">POI(1)</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-MPOI(1)
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
+<tr class="even">
+<td align="left">MPOI(1)</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-LIN(1)
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
+<tr class="odd">
+<td align="left">LIN(1)</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-MLIN(1)
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
+<tr class="even">
+<td align="left">MLIN(1)</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-POL(1)
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
+<tr class="odd">
+<td align="left">POL(1)</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">NA</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-MPOL(1)
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
+<tr class="even">
+<td align="left">MPOL(1)</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-GC(1)
-</td>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-1
-</td>
+<tr class="odd">
+<td align="left">GC(1)</td>
+<td align="right">9</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1</td>
 </tr>
 </tbody>
-<tfoot><tr>
-<td style="padding: 0; border:0;" colspan="100%">
-<sup></sup> Note : Les valeurs comme (1) représentent le nombre d’entités ; NA signifie que l’opération n’est pas possible. Abréviations : POI, LIN, POL et GC font référence à POINT, LINESTRING, POLYGON et GEOMETRYCOLLECTION. La version MULTI de ces types de géométrie est indiquée par un M précédent, par exemple, MPOI est l’acronyme de MULTIPOINT.
-</td>
-</tr></tfoot>
 </table></div>
+<p><strong>Note:</strong>
+Note : Les valeurs comme (1) représentent le nombre d’entités ; NA signifie que l’opération n’est pas possible. Abréviations : POI, LIN, POL et GC font référence à POINT, LINESTRING, POLYGON et GEOMETRYCOLLECTION. La version MULTI de ces types de géométrie est indiquée par un M précédent, par exemple, MPOI est l’acronyme de MULTIPOINT.</p>
 <p>Essayons d’appliquer des transformations de type géométrique sur un nouvel objet, <code>multilinestring_sf</code>, à titre d’exemple (à gauche sur la Figure <a href="geometry-operations.html#fig:line-cast">5.12</a>) :</p>
-<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multilinestring_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">3</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
 <span>                            <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
 <span>                            <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -699,7 +576,7 @@ NA
 Le nouvel objet n’a qu’une seule ligne qui définit toutes les lignes.
 Cela limite le nombre d’opérations qui peuvent être faites, par exemple, cela empêche d’ajouter des noms à chaque segment de ligne ou de calculer les longueurs des lignes individuelles.
 La fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast()</a></code> peut être utilisée dans cette situation, car elle sépare un mutlilinestring en trois linestrings :</p>
-<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">linestring_sf2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html">st_cast</a></span><span class="op">(</span><span class="va">multilinestring_sf</span>, <span class="st">"LINESTRING"</span><span class="op">)</span></span>
 <span><span class="va">linestring_sf2</span></span>
 <span><span class="co">#&gt; Simple feature collection with 3 features and 0 fields</span></span>
@@ -711,6 +588,8 @@ La fonction <code><a href="https://r-spatial.github.io/sf/reference/st_cast.html
 <span><span class="co">#&gt; 1 LINESTRING (1 5, 4 3)</span></span>
 <span><span class="co">#&gt; 2 LINESTRING (4 4, 4 1)</span></span>
 <span><span class="co">#&gt; 3 LINESTRING (2 2, 4 2)</span></span></code></pre></div>
+<pre><code>#&gt; [cols4all] color palettes: use palettes from the R package cols4all. Run 'cols4all::c4a_gui()' to explore them. The old palette name "Set2" is named "set2" (in long format "brewer.set2")
+#&gt; Multiple palettes called "set2 found: "brewer.set2", "hcl.set2". The first one, "brewer.set2", is returned.</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:line-cast"></span>
 <img src="05-geometry-operations_files/figure-html/line-cast-1.png" alt="Exemples de transformation de type de géométrie entre MULTILINESTRING (à gauche) et LINESTRING (à droite)." width="100%"><p class="caption">
@@ -718,7 +597,7 @@ FIGURE 5.12: Exemples de transformation de type de géométrie entre MULTILINEST
 </p>
 </div>
 <p>Le nouvel objet permet la création d’attributs (voir la section <a href="attr.html#vec-attr-creation">3.2.5</a>) et la mesure de la longueur :</p>
-<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">linestring_sf2</span><span class="op">$</span><span class="va">name</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Riddle Rd"</span>, <span class="st">"Marshall Ave"</span>, <span class="st">"Foulke St"</span><span class="op">)</span></span>
 <span><span class="va">linestring_sf2</span><span class="op">$</span><span class="va">length</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_length</a></span><span class="op">(</span><span class="va">linestring_sf2</span><span class="op">)</span></span>
 <span><span class="va">linestring_sf2</span></span>
@@ -739,7 +618,7 @@ FIGURE 5.12: Exemples de transformation de type de géométrie entre MULTILINEST
 </h2>
 <p>
 Les opérations géométriques sur des raster comprennent le décalage, le retournement, la mise en miroir, la mise à l’échelle, la rotation ou la déformation des images.
-Ces opérations sont nécessaires pour une variété d’applications, y compris le géoréférencement, utilisé pour permettre aux images d’être superposées sur une carte précise avec un CRS connu <span class="citation">(<a href="reproj-geo-data.html#ref-liu_essential_2009" role="doc-biblioref">Liu and Mason 2009</a>)</span>.
+Ces opérations sont nécessaires pour une variété d’applications, y compris le géoréférencement, utilisé pour permettre aux images d’être superposées sur une carte précise avec un CRS connu <span class="citation">(<a href="reproj-geo-data.html#ref-liu_essential_2009">Liu and Mason 2009</a>)</span>.
 Il existe une variété de techniques de géoréférencement, notamment :</p>
 <ul>
 <li>Géorectification basée sur des <a href="https://www.qgistutorials.com/en/docs/3/georeferencing_basics.html">points de contrôle au sol</a> connus</li>
@@ -764,9 +643,9 @@ Dans la section <a href="spatial-operations.html#spatial-raster-subsetting">4.3.
 Pour récupérer une sortie spatiale, nous pouvons utiliser pratiquement la même syntaxe de sélection.
 La seule différence est que nous devons préciser que nous souhaitons conserver la structure matricielle en mettant l’argument <code>drop</code> à <code>FALSE</code>.
 Ceci retournera un objet raster contenant les cellules dont les points médians se chevauchent avec <code>clip</code>.</p>
-<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">elev</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/elev.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">clip</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">0.9</span>, xmax <span class="op">=</span> <span class="fl">1.8</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">0.45</span>, ymax <span class="op">=</span> <span class="fl">0.45</span>,</span>
+<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">elev</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/elev.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">clip</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">0.9</span>, xmax <span class="op">=</span> <span class="fl">1.8</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">0.45</span>, ymax <span class="op">=</span> <span class="fl">0.45</span>,</span>
 <span>            resolution <span class="op">=</span> <span class="fl">0.3</span>, vals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">elev</span><span class="op">[</span><span class="va">clip</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
@@ -775,10 +654,11 @@ Ceci retournera un objet raster contenant les cellules dont les points médians 
 <span><span class="co">#&gt; extent      : 1, 1.5, -0.5, 0.5  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. : lon/lat WGS 84 (EPSG:4326) </span></span>
 <span><span class="co">#&gt; source(s)   : memory</span></span>
+<span><span class="co">#&gt; varname     : elev </span></span>
 <span><span class="co">#&gt; name        : elev </span></span>
 <span><span class="co">#&gt; min value   :   18 </span></span>
 <span><span class="co">#&gt; max value   :   24</span></span></code></pre></div>
-<p>Pour la même opération, nous pouvons également utiliser les commandes <code><a href="https://rdrr.io/pkg/terra/man/intersect.html">intersect()</a></code> et <code><a href="https://rdrr.io/pkg/terra/man/crop.html">crop()</a></code>.</p>
+<p>Pour la même opération, nous pouvons également utiliser les commandes <code><a href="https://rspatial.github.io/terra/reference/intersect.html">intersect()</a></code> et <code><a href="https://rspatial.github.io/terra/reference/crop.html">crop()</a></code>.</p>
 </div>
 <div id="étendue-et-origine" class="section level3" number="5.3.2">
 <h3>
@@ -790,9 +670,9 @@ Le même problème se pose lorsque nous souhaitons fusionner des images satellit
 Nous pouvons traiter de telles disparités en alignant les trames.</p>
 <p>Dans le cas le plus simple, deux images ne diffèrent que par leur étendue.
 Le code suivant ajoute une ligne et deux colonnes de chaque côté de l’image raster tout en fixant toutes les nouvelles valeurs à une altitude de 1000 mètres (Figure <a href="geometry-operations.html#fig:extend-example">5.13</a>).</p>
-<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">elev</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/elev.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">elev_2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/extend.html">extend</a></span><span class="op">(</span><span class="va">elev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">elev</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/elev.tif"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">elev_2</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/extend.html">extend</a></span><span class="op">(</span><span class="va">elev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:extend-example"></span>
 <img src="05-geometry-operations_files/figure-html/extend-example-1.png" alt="Trame originale (à gauche) et la même trame (à droite) agrandie d'une ligne en haut et en bas et de deux colonnes à gauche et à droite." width="100%"><p class="caption">
@@ -800,28 +680,28 @@ FIGURE 5.13: Trame originale (à gauche) et la même trame (à droite) agrandie 
 </p>
 </div>
 <p>Performing an algebraic operation on two objects with differing extents in R, the <strong>terra</strong> package returns an error.</p>
-<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elev_3</span> <span class="op">=</span> <span class="va">elev</span> <span class="op">+</span> <span class="va">elev_2</span></span>
 <span><span class="co">#&gt; Error: [+] extents do not match</span></span></code></pre></div>
-<p>Cependant, nous pouvons aligner l’étendue de deux rasters avec <code><a href="https://rdrr.io/pkg/terra/man/extend.html">extend()</a></code>.
+<p>Cependant, nous pouvons aligner l’étendue de deux rasters avec <code><a href="https://rspatial.github.io/terra/reference/extend.html">extend()</a></code>.
 Au lieu d’indiquer à la fonction le nombre de lignes ou de colonnes à ajouter (comme nous l’avons fait précédemment), nous lui permettons de le déterminer en utilisant un autre objet raster.
 Ici, nous étendons l’objet <code>elev</code> à l’étendue de <code>elev_2</code>.
 Les lignes et colonnes nouvellement ajoutées prennent la valeur <code>NA</code>.</p>
-<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">elev_4</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/extend.html">extend</a></span><span class="op">(</span><span class="va">elev</span>, <span class="va">elev_2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">elev_4</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/extend.html">extend</a></span><span class="op">(</span><span class="va">elev</span>, <span class="va">elev_2</span><span class="op">)</span></span></code></pre></div>
 <p>L’origine d’un raster est le coin de la cellule le plus proche des coordonnées (0, 0).
-La fonction <code><a href="https://rdrr.io/pkg/terra/man/origin.html">origin()</a></code> renvoie les coordonnées de l’origine.
+La fonction <code><a href="https://rspatial.github.io/terra/reference/origin.html">origin()</a></code> renvoie les coordonnées de l’origine.
 Dans l’exemple ci-dessous, un coin de cellule existe avec les coordonnées (0, 0), mais ce n’est pas toujours le cas.</p>
-<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/origin.html">origin</a></span><span class="op">(</span><span class="va">elev_4</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/origin.html">origin</a></span><span class="op">(</span><span class="va">elev_4</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0 0</span></span></code></pre></div>
 <p>Si deux rasters ont des origines différentes, leurs cellules ne se chevauchent pas complètement, ce qui rends l’algèbre raster impossible.
-Pour changer l’origine – utilisez <code><a href="https://rdrr.io/pkg/terra/man/origin.html">origin()</a></code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
+Pour changer l’origine – utilisez <code><a href="https://rspatial.github.io/terra/reference/origin.html">origin()</a></code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 Si les origines de deux données matricielles ne sont que marginalement éloignées, il suffit parfois d’augmenter l’argument &lt;code&gt;tolerance&lt;/code&gt; de &lt;code&gt;terra::terraOptions()&lt;/code&gt;.&lt;/p&gt;"><sup>23</sup></a>
 La figure <a href="geometry-operations.html#fig:origin-example">5.14</a> révèle l’effet de la modification de l’origine de cette manière.</p>
-<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># changer l'origine</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/origin.html">origin</a></span><span class="op">(</span><span class="va">elev_4</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/origin.html">origin</a></span><span class="op">(</span><span class="va">elev_4</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:origin-example"></span>
 <img src="05-geometry-operations_files/figure-html/origin-example-1.png" alt="Rasters avec des valeurs identiques mais des origines différentes." width="100%"><p class="caption">
@@ -836,27 +716,35 @@ FIGURE 5.14: Rasters avec des valeurs identiques mais des origines différentes.
 </h3>
 <p>
 Les jeux de données raster peuvent également différer en ce qui concerne leur résolution.
-Pour faire correspondre les résolutions, on peut soit diminuer (<code><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate()</a></code>) soit augmenter (<code><a href="https://rdrr.io/pkg/terra/man/disaggregate.html">disagg()</a></code>) la résolution des rasters.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
+Pour faire correspondre les résolutions, on peut soit diminuer (<code><a href="https://rspatial.github.io/terra/reference/aggregate.html">aggregate()</a></code>) soit augmenter (<code><a href="https://rspatial.github.io/terra/reference/disaggregate.html">disagg()</a></code>) la résolution des rasters.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 Nous faisons ici référence à la résolution spatiale.
 En télédétection, les résolutions spectrale (bandes spectrales), temporelle (observations dans le temps de la même zone) et radiométrique (profondeur de couleur) sont également importantes.
 Consultez l’exemple &lt;code&gt;tapp()&lt;/code&gt; dans la documentation pour avoir une idée sur la façon de faire une agrégation de raster temporel.&lt;/p&gt;"><sup>24</sup></a>
 À titre d’exemple, nous modifions ici la résolution spatiale de <code>dem</code> (trouvé dans le paquet <strong>spDataLarge</strong>) par un facteur 5 (Figure <a href="geometry-operations.html#fig:aggregate-example">5.15</a>).
-De plus, la valeur de la cellule de sortie doit correspondre à la moyenne des cellules d’entrée (notez que l’on pourrait également utiliser d’autres fonctions, telles que <code><a href="https://rdrr.io/pkg/terra/man/summarize-generics.html">median()</a></code>, <code><a href="https://rdrr.io/r/base/sum.html">sum()</a></code>, etc ):</p>
-<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dem</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/dem.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">dem_agg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">dem</span>, fact <span class="op">=</span> <span class="fl">5</span>, fun <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code></pre></div>
+De plus, la valeur de la cellule de sortie doit correspondre à la moyenne des cellules d’entrée (notez que l’on pourrait également utiliser d’autres fonctions, telles que <code><a href="https://rspatial.github.io/terra/reference/summarize-generics.html">median()</a></code>, <code><a href="https://rdrr.io/r/base/sum.html">sum()</a></code>, etc ):</p>
+<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dem</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/dem.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">dem_agg</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">dem</span>, fact <span class="op">=</span> <span class="fl">5</span>, fun <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span></code></pre></div>
+<pre><code>#&gt; -- tmap v3 code detected --
+#&gt; [v3-&gt;v4] tm_raster(): instead of 'style = "cont"', use 'col.scale = tm_scale_continuous()'
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:aggregate-example"></span>
 <img src="05-geometry-operations_files/figure-html/aggregate-example-1.png" alt="Raster original (gauche). Raster agrégé (droite)." width="100%"><p class="caption">
 FIGURE 5.15: Raster original (gauche). Raster agrégé (droite).
 </p>
 </div>
-<p>La fonction <code><a href="https://rdrr.io/pkg/terra/man/disaggregate.html">disagg()</a></code> augmente la résolution des objets matriciels, en fournissant deux méthodes pour assigner des valeurs aux cellules nouvellement créées : la méthode par défaut (<code>method = "near"</code>) donne simplement à toutes les cellules de sortie la valeur de la cellule d’entrée, et donc duplique les valeurs, ce qui conduit à une sortie “en bloc”.
+<p>La fonction <code><a href="https://rspatial.github.io/terra/reference/disaggregate.html">disagg()</a></code> augmente la résolution des objets matriciels, en fournissant deux méthodes pour assigner des valeurs aux cellules nouvellement créées : la méthode par défaut (<code>method = "near"</code>) donne simplement à toutes les cellules de sortie la valeur de la cellule d’entrée, et donc duplique les valeurs, ce qui conduit à une sortie “en bloc”.
 La méthode <code>bilinear</code> utilise les quatre centres de pixels les plus proches de l’image d’entrée (points de couleur saumon sur la figure <a href="geometry-operations.html#fig:bilinear">5.16</a>) pour calculer une moyenne pondérée par la distance (flèches sur la figure <a href="geometry-operations.html#fig:bilinear">5.16</a>.
 La valeur de la cellule de sortie est représentée par un carré dans le coin supérieur gauche de la figure <a href="geometry-operations.html#fig:bilinear">5.16</a>).</p>
-<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dem_disagg</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/disaggregate.html">disagg</a></span><span class="op">(</span><span class="va">dem_agg</span>, fact <span class="op">=</span> <span class="fl">5</span>, method <span class="op">=</span> <span class="st">"bilinear"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">dem</span>, <span class="va">dem_disagg</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dem_disagg</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/disaggregate.html">disagg</a></span><span class="op">(</span><span class="va">dem_agg</span>, fact <span class="op">=</span> <span class="fl">5</span>, method <span class="op">=</span> <span class="st">"bilinear"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/identical.html">identical</a></span><span class="op">(</span><span class="va">dem</span>, <span class="va">dem_disagg</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:bilinear"></span>
@@ -864,7 +752,7 @@ La valeur de la cellule de sortie est représentée par un carré dans le coin s
 FIGURE 5.16: La moyenne pondérée par la distance des quatre cellules d’entrée les plus proches détermine la sortie lors de l’utilisation de la méthode bilinéaire pour la désagrégation.
 </p>
 </div>
-<p>En comparant les valeurs de <code>dem</code> et <code>dem_disagg</code>, on constate qu’elles ne sont pas identiques (vous pouvez aussi utiliser <code><a href="https://rdrr.io/pkg/terra/man/compareGeom.html">compareGeom()</a></code> ou <code><a href="https://rdrr.io/pkg/terra/man/all.equal.html">all.equal()</a></code>).
+<p>En comparant les valeurs de <code>dem</code> et <code>dem_disagg</code>, on constate qu’elles ne sont pas identiques (vous pouvez aussi utiliser <code><a href="https://rspatial.github.io/terra/reference/compareGeom.html">compareGeom()</a></code> ou <code><a href="https://rspatial.github.io/terra/reference/all.equal.html">all.equal()</a></code>).
 Cependant, il ne fallait pas s’y attendre, puisque la désagrégation est une simple technique d’interpolation.
 Il est important de garder à l’esprit que la désagrégation permet d’obtenir une résolution plus fine ; les valeurs correspondantes, cependant, ne peuvent qu’êtres aussi précises que leur source de résolution initiale.</p>
 </div>
@@ -892,25 +780,48 @@ Cette méthode est rapide et convient généralement aux réechantillonnage de r
 </ul>
 <p>Les explications ci-dessus mettent en évidence le fait que seul le rééchantillonnage par <em>voisin le plus proche</em> est adapté aux rasters contenant des catégories, alors que toutes les méthodes peuvent être utilisées (avec des résultats différents) pour les matrices continues.
 En outre, chaque méthode successive nécessite plus de temps de traitement.</p>
-<p>Pour appliquer le rééchantillonnage, le package <strong>terra</strong> fournit une fonction <code><a href="https://rdrr.io/pkg/terra/man/resample.html">resample()</a></code>.
+<p>Pour appliquer le rééchantillonnage, le package <strong>terra</strong> fournit une fonction <code><a href="https://rspatial.github.io/terra/reference/resample.html">resample()</a></code>.
 Elle accepte un raster d’entrée (<code>x</code>), un raster avec des propriétés spatiales cibles (<code>y</code>), et une méthode de rééchantillonnage (<code>method</code>).</p>
-<p>Nous avons besoin d’un raster avec des propriétés spatiales cibles pour voir comment la fonction <code><a href="https://rdrr.io/pkg/terra/man/resample.html">resample()</a></code> fonctionne.
+<p>Nous avons besoin d’un raster avec des propriétés spatiales cibles pour voir comment la fonction <code><a href="https://rspatial.github.io/terra/reference/resample.html">resample()</a></code> fonctionne.
 Pour cet exemple, nous créons <code>target_rast</code>, mais vous utiliserez souvent un objet raster déjà existant.</p>
-<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">target_rast</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">794600</span>, xmax <span class="op">=</span> <span class="fl">798200</span>, </span>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">target_rast</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">794600</span>, xmax <span class="op">=</span> <span class="fl">798200</span>, </span>
 <span>                   ymin <span class="op">=</span> <span class="fl">8931800</span>, ymax <span class="op">=</span> <span class="fl">8935400</span>,</span>
 <span>                   resolution <span class="op">=</span> <span class="fl">150</span>, crs <span class="op">=</span> <span class="st">"EPSG:32717"</span><span class="op">)</span></span></code></pre></div>
 <p>Ensuite, nous devons fournir nos deux objets rasters comme deux premiers arguments et l’une des méthodes de rééchantillonnage décrites ci-dessus.</p>
-<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dem_resampl</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/resample.html">resample</a></span><span class="op">(</span><span class="va">dem</span>, y <span class="op">=</span> <span class="va">target_rast</span>, method <span class="op">=</span> <span class="st">"bilinear"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dem_resampl</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/resample.html">resample</a></span><span class="op">(</span><span class="va">dem</span>, y <span class="op">=</span> <span class="va">target_rast</span>, method <span class="op">=</span> <span class="st">"bilinear"</span><span class="op">)</span></span></code></pre></div>
 <p>La figure <a href="geometry-operations.html#fig:resampl">5.17</a> montre une comparaison de différentes méthodes de rééchantillonnage sur l’objet <code>dem</code>.</p>
+<pre><code>#&gt; -- tmap v3 code detected --
+#&gt; [v3-&gt;v4] tm_raster(): migrate the argument(s) related to the scale of the visual variable 'col', namely 'breaks' to 'col.scale = tm_scale(&lt;HERE&gt;)'
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [v3-&gt;v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#&gt; Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#&gt; 4.0. Please use 'tm_title()' instead.
+#&gt; [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+#&gt; [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+#&gt; [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:resampl"></span>
 <img src="05-geometry-operations_files/figure-html/resampl-1.png" alt="Comparaison visuelle du raster d'entré et de cinq méthodes de rééchantillonnage différentes." width="100%"><p class="caption">
 FIGURE 5.17: Comparaison visuelle du raster d’entré et de cinq méthodes de rééchantillonnage différentes.
 </p>
 </div>
-<p>La fonction <code><a href="https://rdrr.io/pkg/terra/man/resample.html">resample()</a></code> dispose également de quelques méthodes de rééchantillonnage supplémentaires, dont <code>sum</code>, <code>min</code>, <code>q1</code>, <code>med</code>, <code>q3</code>, <code>max</code>, <code>average</code>, <code>mode</code>, et <code>rms</code>.
+<p>La fonction <code><a href="https://rspatial.github.io/terra/reference/resample.html">resample()</a></code> dispose également de quelques méthodes de rééchantillonnage supplémentaires, dont <code>sum</code>, <code>min</code>, <code>q1</code>, <code>med</code>, <code>q3</code>, <code>max</code>, <code>average</code>, <code>mode</code>, et <code>rms</code>.
 Elles calculent toutes une statistique donnée en se basant sur les valeurs de toutes les cellules de la grille (hors <code>NA</code>).
 Par exemple, <code>sum</code> est utile lorsque chaque cellule de raster représente une variable étendue dans l’espace (par exemple, le nombre de personnes).
 En utilisant <code>sum</code>, le raster ré-échantillonné devrait avoir le même nombre total de personnes que le raster original.</p>
@@ -1031,7 +942,7 @@ Pouvez-vous remarquer des différences entre les résultats de ces différentes 
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2023-01-14.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2024-05-03.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

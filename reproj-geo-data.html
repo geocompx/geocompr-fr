@@ -8,7 +8,7 @@
 <title>Chapter 7 Reprojeté des données geographiques | Geocomputation avec R</title>
 <meta name="author" content="Robin Lovelace, Jakub Nowosad, Jannes Muenchow">
 <meta name="description" content="Prérequis Ce chapitre nécessite les paquets suivants : library(sf) library(terra) library(dplyr) library(spData) library(spDataLarge)  7.1 Introduction La section 2.4 a présenté les coordonnées...">
-<meta name="generator" content="bookdown 0.31 with bs4_book()">
+<meta name="generator" content="bookdown 0.39 with bs4_book()">
 <meta property="og:title" content="Chapter 7 Reprojeté des données geographiques | Geocomputation avec R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://r.geocompx.org/fr/reproj-geo-data.html">
@@ -20,14 +20,15 @@
 <meta name="twitter:image" content="https://r.geocompx.org/images/cover.png">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.4/font.css" rel="stylesheet">
-<link href="libs/Roboto_Mono-0.4.4/font.css" rel="stylesheet">
-<link href="libs/Montserrat-0.4.4/font.css" rel="stylesheet">
-<script src="libs/bs3compat-0.4.2/transition.js"></script><script src="libs/bs3compat-0.4.2/tabs.js"></script><script src="libs/bs3compat-0.4.2/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/htmlwidgets-1.6.0/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><link href="libs/Lato-0.4.9/font.css" rel="stylesheet">
+<link href="libs/Roboto_Mono-0.4.9/font.css" rel="stylesheet">
+<link href="libs/Montserrat-0.4.9/font.css" rel="stylesheet">
+<script src="libs/bs3compat-0.7.0/transition.js"></script><script src="libs/bs3compat-0.7.0/tabs.js"></script><script src="libs/bs3compat-0.7.0/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="libs/leaflet-1.3.1/leaflet.js"></script><link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="libs/proj4-2.6.2/proj4.min.js"></script><script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<script src="libs/leaflet-binding-2.2.2/leaflet.js"></script><link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
 <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -88,9 +89,9 @@
 <ul>
 <li>Ce chapitre nécessite les paquets suivants :</li>
 </ul>
-<!-- TODO: remove warning=FALSE in next chunk to suppress the following message: --><!-- #> Warning: multiple methods tables found for 'gridDistance' --><div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
+<!-- TODO: remove warning=FALSE in next chunk to suppress the following message: --><!-- #> Warning: multiple methods tables found for 'gridDistance' --><div class="sourceCode" id="cb234"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/">terra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/">spData</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Nowosad/spData">spDataLarge</a></span><span class="op">)</span></span></code></pre></div>
@@ -134,7 +135,7 @@ En outre, bien qu’il soit lisible par une machine, contrairement à la représ
 L’identifiant plus concis <code>4326</code> est compris par <strong>sf</strong>, mais <strong>nous recommandons la représentation plus explicite <code>AUTHORITY:CODE</code> pour éviter toute ambiguïté et fournir un contexte</strong>.</p>
 <p>La réponse la plus longue est qu’aucune des trois descriptions n’est suffisante et que davantage de détails sont nécessaires pour une manipulation et des transformations non ambiguës des CRS : en raison de la complexité de ces derniers, il n’est pas possible de capturer toutes les informations pertinentes les concernant dans des chaînes de caractères aussi courtes.
 Pour cette raison, l’Open Geospatial Consortium (OGC, qui a également développé la spécification des fonctionnalités simples que le paquet <strong>sf</strong> met en œuvre) a développé un format standard ouvert pour décrire les CRS, appelé WKT (<em>Well Known Text</em>).
-Ce format est détaillé dans un [document de plus de 100 pages] (<a href="https://portal.opengeospatial.org/files/18-010r7" class="uri">https://portal.opengeospatial.org/files/18-010r7</a>) qui “définit la structure et le contenu d’une mise en œuvre de chaîne de caractères du modèle abstrait de systèmes de référence de coordonnées décrit dans la norme ISO 19111:2019” <span class="citation">(<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019" role="doc-biblioref">Open Geospatial Consortium 2019</a>)</span>.
+Ce format est détaillé dans un [document de plus de 100 pages] (<a href="https://portal.opengeospatial.org/files/18-010r7" class="uri">https://portal.opengeospatial.org/files/18-010r7</a>) qui “définit la structure et le contenu d’une mise en œuvre de chaîne de caractères du modèle abstrait de systèmes de référence de coordonnées décrit dans la norme ISO 19111:2019” <span class="citation">(<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019">Open Geospatial Consortium 2019</a>)</span>.
 La représentation WKT du SRC WGS84, qui a l’<strong>identifiant</strong> <code>EPSG:4326</code> est la suivante :</p>
 <!-- Source: https://spatialreference.org/ref/epsg/4326/prettywkt/ -->
 <!-- ``` -->
@@ -149,7 +150,7 @@ La représentation WKT du SRC WGS84, qui a l’<strong>identifiant</strong> <cod
 <!--         AUTHORITY["EPSG","9122"]], -->
 <!--     AUTHORITY["EPSG","4326"]] -->
 <!-- ``` -->
-<div class="sourceCode" id="cb225"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb235"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="st">"EPSG:4326"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinate Reference System:</span></span>
 <span><span class="co">#&gt;   User input: EPSG:4326 </span></span>
@@ -182,16 +183,16 @@ La représentation WKT du SRC WGS84, qui a l’<strong>identifiant</strong> <cod
 <span><span class="co">#&gt;     ID["EPSG",4326]]</span></span></code></pre></div>
 <p>La sortie de la commande montre comment l’identifiant du CRS (également connu sous le nom d’identifiant de référence spatiale ou <a href="https://postgis.net/workshops/postgis-intro/projection.html">SRID</a>) fonctionne : il s’agit simplement d’une liste fournissant un identifiant unique associé à une représentation WKT plus complète du CRS.
 Cela soulève la question suivante : que se passe-t-il s’il y a un décalage entre l’identifiant et la représentation WKT plus longue?
-Sur ce point, <span class="citation">Open Geospatial Consortium (<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019" role="doc-biblioref">2019</a>)</span> est clair : la représentation WKT détaillée a la priorité sur l’<a href="https://docs.opengeospatial.org/is/18-010r7/18-010r7.html#37">identifiant</a> :</p>
+Sur ce point, <span class="citation">Open Geospatial Consortium (<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019">2019</a>)</span> est clair : la représentation WKT détaillée a la priorité sur l’<a href="https://docs.opengeospatial.org/is/18-010r7/18-010r7.html#37">identifiant</a> :</p>
 <blockquote>
 <p>Should any attributes or values given in the cited identifier be in conflict with attributes or values given explicitly in the WKT description, the WKT values shall prevail.</p>
 </blockquote>
 <p>La convention consistant à se référer aux identifiants des CRS sous la forme <code>AUTHORITY:CODE</code>, qui est également utilisée par les logiciels géographiques écrits dans d’autres <a href="https://jorisvandenbossche.github.io/blog/2020/02/11/geopandas-pyproj-crs/">langages</a>, permet de se référer à un large éventail de systèmes de coordonnées formellement définis.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
-Plusieurs autres façons de se référer à des CRS uniques peuvent être utilisées, avec cinq types d’identifiants (code EPSG, SRID PostGIS, SRID INTERNAL, ligne de caractères PROJ4 et WKT) acceptés par [QGIS] (&lt;a href="https://docs.qgis.org/3.16/en/docs/pyqgis_developer_cookbook/crs.html?highlight=srid" class="uri"&gt;https://docs.qgis.org/3.16/en/docs/pyqgis_developer_cookbook/crs.html?highlight=srid&lt;/a&gt;) et d’autres types d’identifiants tels qu’une variante plus explicite de l’identifiant &lt;code&gt;EPSG:4326&lt;/code&gt;, &lt;code&gt;urn:ogc:def:crs:EPSG::4326&lt;/code&gt;. &lt;span class="citation"&gt;(&lt;a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019" role="doc-biblioref"&gt;Open Geospatial Consortium 2019&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>26</sup></a>
+Plusieurs autres façons de se référer à des CRS uniques peuvent être utilisées, avec cinq types d’identifiants (code EPSG, SRID PostGIS, SRID INTERNAL, ligne de caractères PROJ4 et WKT) acceptés par [QGIS] (&lt;a href="https://docs.qgis.org/3.16/en/docs/pyqgis_developer_cookbook/crs.html?highlight=srid" class="uri"&gt;https://docs.qgis.org/3.16/en/docs/pyqgis_developer_cookbook/crs.html?highlight=srid&lt;/a&gt;) et d’autres types d’identifiants tels qu’une variante plus explicite de l’identifiant &lt;code&gt;EPSG:4326&lt;/code&gt;, &lt;code&gt;urn:ogc:def:crs:EPSG::4326&lt;/code&gt;. &lt;span class="citation"&gt;(&lt;a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019"&gt;Open Geospatial Consortium 2019&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>26</sup></a>
 L’autorité la plus couramment utilisée dans les identificateurs de CRS est <em>EPSG</em>, un acronyme de l’European Petroleum Survey Group qui a publié une liste normalisée de CRS (l’EPSG a été <a href="http://wiki.gis.com/wiki/index.php/European_Petroleum_Survey_Group">repris</a> par l’organisme pétrolier et gazier <a href="https://www.iogp.org/our-committees/geomatics/">Geomatics Committee of the International Association of Oil &amp; Gas Producers</a> en 2005).
 D’autres autorités peuvent être utilisées dans les identifiants CRS.
 <code>ESRI:54030</code>, par exemple, fait référence à la mise en œuvre de la projection Robinson par ESRI, qui a la chaîne WKT suivante (seules les 8 premières lignes sont affichées) :</p>
-<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="st">"ESRI:54030"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinate Reference System:</span></span>
 <span><span class="co">#&gt;   User input: ESRI:54030 </span></span>
@@ -208,8 +209,8 @@ Avant l’émergence des définitions de CRS WKT, &lt;em&gt;proj-string&lt;/em&g
 Ces représentations en chaîne de caractères, construites sur une forme clé=valeur (par exemple, &lt;code&gt;+proj=longlat +datum=WGS84 +no_defs&lt;/code&gt;), ont déjà été, ou devraient à l’avenir être, remplacées par des représentations WKT dans la plupart des cas.&lt;/p&gt;"><sup>27</sup></a></p>
 <p>Les versions récentes de PROJ (6+) permettent toujours l’utilisation de <em>proj-strings</em> pour définir des opérations de coordonnées, mais certaines clés de proj-string (<code>+nadgrids</code>, <code>+towgs84</code>, <code>+k</code>, <code>+init=epsg:</code>) ne sont plus supportées ou sont déconseillées.
 De plus, seuls trois systèmes de référence (WGS84, NAD83 et NAD27) peuvent être directement définis dans des<em>proj-string</em>.
-De plus longues explications sur l’évolution des définitions CRS et de la bibliothèque PROJ peuvent être trouvées dans <span class="citation">Bivand (<a href="reproj-geo-data.html#ref-bivand_progress_2021" role="doc-biblioref">2021</a>)</span>, le chapitre 2 de <span class="citation">Pebesma and Bivand (<a href="reproj-geo-data.html#ref-pebesma_spatial_2022" role="doc-biblioref">2022</a>)</span>, et le <a href="https://inbo.github.io/tutorials/tutorials/spatial_crs_coding/">billet de blog de Floris Vanderhaeghe</a>
-Comme indiqué dans la <a href="https://proj.org/development/reference/cpp/cpp_general.html">documentation PROJ</a>, il existe différentes versions du format WKT CRS, notamment WKT1 et deux variantes de WKT2, dont la dernière (WKT2, spécification 2018) correspond à la norme ISO 19111:2019 <span class="citation">(<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019" role="doc-biblioref">Open Geospatial Consortium 2019</a>)</span>.</p>
+De plus longues explications sur l’évolution des définitions CRS et de la bibliothèque PROJ peuvent être trouvées dans <span class="citation">Bivand (<a href="reproj-geo-data.html#ref-bivand_progress_2021">2021</a>)</span>, le chapitre 2 de <span class="citation">Pebesma and Bivand (<a href="reproj-geo-data.html#ref-pebesma_spatial_2022">2022</a>)</span>, et le <a href="https://inbo.github.io/tutorials/tutorials/spatial_crs_coding/">billet de blog de Floris Vanderhaeghe</a>
+Comme indiqué dans la <a href="https://proj.org/development/reference/cpp/cpp_general.html">documentation PROJ</a>, il existe différentes versions du format WKT CRS, notamment WKT1 et deux variantes de WKT2, dont la dernière (WKT2, spécification 2018) correspond à la norme ISO 19111:2019 <span class="citation">(<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019">Open Geospatial Consortium 2019</a>)</span>.</p>
 </div>
 <div id="crs-setting" class="section level2" number="7.3">
 <h2>
@@ -217,12 +218,12 @@ Comme indiqué dans la <a href="https://proj.org/development/reference/cpp/cpp_g
 </h2>
 <p>Voyons comment les CRS sont stockés dans les objets spatiaux de R et comment ils peuvent être interrogés et définis.
 Tout d’abord, nous allons voir comment obtenir et définir les CRS dans les objets de données géographiques <strong>vectoriels</strong>, en commençant par l’exemple suivant :</p>
-<div class="sourceCode" id="cb227"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb237"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vector_filepath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shapes/world.gpkg"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span></span>
 <span><span class="va">new_vector</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="va">vector_filepath</span><span class="op">)</span></span></code></pre></div>
 <p>Notre nouvel objet, <code>new_vector</code>, est un tableau de données de classe <code>sf</code> qui représente les pays du monde entier (voir la page d’aide <code><a href="https://jakubnowosad.com/spData/reference/world.html">?spData::world</a></code> pour plus de détails).
 Le CRS peut être récupéré avec la fonction <strong>sf</strong> <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code>.</p>
-<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">new_vector</span><span class="op">)</span> <span class="co"># obtenir le CRS</span></span>
 <span><span class="co">#&gt; Coordinate Reference System:</span></span>
 <span><span class="co">#&gt;   User input: WGS 84 </span></span>
@@ -252,14 +253,14 @@ Par exemple, essayez d’exécuter :</p>
 <code>st_crs(new_vector)$proj4string</code> extrait la représentation de la chaîne de projet.</li>
 </ul>
 <p>Dans les cas où un système de référence de coordonnées (CRS) est manquant ou le mauvais CRS est défini, la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs()</a></code> peut être utilisée (dans ce cas, la chaîne WKT reste inchangée car le CRS était déjà défini correctement lors de la lecture du fichier) :</p>
-<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb239"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_vector</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs</a></span><span class="op">(</span><span class="va">new_vector</span>, <span class="st">"EPSG:4326"</span><span class="op">)</span> <span class="co"># set CRS</span></span></code></pre></div>
 <p>L’obtention et le paramétrage des CRS fonctionnent de manière similaire pour les objets de données géographiques <strong>raster</strong>.
-La fonction <code><a href="https://rdrr.io/pkg/terra/man/crs.html">crs()</a></code> du paquet <code>terra</code> accède aux informations CRS d’un objet <code>SpatRaster</code> (notez l’utilisation de la fonction <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> pour les imprimer joliment) :</p>
-<div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
+La fonction <code><a href="https://rspatial.github.io/terra/reference/crs.html">crs()</a></code> du paquet <code>terra</code> accède aux informations CRS d’un objet <code>SpatRaster</code> (notez l’utilisation de la fonction <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> pour les imprimer joliment) :</p>
+<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raster_filepath</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/srtm.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span></span>
-<span><span class="va">my_rast</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="va">raster_filepath</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">my_rast</span><span class="op">)</span><span class="op">)</span> <span class="co"># obtenir le CRS</span></span>
+<span><span class="va">my_rast</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span><span class="va">raster_filepath</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/crs.html">crs</a></span><span class="op">(</span><span class="va">my_rast</span><span class="op">)</span><span class="op">)</span> <span class="co"># obtenir le CRS</span></span>
 <span><span class="co">#&gt; GEOGCRS["WGS 84",</span></span>
 <span><span class="co">#&gt;     DATUM["World Geodetic System 1984",</span></span>
 <span><span class="co">#&gt;         ELLIPSOID["WGS 84",6378137,298.257223563,</span></span>
@@ -275,15 +276,15 @@ La fonction <code><a href="https://rdrr.io/pkg/terra/man/crs.html">crs()</a></co
 <span><span class="co">#&gt;             ANGLEUNIT["degree",0.0174532925199433]],</span></span>
 <span><span class="co">#&gt;     ID["EPSG",4326]]</span></span></code></pre></div>
 <p>La sortie est la représentation standard en WKT du CRS.
-La même fonction, <code><a href="https://rdrr.io/pkg/terra/man/crs.html">crs()</a></code>, peut également être utilisée pour définir un CRS pour les objets raster.</p>
-<div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">my_rast</span><span class="op">)</span> <span class="op">=</span> <span class="st">"EPSG:26912"</span> <span class="co"># définir le CRS</span></span></code></pre></div>
+La même fonction, <code><a href="https://rspatial.github.io/terra/reference/crs.html">crs()</a></code>, peut également être utilisée pour définir un CRS pour les objets raster.</p>
+<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/crs.html">crs</a></span><span class="op">(</span><span class="va">my_rast</span><span class="op">)</span> <span class="op">=</span> <span class="st">"EPSG:26912"</span> <span class="co"># définir le CRS</span></span></code></pre></div>
 <p>Ici, nous pouvons utiliser soit l’identifiant (recommandé dans la plupart des cas) ou la représentation WKT complète.
-Des méthodes alternatives pour définir les <code>crs</code> incluent les chaînes de caractères <em>proj-string</em> ou les CRS extraits à partir d’autres objets existants avec <code><a href="https://rdrr.io/pkg/terra/man/crs.html">crs()</a></code>. Ces approches peuvent être moins pérennes.</p>
-<p>Il est important de noter que les fonctions <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code> et <code><a href="https://rdrr.io/pkg/terra/man/crs.html">crs()</a></code> ne modifient pas les valeurs des coordonnées ou les géométries.
+Des méthodes alternatives pour définir les <code>crs</code> incluent les chaînes de caractères <em>proj-string</em> ou les CRS extraits à partir d’autres objets existants avec <code><a href="https://rspatial.github.io/terra/reference/crs.html">crs()</a></code>. Ces approches peuvent être moins pérennes.</p>
+<p>Il est important de noter que les fonctions <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code> et <code><a href="https://rspatial.github.io/terra/reference/crs.html">crs()</a></code> ne modifient pas les valeurs des coordonnées ou les géométries.
 Leur rôle est seulement de définir une information des métadonnées sur l’objet CRS.</p>
 <p>Dans certains cas, le CRS d’un objet géographique est inconnu, comme c’est le cas dans le jeu de données <code>london</code> créé dans l’extrait de code ci-dessous, à partir de l’exemple de Londres introduit dans la section <a href="#vector-data"><strong>??</strong></a> :</p>
-<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">london</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>lon <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>, lat <span class="op">=</span> <span class="fl">51.5</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_is_longlat.html">st_is_longlat</a></span><span class="op">(</span><span class="va">london</span><span class="op">)</span></span>
@@ -297,7 +298,7 @@ Ce comportement est logique étant donné la diversité des CRS disponibles, mai
 <li>En passant un CRS à l’argument <code>crs</code> dans les fonctions <strong>sf</strong> qui créent des objets géométriques comme <code>st_as_sf(... crs = "EPSG:4326")</code>. Le même argument peut également être utilisé pour définir le CRS lors de la création de jeux de données rasters (par exemple, <code>rast(crs = "EPSG:4326")</code>).</li>
 <li>Avec la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs()</a></code>, qui retourne une version des données avec le nouveau CRS, une approche qui est démontrée dans le code suivant</li>
 </ul>
-<div class="sourceCode" id="cb233"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">london_geo</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_set_crs</a></span><span class="op">(</span><span class="va">london</span>, <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_is_longlat.html">st_is_longlat</a></span><span class="op">(</span><span class="va">london_geo</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
@@ -320,9 +321,9 @@ FIGURE 7.1: Comportement des opérations de géométrie dans le paquet sf en fon
 </div>
 <p>Pour démontrer l’importance des CRS, nous allons créer un tampon de 100 km autour de l’objet <code>london</code> de la section précédente.
 Nous allons également créer un tampon délibérément défectueux avec une “distance” de 1 degré, ce qui est à peu près équivalent à 100 km (1 degré est environ 111 km à l’équateur).
-Avant de plonger dans le code, il peut être utile de jeter un coup d’œil à la figure <a href="reproj-geo-data.html#fig:crs-buf">7.2</a> pour avoir une idée des résultats que vous devriez être en mesure de reproduire en suivant les ligne de code ci-dessous.</p>
+Avant de plonger dans le code, il peut être utile de jeter un coup d’œil à la figure <a href="#fig:"><strong>??</strong></a> pour avoir une idée des résultats que vous devriez être en mesure de reproduire en suivant les ligne de code ci-dessous.</p>
 <p>La première étape consiste à créer trois tampons autour des objets <code>london</code> et <code>london_geo</code> créés ci-dessus avec des distances de 1 degré et 100 km (ou 100 000 m, ce qui peut être exprimé par <code>1e5</code> en notation scientifique) à partir du centre de Londres:</p>
-<div class="sourceCode" id="cb234"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">london_buff_no_crs</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">london</span>, dist <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>   <span class="co"># incorrect: pas de CRS</span></span>
 <span><span class="va">london_buff_s2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">london_geo</span>, dist <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span> <span class="co"># utilisation de s2 par défaut</span></span>
 <span><span class="va">london_buff_s2_100_cells</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">london_geo</span>, dist <span class="op">=</span> <span class="fl">1e5</span>, max_cells <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> </span></code></pre></div>
@@ -330,7 +331,7 @@ Avant de plonger dans le code, il peut être utile de jeter un coup d’œil à 
 Dans la deuxième ligne, <strong>sf</strong> utilise silencieusement le moteur de géométrie sphérique S2, introduit dans le chapitre <a href="spatial-class.html#spatial-class">2</a>, pour calculer l’étendue du tampon en utilisant la valeur par défaut de <code>max_cells = 1000</code> — fixée à <code>100</code> dans la troisième ligne — avec les conséquences abordés plus loin (voir <code><a href="https://r-spatial.github.io/s2/reference/s2_boundary.html">?s2::s2_buffer_cells</a></code> pour les détails).
 Pour mettre en évidence l’impact de l’utilisation par <strong>sf</strong> du moteur géométrique S2 pour les systèmes de coordonnées (géographiques) non projetés, nous allons le désactiver temporairement avec la commande <code><a href="https://r-spatial.github.io/sf/reference/s2.html">sf_use_s2()</a></code> (qui est activée, <code>TRUE</code>, par défaut), dans le morceau de code ci-dessous.
 Comme <code>london_buff_no_crs</code>, le nouvel objet <code>london_geo</code> est une abomination géographique : il a des unités de degrés, ce qui n’a aucun sens dans la grande majorité des cas :</p>
-<div class="sourceCode" id="cb235"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/s2.html">sf_use_s2</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Spherical geometry (s2) switched off</span></span>
 <span><span class="va">london_buff_lonlat</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">london_geo</span>, dist <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># résultat incorrect </span></span>
@@ -347,7 +348,7 @@ La distance entre deux lignes de longitude, appelées méridiens, est d’enviro
 Cette distance se réduit à zéro aux pôles.
 À la latitude de Londres, par exemple, les méridiens sont distants de moins de 70 km (défi : exécutez le code qui vérifie cela).
 <!-- `geosphere::distGeo(c(0, 51.5), c(1, 51.5))` -->
-Les lignes de latitude, en revanche, sont équidistantes les unes des autres quelle que soit la latitude : elles sont toujours distantes d’environ 111 km, y compris à l’équateur et près des pôles (voir les figures <a href="reproj-geo-data.html#fig:crs-buf">7.2</a> à <a href="reproj-geo-data.html#fig:wintriproj">7.4</a>
+Les lignes de latitude, en revanche, sont équidistantes les unes des autres quelle que soit la latitude : elles sont toujours distantes d’environ 111 km, y compris à l’équateur et près des pôles (voir les figures <a href="#fig:"><strong>??</strong></a> à <a href="reproj-geo-data.html#fig:wintriproj">7.4</a>
 </div>
 <p>N’interprétez pas l’avertissement concernant le CRS géographique (<code>longitude/latitude</code>) comme “le CRS ne devrait pas être défini” : il devrait presque toujours l’être!
 Il doit être mieux compris comme une suggestion de <em>reprojeter</em> les données sur un CRS projeté.
@@ -356,12 +357,12 @@ Mais pour les opérations impliquant des distances, comme la mise en place de ta
 <!--toDo:rl-->
 <!-- jn: idea -- maybe it would be add a table somewhere in the book showing which operations are impacted by s2? -->
 Les lignes de code ci-dessous indique comme le faire :</p>
-<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">london_proj</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">530000</span>, y <span class="op">=</span> <span class="fl">180000</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, crs <span class="op">=</span> <span class="st">"EPSG:27700"</span><span class="op">)</span></span></code></pre></div>
 <p>Le résultat est un nouvel objet identique à <code>london</code>, mais reprojeté sur un CRS approprié (le British National Grid, ayant un code EPSG de 27700 dans ce cas) qui a des unités de mètres.
 Nous pouvons vérifier que le CRS a changé en utilisant <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code> comme suit (une partie de la sortie a été remplacée par <code>...</code>) :</p>
-<div class="sourceCode" id="cb237"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">london_proj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinate Reference System:</span></span>
 <span><span class="co">#&gt;   User input: EPSG:27700 </span></span>
@@ -379,9 +380,14 @@ D’autres ressources intéressantes sur les projections sont spatialreference.o
 Le fait que les unités du CRS, décrites dans le champ LENGTHUNIT, soient des mètres (plutôt que des degrés) nous indique qu’il s’agit d’un CRS projeté : <code>st_is_longlat(london_proj)</code> renvoie maintenant <code>FALSE</code> et les opérations de géométrie sur <code>london_proj</code> fonctionneront sans avertissement.
 Les opérations de création de tampon sur le <code>london_proj</code> utiliseront GEOS et les résultats seront retournés avec les bonnes unités de distance.
 La ligne de code suivante crée un tampon autour des données <em>projetées</em> d’exactement 100 km :</p>
-<div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">london_buff_projected</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer</a></span><span class="op">(</span><span class="va">london_proj</span>, <span class="fl">1e5</span><span class="op">)</span></span></code></pre></div>
-<p>Les géométries des trois objets <code>london_buff*</code> qui <em>ont</em> un CRS spécifié créé ci-dessus (<code>london_buff_s2</code>, <code>london_buff_lonlat</code> et <code>london_buff_projected</code>) créés dans les extraits de code précédents sont illustrées dans la Figure <a href="reproj-geo-data.html#fig:crs-buf">7.2</a>.</p>
+<p>Les géométries des trois objets <code>london_buff*</code> qui <em>ont</em> un CRS spécifié créé ci-dessus (<code>london_buff_s2</code>, <code>london_buff_lonlat</code> et <code>london_buff_projected</code>) créés dans les extraits de code précédents sont illustrées dans la Figure <a href="#fig:"><strong>??</strong></a>.</p>
+<pre><code>#&gt; 
+#&gt; Attachement du package : 'tmap'
+#&gt; L'objet suivant est masqué depuis 'package:datasets':
+#&gt; 
+#&gt;     rivers</code></pre>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:crs-buf"></span>
 <img src="07-reproj_files/figure-html/crs-buf-1.png" alt="Tampons autour de Londres montrant les résultats créés avec le moteur de géométrie sphérique S2 sur des données long/lat (à gauche), des données projetées (au milieu) et des données long/lat sans utiliser la géométrie sphérique (à droite). Le graphique de gauche illustre le résultat des tampons sur des données non projetées avec sf, qui appelle le moteur de géométrie sphérique S2 de Google par défaut avec des cellules maximales fixées à 1000 (ligne fine). La ligne épaisse en 'bloc' illustre le résultat de la même opération avec des cellules maximales fixées à 100." width="100%"><p class="caption">
@@ -412,7 +418,7 @@ Dans les applications réelles, cependant, les CRS sont généralement définis 
 Dans de nombreux projets, la principale tâche liée aux CRS consiste à <em>transformer</em> les objets, d’un CRS à un autre.
 Mais quand les données doivent-elles être transformées ?
 Et dans quel CRS ?
-Il n’existe pas de réponses parfaites à ces questions et le choix d’un CRS implique toujours des compromis <span class="citation">(<a href="reproj-geo-data.html#ref-maling_coordinate_1992" role="doc-biblioref">Maling 1992</a>)</span>.
+Il n’existe pas de réponses parfaites à ces questions et le choix d’un CRS implique toujours des compromis <span class="citation">(<a href="reproj-geo-data.html#ref-maling_coordinate_1992">Maling 1992</a>)</span>.
 Cependant, certains principes généraux présentés dans cette section peuvent vous aider à prendre une décision.</p>
 <p>Tout d’abord, il convient de se demander <em>quand transformer</em>.
 <!--toDo:rl-->
@@ -420,7 +426,7 @@ Cependant, certains principes généraux présentés dans cette section peuvent 
 Dans certains cas, la transformation en un CRS projeté est essentielle, notamment lors de l’utilisation de fonctions géométriques telles que <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_buffer()</a></code>, comme l’a montré la figure <a href="reproj-geo-data.html#fig:crs-buf">7.2</a>.
 À l’inverse, la publication de données en ligne avec le package <strong>leaflet</strong> peut nécessiter un CRS géographique.
 Un autre cas est celui où deux objets avec des CRS différents doivent être comparés ou combinés, comme on peut le voir lorsque l’on essaie de trouver la distance entre deux objets avec des CRS différents :</p>
-<div class="sourceCode" id="cb239"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">london_geo</span>, <span class="va">london_proj</span><span class="op">)</span></span>
 <span><span class="co"># &gt; Error: st_crs(x) == st_crs(y) is not TRUE</span></span></code></pre></div>
 <p>Pour rendre les objets <code>london</code> et <code>london_proj</code> géographiquement comparables, l’un d’entre eux doit être transformé dans le CRS de l’autre.
@@ -435,7 +441,7 @@ C’est le sujet de la section <a href="reproj-geo-data.html#reproj-vec-geom">7.
 </h2>
 <p>
 La question de savoir <em>quel CRS</em> est délicate, et il y a rarement une “bonne” réponse :
-“Il n’existe pas de projections polyvalentes, toutes impliquent une distorsion lorsqu’elles sont éloignées du centre du cadre spécifié” <span class="citation">(<a href="reproj-geo-data.html#ref-bivand_applied_2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span>.
+“Il n’existe pas de projections polyvalentes, toutes impliquent une distorsion lorsqu’elles sont éloignées du centre du cadre spécifié” <span class="citation">(<a href="reproj-geo-data.html#ref-bivand_applied_2013">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span>.
 De plus, vous ne devez pas vous attacher à une seule projection pour toutes les tâches.
 Il est possible d’utiliser une projection pour une partie de l’analyse, une autre projection pour une autre partie, et même une autre pour la visualisation.
 Essayez toujours de choisir le CRS qui sert le mieux votre objectif.</p>
@@ -445,7 +451,7 @@ WGS84 est le CRS le plus répandu dans le monde, il est donc utile de connaître
 Ce “chiffre magique” peut être utilisé pour convertir des objets avec des CRS projetés inhabituels en quelque chose de largement compréhensible.</p>
 <p>Qu’en est-il lorsqu’un <strong>CRS projeté</strong> est nécessaire ?
 Dans certains cas, ce n’est pas quelque chose que nous sommes libres de décider :
-” souvent le choix de la projection est fait par une agence publique de cartographie ” <span class="citation">(<a href="reproj-geo-data.html#ref-bivand_applied_2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span>.
+” souvent le choix de la projection est fait par une agence publique de cartographie ” <span class="citation">(<a href="reproj-geo-data.html#ref-bivand_applied_2013">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span>.
 Cela signifie que lorsque l’on travaille avec des sources de données locales, il est probablement préférable de travailler avec le CRS dans lequel les données ont été fournies, afin de garantir la compatibilité, même si le CRS officiel n’est pas le plus précis.
 L’exemple de Londres était simple car (a) le British National Grid (avec son code EPSG 27700 associé) est bien connu et (b) le jeu de données original (<code>london</code>) avait déjà ce CRS.</p>
 <p>
@@ -456,7 +462,7 @@ Par conséquent, nous recommandons d’utiliser l’UTM uniquement lorsque votre
 <p>Presque tous les endroits de la Terre ont un code UTM, tel que “60H” qui fait référence au nord de la Nouvelle-Zélande où R a été inventé.
 Les codes UTM EPSG vont séquentiellement de 32601 à 32660 pour les lieux de l’hémisphère nord et de 32701 à 32760 pour les lieux de l’hémisphère sud.</p>
 <p>Pour montrer comment le système fonctionne, créons une fonction, <code>lonlat2UTM()</code> pour calculer le code EPSG associé à n’importe quel point de la planète comme <a href="https://stackoverflow.com/a/9188972/">suit</a> :</p>
-<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb251"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lonlat2UTM</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">lonlat</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">utm</span> <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="op">(</span><span class="va">lonlat</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="fl">180</span><span class="op">)</span> <span class="op">/</span> <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Arithmetic.html">%%</a></span> <span class="fl">60</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="va">lonlat</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
@@ -466,7 +472,7 @@ Les codes UTM EPSG vont séquentiellement de 32601 à 32660 pour les lieux de l�
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>La commande suivante utilise cette fonction pour identifier la zone UTM et le code EPSG associé pour Auckland et Londres :</p>
-<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">lonlat2UTM</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">174.7</span>, <span class="op">-</span><span class="fl">36.9</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 32760</span></span>
 <span><span class="fu">lonlat2UTM</span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">london</span><span class="op">)</span><span class="op">)</span></span>
@@ -511,7 +517,7 @@ Enfin, la dernière section montre comment créer des projections cartographique
 Le chapitre <a href="spatial-class.html#spatial-class">2</a> a montré comment les géométries vectorielles sont constituées de points, et comment les points constituent la base d’objets plus complexes tels que les lignes et les polygones.
 Reprojeter des vecteurs consiste donc à transformer les coordonnées de ces points, qui forment les sommets des lignes et des polygones.</p>
 <p>La section <a href="reproj-geo-data.html#whenproject">7.5</a> contient un exemple dans lequel au moins un objet <code>sf</code> doit être transformé en un objet équivalent avec un CRS différent pour calculer la distance entre deux objets.</p>
-<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">london2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">london_geo</span>, <span class="st">"EPSG:27700"</span><span class="op">)</span></span></code></pre></div>
 <p>Maintenant qu’une version transformée de <code>london</code> a été créée, en utilisant la fonction <strong>sf</strong> <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code>, la distance entre les deux représentations de Londres peut être obtenue.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 Une alternative à &lt;code&gt;st_transform()&lt;/code&gt; est &lt;code&gt;st_transform_proj()&lt;/code&gt; de la &lt;strong&gt;lwgeom&lt;/strong&gt;, qui permet des transformations qui contournent GDAL et peut utiliser des projections non supportées par GDAL.
@@ -521,15 +527,15 @@ Il est également surprenant que le résultat soit fourni dans une matrice avec 
 C’est parce que <code><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance()</a></code> peut fournir des distances entre de nombreuses caractéristiques et parce que le CRS a des unités de mètres.
 Utilisez <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> pour convertir le résultat en un nombre sans unité.
 ]</p>
-<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">london2</span>, <span class="va">london_proj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Units: [m]</span></span>
 <span><span class="co">#&gt;      [,1]</span></span>
-<span><span class="co">#&gt; [1,] 2018</span></span></code></pre></div>
+<span><span class="co">#&gt; [1,] 2016</span></span></code></pre></div>
 <p>Les fonctions d’interrogation et de reprojection des CRS sont présentées ci-dessous en référence à <code>cycle_hire_osm</code>, un objet <code>sf</code> de <strong>spData</strong> qui représente les “stations d’accueil” où l’on peut louer des vélos à Londres.
 Les CRS des objets <code>sf</code> peuvent être interrogés — et comme nous l’avons appris dans la section <a href="reproj-geo-data.html#reproj-intro">7.1</a> définis — avec la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code>.
 La sortie est imprimée sous forme de plusieurs lignes de texte contenant des informations sur le système de coordonnées :</p>
-<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">cycle_hire_osm</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinate Reference System:</span></span>
 <span><span class="co">#&gt;   User input: EPSG:4326 </span></span>
@@ -545,14 +551,14 @@ La sortie est imprimée sous forme de plusieurs lignes de texte contenant des in
 <span><span class="co">#&gt;         AUTHORITY["EPSG","9122"]],</span></span>
 <span><span class="co">#&gt;     AUTHORITY["EPSG","4326"]]</span></span></code></pre></div>
 <p>Comme nous l’avons vu dans la section <a href="reproj-geo-data.html#crs-setting">7.3</a>, les principaux composants du CRS, <code>User input</code> et <code>wkt</code>, sont imprimés comme une seule entité, la sortie de <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs()</a></code> est en fait une liste nommée de la classe <code>crs</code> avec deux éléments, des chaînes de caractères uniques nommées <code>input</code> et <code>wkt</code>, comme le montre la sortie du morceau de code suivant :</p>
-<div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">crs_lnd</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">london_geo</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">crs_lnd</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "crs"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">crs_lnd</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html">names</a></span><span class="op">(</span><span class="va">crs_lnd</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "input" "wkt"</span></span></code></pre></div>
 <p>Des éléments supplémentaires peuvent être récupérés avec l’opérateur <code>$</code>, notamment <code>Name</code>, <code>proj4string</code> et <code>epsg</code> (voir <a href="https://r-spatial.github.io/sf/reference/st_crs.html"><code>?st_crs</code></a> et le tutoriel CRS et transformation sur le <a href="https://gdal.org/tutorials/osr_api_tut.html#querying-coordinate-reference-system">site web de GDAL</a> pour plus de détails) :</p>
-<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">crs_lnd</span><span class="op">$</span><span class="va">Name</span></span>
 <span><span class="co">#&gt; [1] "WGS 84"</span></span>
 <span><span class="va">crs_lnd</span><span class="op">$</span><span class="va">proj4string</span></span>
@@ -563,7 +569,7 @@ La sortie est imprimée sous forme de plusieurs lignes de texte contenant des in
 Cela signifie que les sorties de la séquence de code précédente sont des requêtes provenant de la représentation <code>wkt</code> fournie par PROJ, plutôt que des attributs inhérents à l’objet et à son CRS.</p>
 <p>Les deux éléments <code>wkt</code> et <code>User Input</code> du CRS sont modifiés lorsque le CRS de l’objet est transformé.
 Dans le morceau de code ci-dessous, nous créons une nouvelle version de <code>cycle_hire_osm</code> avec un CRS projeté (seules les 4 premières lignes de la sortie CRS sont montrées par souci de concision) :</p>
-<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cycle_hire_osm_projected</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">cycle_hire_osm</span>, <span class="st">"EPSG:27700"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">cycle_hire_osm_projected</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Coordinate Reference System:</span></span>
@@ -574,7 +580,7 @@ Dans le morceau de code ci-dessous, nous créons une nouvelle version de <code>c
 <p>L’objet résultant a un nouveau CRS avec un code EPSG 27700.
 Mais comment trouver plus de détails sur ce code EPSG, ou sur n’importe quel code ?
 L’une des possibilités est de le rechercher en ligne,</p>
-<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">crs_lnd_new</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="st">"EPSG:27700"</span><span class="op">)</span></span>
 <span><span class="va">crs_lnd_new</span><span class="op">$</span><span class="va">Name</span></span>
 <span><span class="co">#&gt; [1] "OSGB36 / British National Grid"</span></span>
@@ -610,20 +616,20 @@ Au lieu de rééchantillonner toutes les valeurs, elle laisse toutes les valeurs
 Par exemple, elle peut convertir la grille d’entrée (une grille régulière) en une grille curviligne.
 L’opération de transformation peut être effectuée dans R en utilisant [le paquet <strong>stars</strong>] (<a href="https://r-spatial.github.io/stars/articles/stars5.html" class="uri">https://r-spatial.github.io/stars/articles/stars5.html</a>).
 </div>
-<p>Le processus de reprojection matricielle est effectué avec <code><a href="https://rdrr.io/pkg/terra/man/project.html">project()</a></code> du paquetage <strong>terra</strong>.
-Comme la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code> démontrée dans la section précédente, <code><a href="https://rdrr.io/pkg/terra/man/project.html">project()</a></code> prend un objet géographique (un jeu de données raster dans ce cas) et une représentation CRS comme second argument.
+<p>Le processus de reprojection matricielle est effectué avec <code><a href="https://rspatial.github.io/terra/reference/project.html">project()</a></code> du paquetage <strong>terra</strong>.
+Comme la fonction <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code> démontrée dans la section précédente, <code><a href="https://rspatial.github.io/terra/reference/project.html">project()</a></code> prend un objet géographique (un jeu de données raster dans ce cas) et une représentation CRS comme second argument.
 Le second argument peut aussi être un raster existant avec un CRS différent.</p>
 <p>Examinons deux exemples de transformation de raster : l’un sur des données catégorielles et un autre sur des données continues.
 Les données d’occupation du sol sont généralement représentées par des cartes catégorielles.
 Le fichier <code>nlcd.tif</code> fournit des informations pour une petite zone de l’Utah, aux Etats-Unis, obtenues à partir de <a href="https://www.mrlc.gov/data/nlcd-2011-land-cover-conus">National Land Cover Database 2011</a> dans le NAD83 / UTM zone 12N CRS, comme le montre la sortie du code ci-dessous (seulement la première ligne de la sortie est affichée) :</p>
-<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cat_raster</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/nlcd.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">cat_raster</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cat_raster</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/nlcd.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/crs.html">crs</a></span><span class="op">(</span><span class="va">cat_raster</span><span class="op">)</span></span>
 <span><span class="co">#&gt; PROJCRS["NAD83 / UTM zone 12N",</span></span>
 <span><span class="co">#&gt; ...</span></span></code></pre></div>
 <p>Dans cette région, 8 classes d’occupation du sol ont été distinguées (une liste complète des classes d’occupation du sol de NLCD2011 peut être consultée à l’adresse suivante <a href="https://www.mrlc.gov/data/legends/national-land-cover-database-2011-nlcd2011-legend">mrlc.gov</a>):</p>
-<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/unique.html">unique</a></span><span class="op">(</span><span class="va">cat_raster</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/unique.html">unique</a></span><span class="op">(</span><span class="va">cat_raster</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       levels</span></span>
 <span><span class="co">#&gt; 1      Water</span></span>
 <span><span class="co">#&gt; 2  Developed</span></span>
@@ -637,9 +643,9 @@ Le fichier <code>nlcd.tif</code> fournit des informations pour une petite zone d
 Cela peut être fait en utilisant la méthode du plus proche voisin (<code>near</code>), qui fixe chaque nouvelle valeur de cellule à la valeur de la cellule la plus proche (via son centre) du raster d’entrée.
 Un exemple est la reprojection de <code>cat_raster</code> en WGS84, un CRS géographique bien adapté à la cartographie web.
 La première étape est d’obtenir la définition PROJ de ce CRS, ce qui peut être fait, par exemple en utilisant la page web <a href="http://spatialreference.org/ref/epsg/wgs-84/">http://spatialreference.org</a>.
-La dernière étape consiste à reprojeter le raster avec la fonction <code><a href="https://rdrr.io/pkg/terra/man/project.html">project()</a></code> qui, dans le cas de données catégorielles, utilise la méthode du plus proche voisin (<code>near</code>) :</p>
-<div class="sourceCode" id="cb251"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cat_raster_wgs84</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/project.html">project</a></span><span class="op">(</span><span class="va">cat_raster</span>, <span class="st">"EPSG:4326"</span>, method <span class="op">=</span> <span class="st">"near"</span><span class="op">)</span></span></code></pre></div>
+La dernière étape consiste à reprojeter le raster avec la fonction <code><a href="https://rspatial.github.io/terra/reference/project.html">project()</a></code> qui, dans le cas de données catégorielles, utilise la méthode du plus proche voisin (<code>near</code>) :</p>
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cat_raster_wgs84</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/project.html">project</a></span><span class="op">(</span><span class="va">cat_raster</span>, <span class="st">"EPSG:4326"</span>, method <span class="op">=</span> <span class="st">"near"</span><span class="op">)</span></span></code></pre></div>
 <p>De nombreuses propriétés du nouvel objet diffèrent de l’ancien, notamment le nombre de colonnes et de lignes (et donc le nombre de cellules), la résolution (transformée de mètres en degrés) et l’étendue, comme l’illustre le tableau <a href="reproj-geo-data.html#tab:catraster">7.1</a> (notez que le nombre de catégories passe de 8 à 9 en raison de l’ajout des valeurs <code>NA</code>, et non parce qu’une nouvelle catégorie a été créée — les classes d’occupation du sol sont préservées).</p>
 <div class="inline-table"><table class="table table-sm">
 <caption>
@@ -673,9 +679,9 @@ La dernière étape consiste à reprojeter le raster avec la fonction <code><a h
 </table></div>
 <p>La reprojection de rasters avec des valeurs numérique (avec des valeurs <code>décimales</code> ou dans ce cas <code>entières</code>) suit une procédure presque identique.
 Ceci est démontré ci-dessous avec <code>srtm.tif</code> dans <strong>spDataLarge</strong> de <a href="https://www2.jpl.nasa.gov/srtm/">la Shuttle Radar Topography Mission (SRTM)</a>, qui représente la hauteur en mètres au-dessus du niveau de la mer (élévation) avec le WGS84 CRS :</p>
-<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">con_raster</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/srtm.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">con_raster</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">con_raster</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"raster/srtm.tif"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/crs.html">crs</a></span><span class="op">(</span><span class="va">con_raster</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "GEOGCRS[\"WGS 84\",\n    DATUM[\"World Geodetic System 1984\",\n        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n            LENGTHUNIT[\"metre\",1]]],\n    PRIMEM[\"Greenwich\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433]],\n    CS[ellipsoidal,2],\n        AXIS[\"geodetic latitude (Lat)\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        AXIS[\"geodetic longitude (Lon)\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n    ID[\"EPSG\",4326]]"</span></span></code></pre></div>
 <p>Nous allons reprojeter ce jeu de données dans un CRS projeté, mais cette fois ci avec une autre méthode que celle des plus proche voisins qui est appropriée pour les données catégorielles.
 Nous utiliserons plutôt la méthode bilinéaire qui calcule la valeur de la cellule de sortie sur la base des quatre cellules les plus proches dans le raster d’origine.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
@@ -683,9 +689,9 @@ D’autres méthodes mentionnées dans la Section &lt;a href="#resampling"&gt;&l
 Les valeurs du jeu de données projeté sont la moyenne pondérée par la distance des valeurs de ces quatre cellules :
 plus la cellule d’entrée est proche du centre de la cellule de sortie, plus son poids est élevé.
 Les commandes suivantes créent une chaîne de caractères représentant la zone WGS 84 / UTM 12N, et reprojettent le raster dans ce CRS, en utilisant la méthode <code>bilinéaire</code> :</p>
-<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">con_raster_ea</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/project.html">project</a></span><span class="op">(</span><span class="va">con_raster</span>, <span class="st">"EPSG:32612"</span>, method <span class="op">=</span> <span class="st">"bilinear"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/crs.html">crs</a></span><span class="op">(</span><span class="va">con_raster_ea</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">con_raster_ea</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/project.html">project</a></span><span class="op">(</span><span class="va">con_raster</span>, <span class="st">"EPSG:32612"</span>, method <span class="op">=</span> <span class="st">"bilinear"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/crs.html">crs</a></span><span class="op">(</span><span class="va">con_raster_ea</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "PROJCRS[\"WGS 84 / UTM zone 12N\",\n    BASEGEOGCRS[\"WGS 84\",\n        ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n            MEMBER[\"World Geodetic System 1984 (Transit)\"],\n            MEMBER[\"World Geodetic System 1984 (G730)\"],\n            MEMBER[\"World Geodetic System 1984 (G873)\"],\n            MEMBER[\"World Geodetic System 1984 (G1150)\"],\n            MEMBER[\"World Geodetic System 1984 (G1674)\"],\n            MEMBER[\"World Geodetic System 1984 (G1762)\"],\n            MEMBER[\"World Geodetic System 1984 (G2139)\"],\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ENSEMBLEACCURACY[2.0]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        ID[\"EPSG\",4326]],\n    CONVERSION[\"UTM zone 12N\",\n        METHOD[\"Transverse Mercator\",\n            ID[\"EPSG\",9807]],\n        PARAMETER[\"Latitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",-111,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",0.9996,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",500000,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1]],\n    USAGE[\n        SCOPE[\"Engineering survey, topographic mapping.\"],\n        AREA[\"Between 114°W and 108°W, northern hemisphere between equator and 84°N, onshore and offshore. Canada - Alberta; Northwest Territories (NWT); Nunavut; Saskatchewan. Mexico. United States (USA).\"],\n        BBOX[0,-114,84,-108]],\n    ID[\"EPSG\",32612]]"</span></span></code></pre></div>
 <p>La reprojection raster sur les variables numériques entraîne également des modifications des valeurs et des propriétés spatiales, telles que le nombre de cellules, la résolution et l’étendue.
 Ces changements sont illustrés dans le tableau <a href="reproj-geo-data.html#tab:rastercrs">7.2</a><a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;
@@ -738,19 +744,19 @@ Cependant, il est souhaitable d’utiliser d’autres projections ou de créer d
 La section <a href="reproj-geo-data.html#which-crs">7.6</a> a mentionné les raisons d’utiliser des CRS personnalisés et a fourni plusieurs approches possibles.
 Nous montrons ici comment appliquer ces idées dans R.</p>
 <p>L’une d’elles consiste à prendre une définition WKT existante d’un CRS, à modifier certains de ses éléments, puis à utiliser la nouvelle définition pour la reprojection.
-Ceci peut être fait pour les vecteurs spatiaux avec <code>st_crs()$wkt</code> et <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code>, et pour les rasters avec <code><a href="https://rdrr.io/pkg/terra/man/crs.html">crs()</a></code> et <code><a href="https://rdrr.io/pkg/terra/man/project.html">project()</a></code>, comme le montre l’exemple suivant qui transforme l’objet <code>zion</code> en un CRS azimutal équidistant (AEQD) personnalisé.</p>
-<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
+Ceci peut être fait pour les vecteurs spatiaux avec <code>st_crs()$wkt</code> et <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform()</a></code>, et pour les rasters avec <code><a href="https://rspatial.github.io/terra/reference/crs.html">crs()</a></code> et <code><a href="https://rspatial.github.io/terra/reference/project.html">project()</a></code>, comme le montre l’exemple suivant qui transforme l’objet <code>zion</code> en un CRS azimutal équidistant (AEQD) personnalisé.</p>
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zion</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"vector/zion.gpkg"</span>, package <span class="op">=</span> <span class="st">"spDataLarge"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>L’utilisation d’un CRS AEQD personnalisé nécessite de connaître les coordonnées du point central d’un ensemble de données en degrés (CRS géographique).
 Dans notre cas, cette information peut être extraite en calculant un centroïde de la zone <code>sion</code> et en le transformant en WGS84.</p>
-<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb266"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zion_centr</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">zion</span><span class="op">)</span></span>
 <span><span class="va">zion_centr_wgs84</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">zion_centr</span>, <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_text.html">st_as_text</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">zion_centr_wgs84</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "POINT (-113 37.3)"</span></span></code></pre></div>
 <p>Ensuite, nous pouvons utiliser les nouvelles valeurs obtenues pour mettre à jour la définition WKT du CRS azimutal équidistant (AEQD) vue ci-dessous.
 Remarquez que nous avons modifié seulement deux valeurs ci-dessous – <code>"Central_Meridian"</code> pour la nouvelle longitude et <code>"Latitude_Of_Origin"</code> pour la latitude de notre centroïde.</p>
-<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_wkt</span> <span class="op">=</span> <span class="st">'PROJCS["Custom_AEQD",</span></span>
 <span><span class="st"> GEOGCS["GCS_WGS_1984",</span></span>
 <span><span class="st">  DATUM["WGS_1984",</span></span>
@@ -762,18 +768,18 @@ Remarquez que nous avons modifié seulement deux valeurs ci-dessous – <code>"C
 <span><span class="st"> PARAMETER["Latitude_Of_Origin",37.29818],</span></span>
 <span><span class="st"> UNIT["Meter",1.0]]'</span></span></code></pre></div>
 <p>La dernière étape de cette approche consiste à transformer notre objet original (<code>zion</code>) en notre nouveau SRC personnalisé (<code>zion_aeqd</code>).</p>
-<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zion_aeqd</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">zion</span>, <span class="va">my_wkt</span><span class="op">)</span></span></code></pre></div>
-<p>Les projections personnalisées peuvent également être réalisées de manière interactive, par exemple à l’aide de l’application web <a href="https://projectionwizard.org/#">Projection Wizard</a> <span class="citation">(<a href="reproj-geo-data.html#ref-savric_projection_2016" role="doc-biblioref">Šavrič, Jenny, and Jenny 2016</a>)</span>.
+<p>Les projections personnalisées peuvent également être réalisées de manière interactive, par exemple à l’aide de l’application web <a href="https://projectionwizard.org/#">Projection Wizard</a> <span class="citation">(<a href="reproj-geo-data.html#ref-savric_projection_2016">Šavrič, Jenny, and Jenny 2016</a>)</span>.
 Ce site Web vous permet de sélectionner une étendue spatiale de vos données et une propriété de distorsion, et renvoie une liste de projections possibles.
 La liste contient également des définitions WKT des projections que vous pouvez copier et utiliser pour des reprojections.
-Voir <span class="citation">Open Geospatial Consortium (<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019" role="doc-biblioref">2019</a>)</span> pour plus de détails sur la création de définitions CRS personnalisées avec des chaînes WKT.</p>
+Voir <span class="citation">Open Geospatial Consortium (<a href="reproj-geo-data.html#ref-opengeospatialconsortium_wellknown_2019">2019</a>)</span> pour plus de détails sur la création de définitions CRS personnalisées avec des chaînes WKT.</p>
 <p>
 Les chaînes PROJ peuvent également être utilisées pour créer des projections personnalisées, en acceptant les limitations inhérentes aux projections, notamment des géométries couvrant de grandes zones géographiques, mentionnées dans la section <a href="reproj-geo-data.html#crs-in-r">7.2</a>.
 De nombreuses projections ont été développées et peuvent être définies à l’aide de l’élément <code>+proj=</code> des chaînes PROJ. Des dizaines de projets sont décrits en détail rien que sur le <a href="https://proj.org/operations/projections/index.html">site PROJ</a>.</p>
-<p>Lorsqu’il s’agit de cartographier le monde tout en préservant les relations entre surfaces, la projection de Mollweide, illustrée dans la figure <a href="reproj-geo-data.html#fig:mollproj">7.3</a>, est un choix populaire et souvent judicieux <span class="citation">(<a href="reproj-geo-data.html#ref-jenny_guide_2017" role="doc-biblioref">Jenny et al. 2017</a>)</span>.
+<p>Lorsqu’il s’agit de cartographier le monde tout en préservant les relations entre surfaces, la projection de Mollweide, illustrée dans la figure <a href="reproj-geo-data.html#fig:mollproj">7.3</a>, est un choix populaire et souvent judicieux <span class="citation">(<a href="reproj-geo-data.html#ref-jenny_guide_2017">Jenny et al. 2017</a>)</span>.
 Pour utiliser cette projection, nous devons la spécifier en utilisant l’élément proj-string, <code>"+proj=moll"</code>, dans la fonction <code>st_transform</code> :</p>
-<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">world_mollweide</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">world</span>, crs <span class="op">=</span> <span class="st">"+proj=moll"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:mollproj"></span>
@@ -785,7 +791,7 @@ FIGURE 7.3: Représentation du monde avec la projection de Mollweide.
 L’une des projections les plus populaires permettant d’atteindre cet objectif est celle de <a href="http://www.winkel.org/other/Winkel%20Tripel%20Projections.htm">Winkel tripel</a>, illustrée sur la figure <a href="reproj-geo-data.html#fig:wintriproj">7.4</a>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;
 Cette projection est utilisée, entre autres, par la National Geographic Society.&lt;/p&gt;"><sup>33</sup></a>
 Le résultat a été créé avec la commande suivante :</p>
-<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">world_wintri</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">world</span>, crs <span class="op">=</span> <span class="st">"+proj=wintri"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:wintriproj"></span>
@@ -797,7 +803,7 @@ FIGURE 7.4: Repréentation du monde avec la projection Winkel tripel.
 <!--check if the following block is still correct-->
 <p>De plus, les paramètres proj-string peuvent être modifiés dans la plupart des définitions CRS, par exemple le centre de la projection peut être ajusté en utilisant les paramètres <code>+lon_0</code> et <code>+lat_0</code>.
 Le code ci-dessous transforme les coordonnées en une projection de Lambert azimutale à aire égale centrée sur la longitude et la latitude de la ville de New York (Figure <a href="reproj-geo-data.html#fig:laeaproj2">7.5</a>).</p>
-<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">world_laea2</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">world</span>,</span>
 <span>                           crs <span class="op">=</span> <span class="st">"+proj=laea +x_0=0 +y_0=0 +lon_0=-74 +lat_0=40"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -848,7 +854,7 @@ Comment cela influence-t-il les résultats ?</p>
 <!-- plot(st_geometry(new_canada), graticule = TRUE, axes = TRUE) -->
 <!-- ``` -->
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-akima_akima_2016" class="csl-entry">
 Akima, Hiroshi, and Albrecht Gebhardt. 2016. <em>Akima: <span>Interpolation</span> of <span>Irregularly</span> and <span>Regularly Spaced Data</span></em>. <a href="https://CRAN.R-project.org/package=akima">https://CRAN.R-project.org/package=akima</a>.
 </div>
@@ -1250,7 +1256,7 @@ Wulf, Andrea. 2015. <em>The Invention of Nature: <span>Alexander</span> von <spa
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2023-01-14.</p>
+    <p>"<strong>Geocomputation avec R</strong>" a été ecris par Robin Lovelace, Jakub Nowosad, Jannes Muenchow. Traduction: Olivier Leroy.  et sa dernière mise en ligne date de  2024-05-03.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

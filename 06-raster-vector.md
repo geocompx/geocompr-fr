@@ -78,6 +78,22 @@ Si vous définissez `inverse = TRUE`, vous masquerez tout ce qui se trouve *à l
 srtm_inv_masked = mask(srtm, zion, inverse = TRUE)
 ```
 
+
+```
+#> 
+#> Attachement du package : 'tmap'
+#> L'objet suivant est masqué depuis 'package:datasets':
+#> 
+#>     rivers
+#> -- tmap v3 code detected --
+#> [v3->v4] tm_raster(): instead of 'style = "cont"', use 'col.scale = tm_scale_continuous()' and migrate the argument(s) 'palette' (rename to 'values') to 'tm_scale_continuous(<HERE>)'
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+```
+
 <div class="figure" style="text-align: center">
 <img src="06-raster-vector_files/figure-html/cropmask-1.png" alt="Illustration du découpage et de l'application de masque sur des rasters." width="100%" />
 <p class="caption">(\#fig:cropmask)Illustration du découpage et de l'application de masque sur des rasters.</p>
@@ -221,8 +237,8 @@ zion_nlcd |>
 #> 1     1 Developed   4205
 #> 2     1 Barren     98285
 #> 3     1 Forest    298299
-#> 4     1 Shrubland 203701
-#> # … with 3 more rows
+#> 4     1 Shrubland 203700
+#> # ℹ 3 more rows
 ```
 
 <div class="figure" style="text-align: center">
@@ -332,6 +348,12 @@ Comparez-la à une rastérisation de polygone, avec `touches = FALSE` par défau
 
 ```r
 california_raster2 = rasterize(california, raster_template2) 
+```
+
+
+```
+#> The visual variable "col" of the layer "raster" contains a unique value. Therefore a discrete scale is applied (tm_scale_discrete).
+#> The visual variable "col" of the layer "raster" contains a unique value. Therefore a discrete scale is applied (tm_scale_discrete).
 ```
 
 <div class="figure" style="text-align: center">

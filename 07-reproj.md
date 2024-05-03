@@ -286,7 +286,7 @@ GEOS est toujours utilisé pour les données projetées et les données sans CRS
 
 Pour démontrer l'importance des CRS, nous allons créer un tampon de 100 km autour de l'objet `london` de la section précédente.
 Nous allons également créer un tampon délibérément défectueux avec une "distance" de 1 degré, ce qui est à peu près équivalent à 100 km (1 degré est environ 111 km à l'équateur).
-Avant de plonger dans le code, il peut être utile de jeter un coup d'œil à la figure \@ref(fig:crs-buf) pour avoir une idée des résultats que vous devriez être en mesure de reproduire en suivant les ligne de code ci-dessous.
+Avant de plonger dans le code, il peut être utile de jeter un coup d'œil à la figure \@ref(fig:) pour avoir une idée des résultats que vous devriez être en mesure de reproduire en suivant les ligne de code ci-dessous.
 
 La première étape consiste à créer trois tampons autour des objets `london` et `london_geo` créés ci-dessus avec des distances de 1 degré et 100 km (ou 100 000 m, ce qui peut être exprimé par `1e5` en notation scientifique) à partir du centre de Londres:
 
@@ -321,7 +321,7 @@ Lorsque les opérations de géométrie sphérique sont désactivées, avec la co
 Cette distance se réduit à zéro aux pôles.
 À la latitude de Londres, par exemple, les méridiens sont distants de moins de 70 km (défi : exécutez le code qui vérifie cela).
 <!-- `geosphere::distGeo(c(0, 51.5), c(1, 51.5))` -->
-Les lignes de latitude, en revanche, sont équidistantes les unes des autres quelle que soit la latitude : elles sont toujours distantes d'environ 111 km, y compris à l'équateur et près des pôles (voir les figures \@ref(fig:crs-buf) à \@ref(fig:wintriproj)</div>\EndKnitrBlock{rmdnote}
+Les lignes de latitude, en revanche, sont équidistantes les unes des autres quelle que soit la latitude : elles sont toujours distantes d'environ 111 km, y compris à l'équateur et près des pôles (voir les figures \@ref(fig:) à \@ref(fig:wintriproj)</div>\EndKnitrBlock{rmdnote}
 
 N'interprétez pas l'avertissement concernant le CRS géographique (`longitude/latitude`) comme "le CRS ne devrait pas être défini" : il devrait presque toujours l'être!
 Il doit être mieux compris comme une suggestion de *reprojeter* les données sur un CRS projeté.
@@ -368,9 +368,18 @@ La ligne de code suivante crée un tampon autour des données *projetées* d'exa
 london_buff_projected = st_buffer(london_proj, 1e5)
 ```
 
-Les géométries des trois objets `london_buff*` qui *ont* un CRS spécifié créé ci-dessus (`london_buff_s2`, `london_buff_lonlat` et `london_buff_projected`) créés dans les extraits de code précédents sont illustrées dans la Figure  \@ref(fig:crs-buf).
+Les géométries des trois objets `london_buff*` qui *ont* un CRS spécifié créé ci-dessus (`london_buff_s2`, `london_buff_lonlat` et `london_buff_projected`) créés dans les extraits de code précédents sont illustrées dans la Figure  \@ref(fig:).
 
 
+
+
+```
+#> 
+#> Attachement du package : 'tmap'
+#> L'objet suivant est masqué depuis 'package:datasets':
+#> 
+#>     rivers
+```
 
 <div class="figure" style="text-align: center">
 <img src="07-reproj_files/figure-html/crs-buf-1.png" alt="Tampons autour de Londres montrant les résultats créés avec le moteur de géométrie sphérique S2 sur des données long/lat (à gauche), des données projetées (au milieu) et des données long/lat sans utiliser la géométrie sphérique (à droite). Le graphique de gauche illustre le résultat des tampons sur des données non projetées avec sf, qui appelle le moteur de géométrie sphérique S2 de Google par défaut avec des cellules maximales fixées à 1000 (ligne fine). La ligne épaisse en 'bloc' illustre le résultat de la même opération avec des cellules maximales fixées à 100." width="100%" />
@@ -550,7 +559,7 @@ Utilisez `as.numeric()` pour convertir le résultat en un nombre sans unité.
 st_distance(london2, london_proj)
 #> Units: [m]
 #>      [,1]
-#> [1,] 2018
+#> [1,] 2016
 ```
 
 Les fonctions d'interrogation et de reprojection des CRS sont présentées ci-dessous en référence à `cycle_hire_osm`, un objet `sf` de **spData** qui représente les "stations d'accueil" où l'on peut louer des vélos à Londres.
@@ -704,12 +713,15 @@ cat_raster_wgs84 = project(cat_raster, "EPSG:4326", method = "near")
 De nombreuses propriétés du nouvel objet diffèrent de l'ancien, notamment le nombre de colonnes et de lignes (et donc le nombre de cellules), la résolution (transformée de mètres en degrés) et l'étendue, comme l'illustre le tableau \@ref(tab:catraster) (notez que le nombre de catégories passe de 8 à 9 en raison de l'ajout des valeurs `NA`, et non parce qu'une nouvelle catégorie a été créée --- les classes d'occupation du sol sont préservées).
 
 
+
 Table: (\#tab:catraster)Attributs présent dans l'original ('cat\_raster') et reprojecté ('cat\_raster\_wgs84')  pour des jeux de données categoriels.
 
 |CRS   | nrow| ncol|   ncell| resolution| unique_categories|
 |:-----|----:|----:|-------:|----------:|-----------------:|
 |NAD83 | 1359| 1073| 1458207|    31.5275|                 8|
 |WGS84 | 1246| 1244| 1550024|     0.0003|                 9|
+
+
 
 La reprojection de rasters avec des valeurs numérique (avec des valeurs `décimales` ou dans ce cas `entières`) suit une procédure presque identique.
 Ceci est démontré ci-dessous avec `srtm.tif` dans **spDataLarge** de [la Shuttle Radar Topography Mission (SRTM)](https://www2.jpl.nasa.gov/srtm/), qui représente la hauteur en mètres au-dessus du niveau de la mer (élévation) avec le WGS84 CRS :
@@ -744,12 +756,15 @@ Cela peut avoir des conséquences sur la taille des fichiers lorsque les donnée
 ]:
 
 
+
 Table: (\#tab:rastercrs)Attributs présent dans l'original ('con\_raster') et reprojeté ('con\_raster\_ea') pour un raster avec des valeurs continues.
 
 |CRS          | nrow| ncol|  ncell| resolution| mean|
 |:------------|----:|----:|------:|----------:|----:|
 |WGS84        |  457|  465| 212505|     0.0008| 1843|
 |UTM zone 12N |  515|  422| 217330|    83.5334| 1842|
+
+
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Bien entendu, les limites des projections terrestres 2D s´appliquent aussi bien aux données vectorielles qu´aux données rasters.
 Au mieux, nous pouvons respecter deux propriétés spatiales sur trois (distance, surface, direction).

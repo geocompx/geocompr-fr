@@ -250,11 +250,9 @@ world_mini
 #> Dimension:     XY
 #> Bounding box:  xmin: -180 ymin: -18.3 xmax: 180 ymax: -0.95
 #> Geodetic CRS:  WGS 84
-#> # A tibble: 2 × 4
-#>   iso_a2 name_long continent                                                geom
-#>   <chr>  <chr>     <chr>                                      <MULTIPOLYGON [°]>
-#> 1 FJ     Fiji      Oceania   (((-180 -16.6, -180 -16.5, -180 -16, -180 -16.1, -…
-#> 2 TZ     Tanzania  Africa    (((33.9 -0.95, 31.9 -1.03, 30.8 -1.01, 30.4 -1.13,…
+#>   iso_a2 name_long continent                           geom
+#> 1     FJ      Fiji   Oceania MULTIPOLYGON (((-180 -16.6,...
+#> 2     TZ  Tanzania    Africa MULTIPOLYGON (((33.9 -0.95,...
 ```
 
 Tout cela peut sembler assez complexe, surtout pour un système de classes qui est censé être simple.
@@ -873,6 +871,21 @@ india_buffer_without_s2 = st_buffer(india, 1)
 #> Warning in st_buffer.sfc(st_geometry(x), dist, nQuadSegs, endCapStyle =
 #> endCapStyle, : st_buffer does not correctly buffer longitude/latitude data
 #> dist is assumed to be in decimal degrees (arc_degrees).
+```
+
+
+```
+#> 
+#> Attachement du package : 'tmap'
+#> L'objet suivant est masqué depuis 'package:datasets':
+#> 
+#>     rivers
+#> [v3->v4] tm_layout(): use 'tm_title()' instead of the 'title' argument of 'tm_layout'
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_layout(): use 'tm_title()' instead of the 'title' argument of 'tm_layout'
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
 ```
 
 <div class="figure" style="text-align: center">

@@ -185,6 +185,14 @@ seine_buff_5km = st_buffer(seine, dist = 5000)
 seine_buff_50km = st_buffer(seine, dist = 50000)
 ```
 
+
+```
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+```
+
 <div class="figure" style="text-align: center">
 <img src="05-geometry-operations_files/figure-html/buffs-1.png" alt="Tampons de 5 km autour du jeu de données de la Seine  (à gauche) et de 50 km (à droite). Notez les couleurs, qui reflètent le fait qu'un tampon est créé par élément géométrique." width="75%" />
 <p class="caption">(\#fig:buffs)Tampons de 5 km autour du jeu de données de la Seine  (à gauche) et de 50 km (à droite). Notez les couleurs, qui reflètent le fait qu'un tampon est créé par élément géométrique.</p>
@@ -396,6 +404,11 @@ regions2 = us_states |>
 
 
 
+
+```
+#> [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+```
+
 <div class="figure" style="text-align: center">
 <img src="05-geometry-operations_files/figure-html/us-regions-1.png" alt="Agrégation spatiale sur des polygones contigus, illustrée par l'agrégation de la population des États américains en régions, la population étant représentée par une couleur. Notez que l'opération dissout automatiquement les frontières entre les états." width="100%" />
 <p class="caption">(\#fig:us-regions)Agrégation spatiale sur des polygones contigus, illustrée par l'agrégation de la population des États américains en régions, la population étant représentée par une couleur. Notez que l'opération dissout automatiquement les frontières entre les états.</p>
@@ -443,6 +456,12 @@ linestring = st_cast(multipoint, "LINESTRING")
 polyg = st_cast(multipoint, "POLYGON")
 ```
 
+
+```
+#> -- tmap v3 code detected --
+#> [v3->v4] polygons(): use 'fill' for the fill color of polygons/symbols (instead of 'col'), and 'col' for the outlines (instead of 'border.col')
+```
+
 <div class="figure" style="text-align: center">
 <img src="05-geometry-operations_files/figure-html/single-cast-1.png" alt="Exemples de lignes et de polygones créés à partir d'une géométrie multipoint" width="100%" />
 <p class="caption">(\#fig:single-cast)Exemples de lignes et de polygones créés à partir d'une géométrie multipoint</p>
@@ -479,98 +498,24 @@ Plusieurs des transformations ne sont pas possibles, par exemple, vous ne pouvez
 Certaines transformations divisent un seul élément en plusieurs sous-éléments, en "étendant" les objets `sf` (en ajoutant de nouvelles lignes avec des valeurs d'attributs dupliquées).
 Par exemple, lorsqu'une géométrie multipoint composée de cinq paires de coordonnées est transformée en une géométrie "POINT", la sortie contiendra cinq entités.
 
-<table>
-<caption>(\#tab:sfs-st-cast)Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d'entrée par ligne et type de sortie par colonne</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">  </th>
-   <th style="text-align:right;"> POI </th>
-   <th style="text-align:right;"> MPOI </th>
-   <th style="text-align:right;"> LIN </th>
-   <th style="text-align:right;"> MLIN </th>
-   <th style="text-align:right;"> POL </th>
-   <th style="text-align:right;"> MPOL </th>
-   <th style="text-align:right;"> GC </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> POI(1) </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MPOI(1) </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> LIN(1) </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MLIN(1) </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> POL(1) </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MPOL(1) </td>
-   <td style="text-align:right;"> 10 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> GC(1) </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-</tbody>
-<tfoot>
-<tr>
-<td style = 'padding: 0; border:0;' colspan='100%'><sup></sup> Note : Les valeurs comme (1) représentent le nombre d'entités ; NA signifie que l'opération n'est pas possible. Abréviations : POI, LIN, POL et GC font référence à POINT, LINESTRING, POLYGON et GEOMETRYCOLLECTION. La version MULTI de ces types de géométrie est indiquée par un M précédent, par exemple, MPOI est l'acronyme de MULTIPOINT.</td>
-</tr>
-</tfoot>
-</table>
+
+
+Table: (\#tab:sfs-st-cast)Transformation de type de géométrie sur des entités simples (voir section 2.1) avec un type d'entrée par ligne et type de sortie par colonne
+
+|        | POI| MPOI| LIN| MLIN| POL| MPOL| GC|
+|:-------|---:|----:|---:|----:|---:|----:|--:|
+|POI(1)  |   1|    1|   1|   NA|  NA|   NA| NA|
+|MPOI(1) |   4|    1|   1|    1|   1|   NA| NA|
+|LIN(1)  |   5|    1|   1|    1|   1|   NA| NA|
+|MLIN(1) |   7|    2|   2|    1|  NA|   NA| NA|
+|POL(1)  |   5|    1|   1|    1|   1|    1| NA|
+|MPOL(1) |  10|    1|  NA|    1|   2|    1|  1|
+|GC(1)   |   9|    1|  NA|   NA|  NA|   NA|  1|
+
+__Note:__
+Note : Les valeurs comme (1) représentent le nombre d'entités ; NA signifie que l'opération n'est pas possible. Abréviations : POI, LIN, POL et GC font référence à POINT, LINESTRING, POLYGON et GEOMETRYCOLLECTION. La version MULTI de ces types de géométrie est indiquée par un M précédent, par exemple, MPOI est l'acronyme de MULTIPOINT.
+
+
 
 Essayons d'appliquer des transformations de type géométrique sur un nouvel objet, `multilinestring_sf`, à titre d'exemple (à gauche sur la Figure \@ref(fig:line-cast)) :
 
@@ -609,6 +554,12 @@ linestring_sf2
 #> 1 LINESTRING (1 5, 4 3)
 #> 2 LINESTRING (4 4, 4 1)
 #> 3 LINESTRING (2 2, 4 2)
+```
+
+
+```
+#> [cols4all] color palettes: use palettes from the R package cols4all. Run 'cols4all::c4a_gui()' to explore them. The old palette name "Set2" is named "set2" (in long format "brewer.set2")
+#> Multiple palettes called "set2 found: "brewer.set2", "hcl.set2". The first one, "brewer.set2", is returned.
 ```
 
 <div class="figure" style="text-align: center">
@@ -676,6 +627,7 @@ elev[clip, drop = FALSE]
 #> extent      : 1, 1.5, -0.5, 0.5  (xmin, xmax, ymin, ymax)
 #> coord. ref. : lon/lat WGS 84 (EPSG:4326) 
 #> source(s)   : memory
+#> varname     : elev 
 #> name        : elev 
 #> min value   :   18 
 #> max value   :   24
@@ -770,6 +722,18 @@ dem = rast(system.file("raster/dem.tif", package = "spDataLarge"))
 dem_agg = aggregate(dem, fact = 5, fun = mean)
 ```
 
+
+```
+#> -- tmap v3 code detected --
+#> [v3->v4] tm_raster(): instead of 'style = "cont"', use 'col.scale = tm_scale_continuous()'
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+```
+
 <div class="figure" style="text-align: center">
 <img src="05-geometry-operations_files/figure-html/aggregate-example-1.png" alt="Raster original (gauche). Raster agrégé (droite)." width="100%" />
 <p class="caption">(\#fig:aggregate-example)Raster original (gauche). Raster agrégé (droite).</p>
@@ -844,6 +808,33 @@ dem_resampl = resample(dem, y = target_rast, method = "bilinear")
 ```
 
 La figure \@ref(fig:resampl) montre une comparaison de différentes méthodes de rééchantillonnage sur l'objet `dem`.
+
+
+```
+#> -- tmap v3 code detected --
+#> [v3->v4] tm_raster(): migrate the argument(s) related to the scale of the visual variable 'col', namely 'breaks' to 'col.scale = tm_scale(<HERE>)'
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [v3->v4] tm_raster(): use 'col.legend = tm_legend_hide()' instead of 'legend.show = FALSE
+#> Warning: The 'main.title' argument of 'tm_layout()' is deprecated as of tmap
+#> 4.0. Please use 'tm_title()' instead.
+#> [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+#> [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+#> [plot mode] fit legend/component: Some legend items or map compoments do not fit well, and are therefore rescaled. Set the tmap option 'component.autoscale' to FALSE to disable rescaling.
+```
 
 <div class="figure" style="text-align: center">
 <img src="05-geometry-operations_files/figure-html/resampl-1.png" alt="Comparaison visuelle du raster d'entré et de cinq méthodes de rééchantillonnage différentes." width="100%" />

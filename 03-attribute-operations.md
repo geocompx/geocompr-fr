@@ -269,6 +269,7 @@ L'ensemble des opérateurs de comparaison peut être utilisé dans la fonction `
 
 
 
+
 Table: (\#tab:operators)Opérateurs de comparaison renvoyant des booléens (TRUE/FALSE).
 
 |Symbole                       |Nom                               |
@@ -278,6 +279,8 @@ Table: (\#tab:operators)Opérateurs de comparaison renvoyant des booléens (TRUE
 |`>`, `<`                      |Supérieur/inférieur à             |
 |`>=`, `<=`                    |Supérieur/inférieur ou égal       |
 |`&`, <code>&#124;</code>, `!` |Opérateurs logiques : Et, Ou, Non |
+
+
 
 ### Enchainement de commandes avec des *pipes*
 
@@ -390,6 +393,7 @@ world_agg5 = world |>
 ```
 
 
+
 Table: (\#tab:continents)Les 3 continents les plus peuplés classés par densité de population ordonnés par nombre de pays.
 
 |continent |        Pop| Superficie|  N| Densité|
@@ -397,6 +401,8 @@ Table: (\#tab:continents)Les 3 continents les plus peuplés classés par densit�
 |Africa    | 1154946633|   29946198| 51|      39|
 |Asia      | 4311408059|   31252459| 47|     138|
 |Europe    |  669036256|   23065219| 39|      29|
+
+
 
 \BeginKnitrBlock{rmdnote}<div class="rmdnote">Plus de détails sont fournis dans les pages d´aide (qui sont accessibles via `?summarize` et `vignette(package = "dplyr")` et le chapitre 5 de [R for Data Science](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarize). </div>\EndKnitrBlock{rmdnote}
 
@@ -421,7 +427,7 @@ Une "jointure gauche" (*left join*), qui préserve le premier ensemble de donné
 
 ```r
 world_coffee = left_join(world, coffee_data)
-#> Joining, by = "name_long"
+#> Joining with `by = join_by(name_long)`
 class(world_coffee)
 #> [1] "sf"         "tbl_df"     "tbl"        "data.frame"
 ```
@@ -474,7 +480,7 @@ Dans ce cas, il faut recourir à une jointure interne, `ìnner join`:
 
 ```r
 world_coffee_inner = inner_join(world, coffee_data)
-#> Joining, by = "name_long"
+#> Joining with `by = join_by(name_long)`
 nrow(world_coffee_inner)
 #> [1] 45
 ```
@@ -510,7 +516,7 @@ En utilisant le tableau de données mis à jour, `inner_join()` renvoie un résu
 ```r
 coffee_data$name_long[grepl("Congo,", coffee_data$name_long)] = drc
 world_coffee_match = inner_join(world, coffee_data)
-#> Joining, by = "name_long"
+#> Joining with `by = join_by(name_long)`
 nrow(world_coffee_match)
 #> [1] 46
 ```
@@ -523,7 +529,7 @@ Le résultat d'une jointure tend à correspondre à son premier argument :
 
 ```r
 coffee_world = left_join(coffee_data, world)
-#> Joining, by = "name_long"
+#> Joining with `by = join_by(name_long)`
 class(coffee_world)
 #> [1] "tbl_df"     "tbl"        "data.frame"
 ```
