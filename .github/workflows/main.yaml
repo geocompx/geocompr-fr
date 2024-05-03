@@ -15,7 +15,7 @@ jobs:
       - name: Render Book
         run: |
           export LANG=fr_FR.UTF-8
-          defaults write org.R-project.R force.LANG fr_FR.UTF-8
+          export LC_ALL=fr_FR.UTF-8
           Rscript -e 'install.packages("geocompkg", repos = c("https://geocompr.r-universe.dev", "https://cloud.r-project.org"), dependencies = TRUE, force = TRUE)'
           Rscript -e 'remotes::install_github("r-tmap/tmap")'
           Rscript -e 'bookdown::render_book("index.Rmd")'
