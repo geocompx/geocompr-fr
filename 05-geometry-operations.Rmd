@@ -581,10 +581,11 @@ linestring_sf2
 
 ```{r line-cast, echo=FALSE, fig.cap="Exemples de transformation de type de géométrie entre MULTILINESTRING (à gauche) et LINESTRING (à droite).", warning=FALSE, fig.scap="Exemples de transformation de type de géométrie."}
 p_lc1 = tm_shape(multilinestring_sf) + tm_lines(lwd = 3) +
-  tm_layout(main.title = "MULTILINESTRING")
+  tm_title("MULTILINESTRING")
 linestring_sf2$name = c("Riddle Rd", "Marshall Ave", "Foulke St")
-p_lc2 = tm_shape(linestring_sf2) + tm_lines(lwd = 3, col = "name", palette = "Set2") +
-  tm_layout(main.title = "LINESTRING", legend.show = FALSE)
+p_lc2 = tm_shape(linestring_sf2) + tm_lines(lwd = 3, col = "name", col.scale = tm_scale(values = "Set2")) +
+  tm_title("LINESTRING") +
+  tm_layout(legend.show = FALSE)
 tmap_arrange(p_lc1, p_lc2, ncol = 2)
 ```
 
