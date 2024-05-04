@@ -1,5 +1,5 @@
 --- 
-title: 'Geocomputation avec R'
+title: 'Géocomputation avec R'
 author: 'Robin Lovelace, Jakub Nowosad, Jannes Muenchow'
 date: '`r Sys.Date()`'
 site: bookdown::bookdown_site
@@ -14,7 +14,7 @@ biblio-style: apalike
 link-citations: yes
 colorlinks: yes
 graphics: yes
-description: "Geocomputation avec R s´adresse aux personnes qui souhaitent analyser, visualiser et modéliser des données géographiques à l´aide de logiciels open source. Il est basé sur R, un langage de programmation statistique qui possède de puissantes capacités de traitement de données, de visualisation et de traitement géospatial. Ce livre vous donne les connaissances et les compétences nécessaires pour aborder un large éventail de questions qui se manifestent dans les données géographiques, notamment celles qui ont des implications scientifiques, sociales et environnementales. Ce livre intéressera des personnes de tous horizons, en particulier les utilisateurs de systèmes d´information géographique (SIG) désireux d´appliquer leurs connaissances spécifiques à un domaine dans un puissant langage open source pour la science des données, et les utilisateurs de R désireux d'étendre leurs compétences au traitement des données spatiales."
+description: "Géocomputation avec R s´adresse aux personnes qui souhaitent analyser, visualiser et modéliser des données géographiques à l´aide de logiciels open source. Il est basé sur R, un langage de programmation statistique qui possède de puissantes capacités de traitement de données, de visualisation et de traitement géospatial. Ce livre vous donne les connaissances et les compétences nécessaires pour aborder un large éventail de questions qui se manifestent dans les données géographiques, notamment celles qui ont des implications scientifiques, sociales et environnementales. Ce livre intéressera des personnes de tous horizons, en particulier les utilisateurs de systèmes d´information géographique (SIG) désireux d´appliquer leurs connaissances spécifiques à un domaine dans un puissant langage open source pour la science des données, et les utilisateurs de R désireux d'étendre leurs compétences au traitement des données spatiales."
 github-repo: "geocompx/geocompr-fr"
 cover-image: "https://r.geocompx.org/images/cover.png"
 url: https://r.geocompx.org/fr/
@@ -27,7 +27,7 @@ is_html = knitr::is_html_output()
 ```
 
 ```{asis index-2, echo=is_html}
-# Bienvenue! {-}
+# Bienvenue ! {-}
 
 Il s'agit du site en français de *Geocomputation with R*, un livre sur l'analyse, la visualisation et la modélisation des données géographiques. Le site en anglais est [ici](https://geocompr.robinlovelace.net/).
 
@@ -78,7 +78,7 @@ En cliquant sur le lien ci-dessous, vous ouvrirez une nouvelle fenêtre contenan
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/geocompr/fr/main?urlpath=rstudio)
 
-Si vous voyez quelque chose comme l'image ci-dessous, félicitations, cela a fonctionné et vous pouvez commencer à explorer la géocomputation avec R dans un environnement cloud.(tout en étant conscient des consignes d'utilisation de [mybinder.org](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html)):
+Si vous voyez quelque chose comme l'image ci-dessous, félicitations, cela a fonctionné et vous pouvez commencer à explorer la géocomputation avec R dans un environnement cloud.(Tout en étant conscient des consignes d'utilisation de [mybinder.org](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html)) :
 
 <!-- ![](https://user-images.githubusercontent.com/1825120/134802314-6dd368c7-f5eb-4cd7-b8ff-428dfa93954c.png) -->
 ```
@@ -112,7 +112,7 @@ remotes::install_github("mtennekes/tmap")
 
 ```{asis index-3-1a, echo=is_html}
 Après avoir installé les dépendances du livre, vous pouvez reconstruire le livre à des fins de test et d'enseignement.
-Pour ce faire, vous devez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) et déziper ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) le code source du libre.
+Pour ce faire, vous devez [télécharger](https://github.com/Robinlovelace/geocompr/archive/refs/heads/main.zip) puis dézipper, ou [cloner](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository), le code source du livre.
 Après avoir ouvert le projet `geocompr.Rproj` dans RStudio (ou ouvert le dossier dans un autre IDE tel que [VS Code](https://github.com/REditorSupport/vscode-R)), vous devriez être en mesure de reproduire le contenu avec la commande suivante :
 ```
 
@@ -139,13 +139,13 @@ La page [GitHub](https://github.com/robinlovelace/geocompr#reproducing-the-book)
 
 Si vous trouvez ce livre utile (sa traduction ou sa version originale), vous pouvez le soutenir :
 
-- En en parlant à d'autres personnes
-- En communiquant sur le livre dans les réseaux sociaux, par exemple, via [#geocompr hashtag](https://twitter.com/hashtag/geocompr) sur Twitter (cf. notre [**Guestbook** sur geocompr.github.io](https://geocompr.github.io/guestbook/)) ou en référençant les [cours](https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md) mobilisant le livre
-- [Le citant](https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib) ou  [le metre en lien](https://geocompr.robinlovelace.net/)
-- '[Starring](https://help.github.com/articles/about-stars/)' le [dépôt GitHub geocompr](https://github.com/robinlovelace/geocompr)
-- Ecrivant un recension, sur Amazon ou [Goodreads](https://www.goodreads.com/book/show/42780859-geocomputation-with-r)
-- Posant des questions ou faire des suggestions de contenus sur [GitHub](https://github.com/Robinlovelace/geocompr/issues/372) ou Twitter.
-- [Achetant](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577) une copie
+- en en parlant à d'autres personnes,
+- en communiquant sur le livre dans les réseaux sociaux, par exemple, via [#geocompr hashtag](https://twitter.com/hashtag/geocompr) sur Twitter (cf. notre [**Guestbook** sur geocompr.github.io](https://geocompr.github.io/guestbook/)) ou en référençant les [cours](https://github.com/geocompr/geocompr.github.io/edit/source/content/guestbook/index.md) mobilisant le livre,
+- en [le citant](https://github.com/Robinlovelace/geocompr/raw/main/CITATION.bib) ou  [le mettre en lien](https://geocompr.robinlovelace.net/),
+- en '[Starring](https://help.github.com/articles/about-stars/)' le [dépôt GitHub geocompr](https://github.com/robinlovelace/geocompr),
+- en écrivant un avis, sur Amazon ou [Goodreads](https://www.goodreads.com/book/show/42780859-geocomputation-with-r)
+- en posant des questions ou en faisant des suggestions de contenus sur [GitHub](https://github.com/Robinlovelace/geocompr/issues/372) ou Twitter,
+- [en achetant](https://www.amazon.com/Geocomputation-R-Robin-Lovelace-dp-0367670577/dp/0367670577) une copie.
 
 Plus de détails sur le [github.com/Robinlovelace/geocompr](https://github.com/Robinlovelace/geocompr#geocomputation-with-r).
 
